@@ -75,5 +75,23 @@ BizConnect AI empowers these vendors by providing an affordable, AI-driven solut
 
 ## 👩‍💻 Installation and Usage
 
-> **Note:** Setup instructions and environment details will be added in a future update.
 
+## 🚀 Setup & Run the Project
+
+### 1. Clone the Repository
+```bash
+git clone https://github.com/<your-username>/BizConnect-AI.git
+cd BizConnect-AI
+```
+
+### 2. Install dependencies
+
+```
+npm install
+```
+
+### 2. Run project
+
+```
+node server.js
+```
