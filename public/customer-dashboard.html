@@ -3,9 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Customer Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    user-dashboard
+    <nav class="navbar">
+        <h2>Customer Dashboard</h2>
+        <div class="user-info">
+            <span id="userName"></span>
+            <button onclick="Auth.logout()" class="btn-logout">Logout</button>
+        </div>
+    </nav>
+    
+    <main class="dashboard-content">
+        <h1>Shop and Track Your Orders</h1>
+        <div class="dashboard-grid">
+            <div class="card">
+                <h3>Browse & Compare</h3>
+                <p>Discover products from all vendors in the marketplace.</p>
+            </div>
+            <div class="card">
+                <h3>Order Tracking</h3>
+                <p>Check the real-time status of your current orders.</p>
+            </div>
+            <div class="card">
+                <h3>Purchase History</h3>
+                <p>View a complete history of all your past purchases.</p>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/config.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        // Protect this page - only 'customer' role is allowed
+        Auth.protectPage(['customer']);
+        
+        // Personalize the page
+        const user = Auth.getCurrentUser();
+        if (user) {
+            document.getElementById('userName').textContent = `Welcome, ${user.name}`;
+        }
+    </script>
 </body>
 </html>

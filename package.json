@@ -4,6 +4,10 @@
   "description": "BizConnect AI is an AI-powered web application designed to simplify business management and promote digital literacy for local vendors, especially in rural and semi-urban communities.   It replaces manual, paper-based systems with an easy-to-use digital assistant that supports natural language and voice input and provides real-time business insights.",
   "main": "index.js",
   "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "seed": "node scripts/seedDatabase.js",
+    "check-db": "node scripts/checkDatabase.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

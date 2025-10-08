@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register - Marketplace</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- CSS Variables for Easy Theming (Consistent with Login Page) --- */
+        :root {
+            --primary-color: #007bff;
+            --primary-hover: #0056b3;
+            --text-dark: #333;
+            --text-light: #fff;
+            --error-color: #dc3545;
+            --card-bg: #ffffff;
+            --shadow-subtle: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        /* --- Global Reset & Typography --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%); /* Soft, appealing background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--text-dark);
+            padding: 20px;
+        }
+
+        /* --- Registration Container & Card --- */
+        .login-container {
+            width: 100%;
+            max-width: 450px; /* Slightly wider card for more fields */
+        }
+
+        .login-card {
+            background-color: var(--card-bg);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-subtle);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .login-card:hover {
+            transform: translateY(-5px); /* Subtle lift effect */
+        }
+
+        .login-card h1 {
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        /* --- Form Groups, Inputs, and Select --- */
+        .form-group {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        /* Style for both input fields and the select dropdown */
+        .form-group input,
+        .form-group select { 
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            font-size: 1rem;
+            color: var(--text-dark); /* Ensure text color is dark */
+            background-color: var(--card-bg);
+            transition: border-color 0.3s, box-shadow 0.3s;
+            /* Reset for select appearance */
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25); /* Focus ring */
+            outline: none;
+        }
+        
+        /* Custom arrow for select to maintain a clean look */
+        .select-wrapper {
+            position: relative;
+        }
+        .select-wrapper::after {
+            content: '▼'; /* Unicode down arrow */
+            position: absolute;
+            top: 50%;
+            right: 15px;
+            transform: translateY(-50%);
+            pointer-events: none; /* Allows clicks to pass through to the select */
+            color: #6c757d;
+            font-size: 0.8rem;
+        }
+
+        /* Apply the wrapper around the select element */
+        .form-group select {
+            margin-top: 0;
+            /* Add padding for the custom arrow */
+            padding-right: 30px;
+        }
+
+        /* --- Buttons --- */
+        .btn-primary {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary-color);
+            color: var(--text-light);
+            border: none;
+            border-radius: 6px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            margin-top: 10px;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn-primary:disabled {
+            background-color: #a0c3e7; /* Lighter shade when disabled */
+            cursor: not-allowed;
+        }
+
+        /* --- Messages & Spinner --- */
+        .error-message {
+            background-color: #f8d7da;
+            color: var(--error-color);
+            border: 1px solid var(--error-color);
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            text-align: left;
+        }
+        
+        .loading-spinner {
+            padding: 10px;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        /* --- Footer Link --- */
+        .login-card > p { /* Target the direct child paragraph */
+            margin-top: 25px;
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+        
+        .login-card > p a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .login-card > p a:hover {
+            color: var(--primary-hover);
+            text-decoration: underline;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <h1>Create a New Account</h1>
+            <form id="registerForm">
+                <div id="errorMessage" class="error-message" style="display:none"></div>
+
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="name" required placeholder="Enter your full name" />
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" required placeholder="name@example.com" />
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required placeholder="Create a password (min 6 characters)" />
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input
+                        type="password"
+                        id="confirmPassword"
+                        name="confirmPassword"
+                        required
+                        placeholder="Re-enter your password"
+                    />
+                </div>
+
+                <div class="form-group">
+                    <label for="role">Select Role</label>
+                    <div class="select-wrapper">
+                        <select id="role" name="role" required>
+                            <option value="customer" selected>Customer</option>
+                            <option value="vendor">Vendor</option>
+                            <option value="admin">Admin</option> 
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" id="registerBtn" class="btn-primary">Register</button>
+                <div class="loading-spinner" id="loadingSpinner" style="display:none">Registering...</div>
+            </form>
+            <p>
+                Already have an account? <a href="login.html">Login here</a>
+            </p>
+        </div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        // Mock register implementation
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.style.display = 'none';
+
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const role = document.getElementById('role').value;
+
+            const registerBtn = document.getElementById('registerBtn');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+
+            // --- Form Validation ---
+            if (!name || !email || !password || !confirmPassword || !role) {
+                errorDiv.textContent = 'Please fill in all fields.';
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                errorDiv.textContent = 'Passwords do not match.';
+                errorDiv.style.display = 'block';
+                return;
+            }
+            
+            if (password.length < 6) {
+                errorDiv.textContent = 'Password must be at least 6 characters long.';
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            try {
+                registerBtn.disabled = true;
+                loadingSpinner.style.display = 'block';
+
+                // Real API call to register user
+                await Auth.register(name, email, password, role);
+                
+                // Success message
+                errorDiv.style.backgroundColor = '#d4edda';
+                errorDiv.style.color = '#155724';
+                errorDiv.style.border = '1px solid #c3e6cb';
+                errorDiv.textContent = 'Registration successful! Redirecting...';
+                errorDiv.style.display = 'block';
+                
+                // Redirect to appropriate dashboard
+                setTimeout(() => {
+                    Auth.redirectToDashboard();
+                }, 1500);
+                
+            } catch (err) {
+                errorDiv.style.backgroundColor = '#f8d7da';
+                errorDiv.style.color = 'var(--error-color)';
+                errorDiv.style.border = '1px solid var(--error-color)';
+                errorDiv.textContent = err.message || 'Registration failed. Please try again.';
+                errorDiv.style.display = 'block';
+            } finally {
+                registerBtn.disabled = false;
+                loadingSpinner.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
