@@ -1,0 +1,26 @@
+{
+  "name": "bizconnect-ai",
+  "version": "1.0.0",
+  "description": "BizConnect AI is an AI-powered web application designed to simplify business management and promote digital literacy for local vendors, especially in rural and semi-urban communities.   It replaces manual, paper-based systems with an easy-to-use digital assistant that supports natural language and voice input and provides real-time business insights.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Soham-26/BizConnect-AI.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Soham-26/BizConnect-AI/issues"
+  },
+  "homepage": "https://github.com/Soham-26/BizConnect-AI#readme",
+  "dependencies": {
+    "body-parser": "^2.2.0",
+    "express": "^5.1.0",
+    "mongoose": "^8.19.1"
+  }
+}
