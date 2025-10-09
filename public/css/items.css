@@ -1,0 +1,9 @@
+/* Items page specific styles */
+.table-wrap { overflow:auto; }
+.item-dialog { position: fixed; inset: 0; background: rgba(2,6,23,0.45); display: flex; align-items: center; justify-content: center; }
+.item-dialog__card { width: 100%; max-width: 560px; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.form-grid label { display: flex; flex-direction: column; gap: 6px; font-size: 14px; color: #374151; }
+@media (max-width: 640px) { .form-grid { grid-template-columns: 1fr; } }
+
+

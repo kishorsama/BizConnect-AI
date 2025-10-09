@@ -3,49 +3,412 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Customer Dashboard</title>
+    <title>BizConnect AI</title>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Custom CSS tweaks -->
+    <link rel="stylesheet" href="css/dashboard.css">
+    <!-- Existing styles (if any) -->
     <link rel="stylesheet" href="css/style.css">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { inter: ['Inter', 'ui-sans-serif', 'system-ui'] }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji'; }
+    </style>
+    <link rel="icon" href="/public/img/favicon.ico">
+    <meta name="color-scheme" content="light only">
+    <meta name="description" content="Responsive customer dashboard">
 </head>
-<body>
-    <nav class="navbar">
-        <h2>Customer Dashboard</h2>
-        <div class="user-info">
-            <span id="userName"></span>
-            <button onclick="Auth.logout()" class="btn-logout">Logout</button>
-        </div>
-    </nav>
-    
-    <main class="dashboard-content">
-        <h1>Shop and Track Your Orders</h1>
-        <div class="dashboard-grid">
-            <div class="card">
-                <h3>Browse & Compare</h3>
-                <p>Discover products from all vendors in the marketplace.</p>
-            </div>
-            <div class="card">
-                <h3>Order Tracking</h3>
-                <p>Check the real-time status of your current orders.</p>
-            </div>
-            <div class="card">
-                <h3>Purchase History</h3>
-                <p>View a complete history of all your past purchases.</p>
-            </div>
-        </div>
-    </main>
+<body class="bg-gray-50 font-inter">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <!-- Header -->
+        <header class="mb-6">
+            <h1 class="text-2xl sm:text-3xl font-semibold text-gray-900 text-center">BizConnect AI</h1>
+        </header>
 
+        <!-- Search & Profile Bar -->
+        <section class="bg-white rounded-2xl shadow-sm p-4 sm:p-5 mb-8">
+            <div class="flex items-end gap-4">
+                <!-- Search -->
+                <div class="relative flex-1">
+                    <!-- Location pill and controls above search -->
+                    <div class="mb-1 flex items-center gap-2 text-sm">
+                        <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-gray-100 text-xs text-gray-800">
+                            <i data-lucide="map-pin" class="w-4 h-4 text-gray-600"></i>
+                            <span id="locationText">Detecting…</span>
+                        </div>
+                        <button id="changeLocationBtn" class="inline-flex items-center gap-1 text-[13px] font-medium text-indigo-700 hover:text-indigo-800">
+                            <span>Select delivery location</span>
+                            <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                    <!-- Optional notice line -->
+                    <p id="locationNotice" class="text-xs text-orange-500 mb-2 hidden">We have put a temporary hold on new orders</p>
+                    <div class="relative h-12">
+                        <div class="absolute inset-0 rounded-xl bg-yellow-50"></div>
+                        <div class="relative h-full flex items-center">
+                            <input type="text" placeholder="Search grocery products" class="w-full bg-transparent rounded-xl pr-12 pl-4 h-full text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition"/>
+                            <i data-lucide="search" class="absolute right-4 w-5 h-5 text-gray-400"></i>
+                        </div>
+                    </div>
+                </div>
+                <!-- Right controls -->
+                <div class="flex items-end h-12 gap-3">
+                    <!-- Nearby shops dropdown button -->
+                    <div class="relative" id="nearbyMenuWrapper">
+                        <button class="p-2 rounded-full hover:bg-gray-100 transition" aria-label="Nearby shops" id="nearbyMenuButton">
+                            <i data-lucide="sliders-horizontal" class="w-5 h-5 text-gray-600"></i>
+                        </button>
+                        <div id="nearbyMenu" class="hidden absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden z-20">
+                            <div class="px-4 pt-3 pb-2 text-xs uppercase tracking-wide text-gray-500">Nearby local shops</div>
+                            <div id="nearbyList" class="max-h-80 overflow-auto">
+                                <!-- Items inserted by JS -->
+                            </div>
+                        </div>
+                    </div>
+                    <button class="relative p-2 rounded-full hover:bg-gray-100 transition" aria-label="Cart" id="cartButton">
+                        <i data-lucide="shopping-cart" class="w-5 h-5 text-gray-600"></i>
+                        <span id="cartCount" class="absolute -top-0.5 -right-0.5 inline-flex items-center justify-center w-4 h-4 text-[10px] font-semibold text-white bg-red-500 rounded-full">0</span>
+                    </button>
+                    <!-- Profile dropdown -->
+                    <div class="relative" id="profileMenuWrapper">
+                        <button id="profileMenuButton" class="flex items-center gap-1 p-0.5 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <img src="https://placehold.co/40x40" alt="Avatar" class="w-9 h-9 rounded-full object-cover border border-gray-200"/>
+                        </button>
+                        <!-- Menu -->
+                        <div id="profileMenu" class="hidden absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden z-20">
+                            <div class="py-1">
+                                <a href="#" data-open-orders class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition">
+                                    <i data-lucide="package" class="w-4 h-4 text-gray-500"></i>
+                                    <span>Orders</span>
+                                </a>
+                                <a href="#" data-open-fav class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition">
+                                    <i data-lucide="heart" class="w-4 h-4 text-gray-500"></i>
+                                    <span>Favourites</span>
+                                </a>
+                                <a href="#" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition">
+                                    <i data-lucide="badge-percent" class="w-4 h-4 text-gray-500"></i>
+                                    <span>Offers & rewards</span>
+                                </a>
+                                <a href="#" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition">
+                                    <i data-lucide="headphones" class="w-4 h-4 text-gray-500"></i>
+                                    <span>Customer care</span>
+                                </a>
+                            </div>
+                            <div class="border-t border-gray-100"></div>
+                            <button id="logoutBtn" class="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition">
+                                <i data-lucide="log-out" class="w-4 h-4"></i>
+                                <span>Logout</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Shop by Categories -->
+        <section class="mb-10">
+            <div class="flex items-baseline justify-between mb-3">
+                <h2 class="text-lg font-semibold text-gray-900">Shop by categories</h2>
+            </div>
+            <div class="flex gap-5 overflow-x-auto no-scrollbar py-2" id="categoriesRow">
+                <!-- Grocery categories -->
+                <button class="flex-none w-24 text-center js-category" data-category="all">
+                    <div class="mx-auto w-16 h-16 rounded-xl bg-white shadow-sm border border-gray-100 flex items-center justify-center hover:shadow-md transition">
+                        <img src="https://placehold.co/48?text=All" alt="All Categories" class="w-10 h-10 rounded-lg"/>
+                    </div>
+                    <p class="mt-2 text-xs text-gray-700">All</p>
+                </button>
+                <button class="flex-none w-24 text-center js-category" data-category="fruits-veg">
+                    <div class="mx-auto w-16 h-16 rounded-xl bg-white shadow-sm border border-gray-100 flex items-center justify-center hover:shadow-md transition">
+                        <img src="https://placehold.co/48" alt="Fruits & Vegetables" class="w-10 h-10 rounded-lg"/>
+                    </div>
+                    <p class="mt-2 text-xs text-gray-700">Fruits & Veg</p>
+                </button>
+                <button class="flex-none w-24 text-center js-category" data-category="dairy-eggs">
+                    <div class="mx-auto w-16 h-16 rounded-xl bg-white shadow-sm border border-gray-100 flex items-center justify-center hover:shadow-md transition">
+                        <img src="https://placehold.co/48" alt="Dairy & Eggs" class="w-10 h-10 rounded-lg"/>
+                    </div>
+                    <p class="mt-2 text-xs text-gray-700">Dairy & Eggs</p>
+                </button>
+                <button class="flex-none w-24 text-center js-category" data-category="bakery">
+                    <div class="mx-auto w-16 h-16 rounded-xl bg-white shadow-sm border border-gray-100 flex items-center justify-center hover:shadow-md transition">
+                        <img src="https://placehold.co/48" alt="Bakery" class="w-10 h-10 rounded-lg"/>
+                    </div>
+                    <p class="mt-2 text-xs text-gray-700">Bakery</p>
+                </button>
+                <button class="flex-none w-24 text-center js-category" data-category="snacks">
+                    <div class="mx-auto w-16 h-16 rounded-xl bg-white shadow-sm border border-gray-100 flex items-center justify-center hover:shadow-md transition">
+                        <img src="https://placehold.co/48" alt="Snacks" class="w-10 h-10 rounded-lg"/>
+                    </div>
+                    <p class="mt-2 text-xs text-gray-700">Snacks</p>
+                </button>
+                <button class="flex-none w-24 text-center js-category" data-category="beverages">
+                    <div class="mx-auto w-16 h-16 rounded-xl bg-white shadow-sm border border-gray-100 flex items-center justify-center hover:shadow-md transition">
+                        <img src="https://placehold.co/48" alt="Beverages" class="w-10 h-10 rounded-lg"/>
+                    </div>
+                    <p class="mt-2 text-xs text-gray-700">Beverages</p>
+                </button>
+                <button class="flex-none w-24 text-center js-category" data-category="breakfast">
+                    <div class="mx-auto w-16 h-16 rounded-xl bg-white shadow-sm border border-gray-100 flex items-center justify-center hover:shadow-md transition">
+                        <img src="https://placehold.co/48" alt="Breakfast & Instant" class="w-10 h-10 rounded-lg"/>
+                    </div>
+                    <p class="mt-2 text-xs text-gray-700">Breakfast</p>
+                </button>
+                <button class="flex-none w-24 text-center js-category" data-category="household">
+                    <div class="mx-auto w-16 h-16 rounded-xl bg-white shadow-sm border border-gray-100 flex items-center justify-center hover:shadow-md transition">
+                        <img src="https://placehold.co/48" alt="Household Essentials" class="w-10 h-10 rounded-lg"/>
+                    </div>
+                    <p class="mt-2 text-xs text-gray-700">Household</p>
+                </button>
+                <button class="flex-none w-24 text-center js-category" data-category="personal-care">
+                    <div class="mx-auto w-16 h-16 rounded-xl bg-white shadow-sm border border-gray-100 flex items-center justify-center hover:shadow-md transition">
+                        <img src="https://placehold.co/48" alt="Personal Care" class="w-10 h-10 rounded-lg"/>
+                    </div>
+                    <p class="mt-2 text-xs text-gray-700">Personal Care</p>
+                </button>
+        </div>
+        </section>
+
+        <!-- Moving Promo Carousel -->
+        <section class="mb-10">
+            <div class="flex items-center justify-between mb-3">
+                <h2 class="text-lg font-semibold text-gray-900">Today’s grocery highlights</h2>
+            </div>
+            <div class="relative overflow-hidden rounded-2xl bg-white border border-gray-100">
+                <!-- gradient edges -->
+                <div class="pointer-events-none absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-white"></div>
+                <div class="pointer-events-none absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-white"></div>
+                <div class="promo-track no-scrollbar flex gap-4 p-4 overflow-x-auto">
+                    <!-- duplicate groups allow seamless loop -->
+                    <div class="promo-group flex gap-4">
+                        <a class="promo-card" href="#">
+                            <img class="promo-img" src="https://placehold.co/640x240?text=Fresh+Produce+Sale" alt="Fresh produce">
+                            <div class="promo-body">Fresh Produce Sale</div>
+                        </a>
+                        <a class="promo-card" href="#">
+                            <img class="promo-img" src="https://placehold.co/640x240?text=Snacks+BOGO" alt="Snacks">
+                            <div class="promo-body">Snacks Buy 1 Get 1</div>
+                        </a>
+                        <a class="promo-card" href="#">
+                            <img class="promo-img" src="https://placehold.co/640x240?text=Dairy+Deals" alt="Dairy">
+                            <div class="promo-body">Dairy & Eggs Deals</div>
+                        </a>
+                        <a class="promo-card" href="#">
+                            <img class="promo-img" src="https://placehold.co/640x240?text=Beverage+Combos" alt="Beverages">
+                            <div class="promo-body">Beverage Combos</div>
+                        </a>
+                        <a class="promo-card" href="#">
+                            <img class="promo-img" src="https://placehold.co/640x240?text=Household+Essentials" alt="Household">
+                            <div class="promo-body">Household Essentials</div>
+                        </a>
+                    </div>
+                    <div class="promo-group flex gap-4" aria-hidden="true">
+                        <a class="promo-card" href="#">
+                            <img class="promo-img" src="https://placehold.co/640x240?text=Fresh+Produce+Sale" alt="">
+                            <div class="promo-body">Fresh Produce Sale</div>
+                        </a>
+                        <a class="promo-card" href="#">
+                            <img class="promo-img" src="https://placehold.co/640x240?text=Snacks+BOGO" alt="">
+                            <div class="promo-body">Snacks Buy 1 Get 1</div>
+                        </a>
+                        <a class="promo-card" href="#">
+                            <img class="promo-img" src="https://placehold.co/640x240?text=Dairy+Deals" alt="">
+                            <div class="promo-body">Dairy & Eggs Deals</div>
+                        </a>
+                        <a class="promo-card" href="#">
+                            <img class="promo-img" src="https://placehold.co/640x240?text=Beverage+Combos" alt="">
+                            <div class="promo-body">Beverage Combos</div>
+                        </a>
+                        <a class="promo-card" href="#">
+                            <img class="promo-img" src="https://placehold.co/640x240?text=Household+Essentials" alt="">
+                            <div class="promo-body">Household Essentials</div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recommended For You -->
+        <section class="mb-10">
+            <div class="flex items-center justify-between mb-3">
+                <h2 class="text-lg font-semibold text-gray-900">Recommended For You</h2>
+                <a href="#" class="text-sm text-blue-600 hover:text-blue-700">More</a>
+            </div>
+            <div id="recommendedGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"></div>
+        </section>
+
+        <!-- Best Deals -->
+        <section class="mb-10">
+            <div class="flex items-center justify-between mb-3">
+                <h2 class="text-lg font-semibold text-gray-900">Best Deals</h2>
+                <a href="#" class="text-sm text-blue-600 hover:text-blue-700">More</a>
+            </div>
+            <div id="dealsGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"></div>
+        </section>
+
+        <!-- Two-Column Layout -->
+        <section class="mb-12">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Left: Festival Exclusive Deals -->
+                <div class="bg-white rounded-2xl shadow-sm p-4 sm:p-5">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-base sm:text-lg font-semibold text-gray-900">Festival Exclusive Deals</h3>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-3 p-3 rounded-xl border border-gray-100 hover:shadow-sm transition">
+                            <img src="https://placehold.co/80x60" alt="Item" class="w-20 h-14 rounded-lg object-cover">
+                            <div>
+                                <p class="text-sm font-medium text-gray-800">Exclusive item</p>
+                                <p class="text-xs text-gray-500">Special price</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 p-3 rounded-xl border border-gray-100 hover:shadow-sm transition">
+                            <img src="https://placehold.co/80x60" alt="Item" class="w-20 h-14 rounded-lg object-cover">
+                            <div>
+                                <p class="text-sm font-medium text-gray-800">Exclusive item</p>
+                                <p class="text-xs text-gray-500">Special price</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 p-3 rounded-xl border border-gray-100 hover:shadow-sm transition">
+                            <img src="https://placehold.co/80x60" alt="Item" class="w-20 h-14 rounded-lg object-cover">
+                            <div>
+                                <p class="text-sm font-medium text-gray-800">Exclusive item</p>
+                                <p class="text-xs text-gray-500">Special price</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Trending Shops near you -->
+                <div class="bg-white rounded-2xl shadow-sm p-4 sm:p-5">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-base sm:text-lg font-semibold text-gray-900">Trending Shops near you</h3>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-3 p-3 rounded-xl border border-gray-100 hover:shadow-sm transition">
+                            <img src="https://placehold.co/80x60" alt="Shop" class="w-20 h-14 rounded-lg object-cover">
+                            <div>
+                                <p class="text-sm font-medium text-gray-800">Shop name</p>
+                                <p class="text-xs text-gray-500">1.2 km away</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 p-3 rounded-xl border border-gray-100 hover:shadow-sm transition">
+                            <img src="https://placehold.co/80x60" alt="Shop" class="w-20 h-14 rounded-lg object-cover">
+                            <div>
+                                <p class="text-sm font-medium text-gray-800">Shop name</p>
+                                <p class="text-xs text-gray-500">2.0 km away</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 p-3 rounded-xl border border-gray-100 hover:shadow-sm transition">
+                            <img src="https://placehold.co/80x60" alt="Shop" class="w-20 h-14 rounded-lg object-cover">
+                            <div>
+                                <p class="text-sm font-medium text-gray-800">Shop name</p>
+                                <p class="text-xs text-gray-500">2.7 km away</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="bg-white rounded-2xl shadow-sm px-6 py-6 text-center text-sm text-gray-500 mt-8 border-t border-gray-100">
+            <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between max-w-6xl mx-auto">
+                <div class="mb-3 md:mb-0 flex items-center justify-center gap-3">
+                    <span class="font-bold text-green-700 text-base">BizConnect-AI</span>
+                    <span class="hidden md:inline opacity-50">|</span> 
+                    <span class="text-xs opacity-80">Connecting businesses, smarter!</span>
+                </div>
+                <div class="flex flex-wrap items-center justify-center gap-5">
+                    <a href="#" class="hover:text-green-700 transition text-xs font-medium">About</a>
+                    <a href="#" class="hover:text-green-700 transition text-xs font-medium">Contact</a>
+                    <a href="#" class="hover:text-green-700 transition text-xs font-medium">Terms</a>
+                    <a href="#" class="hover:text-green-700 transition text-xs font-medium">Privacy</a>
+                </div>
+                <div class="flex items-center justify-center gap-2 mt-2 md:mt-0">
+                    <a href="#" aria-label="Instagram" class="group p-1.5 rounded-full hover:bg-gray-50 transition"><i data-lucide="instagram" class="w-4 h-4 text-gray-400 group-hover:text-pink-600"></i></a>
+                    <a href="#" aria-label="Twitter" class="group p-1.5 rounded-full hover:bg-gray-50 transition"><i data-lucide="twitter" class="w-4 h-4 text-gray-400 group-hover:text-sky-400"></i></a>
+                    <a href="#" aria-label="Facebook" class="group p-1.5 rounded-full hover:bg-gray-50 transition"><i data-lucide="facebook" class="w-4 h-4 text-gray-400 group-hover:text-blue-600"></i></a>
+                </div>
+            </div>
+            <div class="mt-4 text-xs text-gray-300">&copy; 2025 BizConnect-AI. All rights reserved.</div>
+        </footer>
+        </div>
+
+    <!-- App Scripts -->
     <script src="js/config.js"></script>
     <script src="js/storage.js"></script>
     <script src="js/api.js"></script>
     <script src="js/auth.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/favourites.js"></script>
+    <script src="js/orders.js"></script>
+    <script src="js/dashboard.js"></script>
     <script>
-        // Protect this page - only 'customer' role is allowed
         Auth.protectPage(['customer']);
-        
-        // Personalize the page
-        const user = Auth.getCurrentUser();
-        if (user) {
-            document.getElementById('userName').textContent = `Welcome, ${user.name}`;
-        }
     </script>
+
+    <!-- Cart Drawer -->
+    <div id="cartDrawer" class="fixed inset-0 z-40 hidden">
+        <div id="cartBackdrop" class="absolute inset-0 bg-black/40 opacity-0 transition-opacity"></div>
+        <aside class="absolute right-0 top-0 h-full w-full sm:w-[380px] bg-white shadow-xl translate-x-full transition-transform">
+            <div class="h-full flex flex-col">
+                <div class="flex items-center justify-between p-4 border-b border-gray-100">
+                    <h3 class="text-lg font-semibold text-gray-900">Your Cart</h3>
+                    <button id="cartClose" class="p-2 rounded-full hover:bg-gray-100"><i data-lucide="x"></i></button>
+                </div>
+                <div id="cartItems" class="flex-1 overflow-auto p-4 space-y-3"></div>
+                <div class="border-t border-gray-100 p-4">
+                    <div class="flex items-center justify-between mb-3 text-sm">
+                        <span class="text-gray-600">Subtotal</span>
+                        <span id="cartSubtotal" class="font-semibold text-gray-900">₹0</span>
+                    </div>
+                    <button id="checkoutBtn" class="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2.5 rounded-full transition">Checkout</button>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Favourites Drawer -->
+    <div id="favDrawer" class="fixed inset-0 z-40 hidden">
+        <div id="favBackdrop" class="absolute inset-0 bg-black/40 opacity-0 transition-opacity"></div>
+        <aside class="absolute right-0 top-0 h-full w-full sm:w-[380px] bg-white shadow-xl translate-x-full transition-transform">
+            <div class="h-full flex flex-col">
+                <div class="flex items-center justify-between p-4 border-b border-gray-100">
+                    <h3 class="text-lg font-semibold text-gray-900">Favourites</h3>
+                    <button id="favClose" class="p-2 rounded-full hover:bg-gray-100"><i data-lucide="x"></i></button>
+                </div>
+                <div id="favItems" class="flex-1 overflow-auto p-4 space-y-3"></div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Orders Drawer -->
+    <div id="ordersDrawer" class="fixed inset-0 z-40 hidden">
+        <div id="ordersBackdrop" class="absolute inset-0 bg-black/40 opacity-0 transition-opacity"></div>
+        <aside class="absolute right-0 top-0 h-full w-full sm:w-[420px] bg-white shadow-xl translate-x-full transition-transform">
+            <div class="h-full flex flex-col">
+                <div class="flex items-center justify-between p-4 border-b border-gray-100">
+                    <h3 class="text-lg font-semibold text-gray-900">Your Orders</h3>
+                    <button id="ordersClose" class="p-2 rounded-full hover:bg-gray-100"><i data-lucide="x"></i></button>
+                </div>
+                <div id="ordersList" class="flex-1 overflow-auto p-4 space-y-3"></div>
+            </div>
+        </aside>
+    </div>
 </body>
 </html>

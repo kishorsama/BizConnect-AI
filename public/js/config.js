@@ -1,7 +1,7 @@
 // js/config.js
 
 const API_CONFIG = {
-  baseURL: 'https://bizconnect-ai.onrender.com/api', // Replace with your actual backend URL
+  baseURL: '/api', // same-origin API base to avoid CORS issues
   timeout: 10000,
   endpoints: {
     login: '/auth/login',
