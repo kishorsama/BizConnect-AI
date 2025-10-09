@@ -1,0 +1,13 @@
+/* Invoices page specific styles */
+.table-wrap { overflow:auto; }
+.chip { display:inline-block; padding:2px 9px; border-radius:999px; font-size:13px; font-weight: 500; }
+.chip-paid { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+.chip-unpaid { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+.action-btn { padding:5px 12px; border-radius:7px; background:#f1f5f9; margin-right:5px; border:none; color:#0f172a; font-weight:600; cursor:pointer; transition: background .14s; }
+.action-btn:hover { background: #bae6fd; }
+@media (max-width: 640px) { .table thead { display:none; } .table tr { display:block; margin-bottom:18px; border-bottom:2px solid #eee; } .table td { display:block; padding:12px 6px; }}
+
+/* Invoice detail modal reuses item-dialog styles */
+.item-dialog { position: fixed; inset: 0; background: rgba(2,6,23,0.45); display: flex; align-items: center; justify-content: center; z-index:500; }
+.item-dialog[hidden] { display:none!important; }
+.item-dialog__card { width: 100%; max-width: 540px; }

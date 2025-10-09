@@ -3,49 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
+    <title>Admin Dashboard - BizConnect</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/admin-dashboard.css">
 </head>
 <body>
-    <nav class="navbar">
-        <h2>Admin Dashboard</h2>
-        <div class="user-info">
-            <span id="userName"></span>
-            <button onclick="Auth.logout()" class="btn-logout">Logout</button>
+    <div class="admin-layout">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="admin-brand">
+                <h2>🔧 Admin Panel</h2>
+            </div>
+            <nav class="admin-nav">
+                <a href="#" class="active"><span>👥</span>Vendor Approval</a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <!-- Top Bar -->
+            <div class="admin-topbar">
+                <div class="topbar-left">
+                    <h1>Vendor Management</h1>
+                    <p>Review and approve vendor applications</p>
+                </div>
+            <div class="topbar-right">
+                <div class="notification-bell" id="notificationBell">
+                    <span class="bell-icon">🔔</span>
+                    <span class="notification-count" id="notificationCount">12</span>
+                </div>
+                <span id="adminUserName" class="admin-user"></span>
+                <button onclick="Auth.logout()" class="admin-logout-btn">Logout</button>
+            </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="admin-stats">
+                <div class="stat-card">
+                    <div class="stat-icon">⏳</div>
+                    <div class="stat-content">
+                        <div class="stat-number" id="pendingCount">12</div>
+                        <div class="stat-label">Pending Approval</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-content">
+                        <div class="stat-number" id="approvedCount">45</div>
+                        <div class="stat-label">Approved Today</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">❌</div>
+                    <div class="stat-content">
+                        <div class="stat-number" id="rejectedCount">3</div>
+                        <div class="stat-label">Rejected Today</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📈</div>
+                    <div class="stat-content">
+                        <div class="stat-number" id="totalVendors">156</div>
+                        <div class="stat-label">Total Vendors</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vendor Applications Table -->
+            <div class="admin-content">
+                <div class="content-header">
+                    <h2>Pending Vendor Applications</h2>
+                    <div class="filter-options">
+                        <select id="statusFilter">
+                            <option value="all">All Applications</option>
+                            <option value="pending">Pending</option>
+                            <option value="approved">Approved</option>
+                            <option value="rejected">Rejected</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="vendor-table-container">
+                    <table class="vendor-table" id="vendorTable">
+                        <thead>
+                            <tr>
+                                <th>Vendor Info</th>
+                                <th>Business Details</th>
+                                <th>Documents</th>
+                                <th>Status</th>
+                                <th>Applied Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="vendorTableBody">
+                            <!-- Dynamic content will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Vendor Detail Modal -->
+    <div id="vendorDetailModal" class="admin-modal" hidden>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Vendor Application Details</h3>
+                <button id="closeModal" class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body" id="vendorDetailContent">
+                <!-- Dynamic content -->
+            </div>
+            <div class="modal-footer">
+                <button id="closeModalBtn" class="btn-close">Close</button>
+            </div>
         </div>
-    </nav>
-    
-    <main class="dashboard-content">
-        <h1>Platform Governance</h1>
-        <div class="dashboard-grid">
-            <div class="card">
-                <h3>Vendor Approval</h3>
-                <p>Review and manage new vendor applications.</p>
-            </div>
-            <div class="card">
-                <h3>Fraud Detection</h3>
-                <p>Monitor transactions for suspicious activity.</p>
-            </div>
-            <div class="card">
-                <h3>Dispute Resolution</h3>
-                <p>Mediate and resolve disputes between users.</p>
-            </div>
-        </div>
-    </main>
+    </div>
 
     <script src="js/config.js"></script>
     <script src="js/storage.js"></script>
     <script src="js/api.js"></script>
     <script src="js/auth.js"></script>
-    <script>
-        // Protect this page - only 'admin' role is allowed
-        Auth.protectPage(['admin']);
-        
-        // Personalize the page
-        const user = Auth.getCurrentUser();
-        if (user) {
-            document.getElementById('userName').textContent = `Welcome, ${user.name}`;
-        }
-    </script>
+    <script src="js/admin-dashboard.js"></script>
 </body>
 </html>

@@ -5,48 +5,261 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vendor Dashboard</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/vendor-dashboard.css">
 </head>
 <body>
-    <nav class="navbar">
-        <h2>vendor Dashboard</h2>
-        <div class="user-info">
-            <span id="userName"></span>
-            <button onclick="Auth.logout()" class="btn-logout">Logout</button>
+    <div class="vd-layout">
+        <aside class="vd-sidebar">
+            <div class="vd-brand">
+                <img src="img/landing-page-image.jpg" alt="BizConnect" style="width:28px;height:28px;border-radius:6px;object-fit:cover;">
+                <span>BizConnect • Vendor</span>
         </div>
+            <nav class="vd-nav">
+                <a class="active" href="#"><span>🏠</span>Dashboard</a>
+                <a href="items.html"><span>📦</span>Items</a>
+                <a href="invoices.html"><span>🧮</span>Invoices</a>
+                <a href="reports.html"><span>📈</span>Reports</a>
     </nav>
-    
-    <main class="dashboard-content">
-        <h1>Shop and Track Your Orders</h1>
-        <div class="dashboard-grid">
-            <div class="card">
-                <h3>Browse & Compare</h3>
-                <p>Discover products from all vendors in the marketplace.</p>
+        </aside>
+
+        <section class="vd-main">
+            <div class="vd-topbar">
+                <div class="muted" id="shopAddress">123 Market Lane, Main City</div>
+                <div style="text-align:center;flex:1;">
+                    <h2 style="margin:0;font-size:20px;font-weight:700;color:#0f766e;" id="shopName">BizConnect Demo Shop</h2>
+                </div>
+                <div class="user-info" style="position:relative;display:flex;align-items:center;gap:10px;">
+                  <span id="userName" class="muted"></span>
+                  <button id="profileMenuButton" style="background:none;border:none;outline:none;padding:0 8px;cursor:pointer;">
+                    <span style="display:inline-block;border-radius:50%;background:#bae6fd;width:35px;height:35px;display:flex;align-items:center;justify-content:center;font-size:20px;">👤</span>
+                  </button>
+                  <div id="profileMenu" class="vd-card" style="position:absolute;right:0;top:45px;width:160px;padding:0;display:none;z-index:50;">
+                    <button id="profileInfoBtn" class="primary-btn" style="width:100%;padding:8px 14px 8px 14px;border-radius:13px 13px 0 0;background:#f1f5f9;color:#0f172a;font-weight:600;">Profile Info</button>
+                    <button id="logoutBtn" class="primary-btn" style="width:100%;padding:8px 14px;border-radius: 0 0 13px 13px;">Logout</button>
+                  </div>
+                </div>
+                <div id="profileInfoModal" class="profile-modal" hidden>
+                  <div class="profile-modal-card vd-card">
+                    <h3 style="margin-bottom:14px;">Profile Info</h3>
+                    <form id="profileInfoForm" autocomplete="off">
+                      <div style="margin-bottom:7px"><strong>Shop Name:</strong><br>
+                        <input type="text" id="piShopNameIn" class="nice-input" style="width:100%;margin-top:1.5px;">
+                      </div>
+                      <div style="margin-bottom:7px"><strong>Vendor Name:</strong><br>
+                        <input type="text" id="piVendorNameIn" class="nice-input" style="width:100%;margin-top:1.5px;">
+                      </div>
+                      <div style="margin-bottom:7px"><strong>Email:</strong><br>
+                        <input type="email" id="piEmailIn" class="nice-input" style="width:100%;margin-top:1.5px;">
+                      </div>
+                      <div style="margin-bottom:7px"><strong>Phone:</strong><br>
+                        <input type="text" id="piPhoneIn" class="nice-input" style="width:100%;margin-top:1.5px;">
+                      </div>
+                      <div><strong>Address:</strong><br>
+                        <textarea id="piAddressIn" class="nice-input" style="width:100%;min-height:55px;margin-top:1.5px;"></textarea>
+                      </div>
+                      <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:18px;">
+                        <button type="submit" id="profileInfoSave" class="primary-btn" style="padding:8px 28px;">Save</button>
+                        <button type="button" id="profileInfoClose" class="primary-btn" style="padding:8px 21px;background:#e5e7eb;color:#111827;">Close</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
             </div>
-            <div class="card">
-                <h3>Order Tracking</h3>
-                <p>Check the real-time status of your current orders.</p>
+
+            <div class="vd-container">
+                <!-- Welcome Section -->
+                <div class="welcome-section">
+                    <h1 style="margin:0;font-size:32px;font-weight:800;color:#0f172a;margin-bottom:8px;">Welcome back!</h1>
+                    <p style="margin:0;color:#64748b;font-size:16px;">Here's what's happening with your business today</p>
+                </div>
+
+                <!-- Key Metrics -->
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-icon">📦</div>
+                        <div class="metric-content">
+                            <div class="metric-number" id="kpi-packed">228</div>
+                            <div class="metric-label">To be Packed</div>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">🚚</div>
+                        <div class="metric-content">
+                            <div class="metric-number" id="kpi-shipped">6</div>
+                            <div class="metric-label">To be Shipped</div>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">✅</div>
+                        <div class="metric-content">
+                            <div class="metric-number" id="kpi-delivered">10</div>
+                            <div class="metric-label">To be Delivered</div>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">🧾</div>
+                        <div class="metric-content">
+                            <div class="metric-number" id="kpi-invoiced">474</div>
+                            <div class="metric-label">To be Invoiced</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Content Grid -->
+                <div class="main-grid">
+                    <!-- Left Column -->
+                    <div class="left-column">
+                        <!-- Inventory Overview -->
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <h3>📊 Inventory Overview</h3>
+                            </div>
+                            <div class="inventory-stats">
+                                <div class="stat-item">
+                                    <span class="stat-label">Total Items</span>
+                                    <span class="stat-value">190</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label">Low Stock</span>
+                                    <span class="stat-value warning">3</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label">Active Items</span>
+                                    <span class="stat-value success">71%</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label">Item Groups</span>
+                                    <span class="stat-value">39</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sales Orders -->
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <h3>📋 Sales Orders</h3>
+                            </div>
+                            <div class="sales-channel">
+                                <div class="channel-header">
+                                    <span>Direct Sales</span>
+                                </div>
+                                <div class="channel-stats">
+                                    <div class="channel-item">
+                                        <span>Draft</span>
+                                        <span class="badge">0</span>
+                                    </div>
+                                    <div class="channel-item">
+                                        <span>Confirmed</span>
+                                        <span class="badge primary">50</span>
+                                    </div>
+                                    <div class="channel-item">
+                                        <span>Packed</span>
+                                        <span class="badge">0</span>
+                                    </div>
+                                    <div class="channel-item">
+                                        <span>Shipped</span>
+                                        <span class="badge">0</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column -->
+                    <div class="right-column">
+                        <!-- Top Products -->
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <h3>🏆 Top Products</h3>
+                            </div>
+                            <div class="top-products">
+                                <div class="product-item">
+                                    <div class="product-image">
+                                        <img src="https://placehold.co/48x48" alt="Product">
+                                    </div>
+                                    <div class="product-info">
+                                        <div class="product-name">Hanswooly Cotton</div>
+                                        <div class="product-sales">171 pcs sold</div>
+                                    </div>
+                                </div>
+                                <div class="product-item">
+                                    <div class="product-image">
+                                        <img src="https://placehold.co/48x48" alt="Product">
+                                    </div>
+                                    <div class="product-info">
+                                        <div class="product-name">Cutiepie Rompers</div>
+                                        <div class="product-sales">45 sets sold</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Quick Actions -->
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <h3>⚡ Quick Actions</h3>
+                            </div>
+                            <div class="quick-actions">
+                                <a href="items.html" class="action-btn">
+                                    <span class="action-icon">📦</span>
+                                    <span>Manage Items</span>
+                                </a>
+                                <a href="invoices.html" class="action-btn">
+                                    <span class="action-icon">🧾</span>
+                                    <span>View Invoices</span>
+                                </a>
+                                <a href="reports.html" class="action-btn">
+                                    <span class="action-icon">📈</span>
+                                    <span>View Reports</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="card">
-                <h3>Purchase History</h3>
-                <p>View a complete history of all your past purchases.</p>
+        </section>
+
+        <!-- Footer -->
+        <footer class="vendor-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>BizConnect</h4>
+                <p>Empowering vendors with smart business solutions</p>
+                <div class="social-links">
+                    <a href="#" aria-label="Facebook">📘</a>
+                    <a href="#" aria-label="Twitter">🐦</a>
+                    <a href="#" aria-label="LinkedIn">💼</a>
+                    <a href="#" aria-label="Instagram">📷</a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h5>Quick Links</h5>
+                <ul>
+                    <li><a href="vendor-dashboard.html">Dashboard</a></li>
+                    <li><a href="items.html">Items</a></li>
+                    <li><a href="invoices.html">Invoices</a></li>
+                    <li><a href="reports.html">Reports</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h5>Support</h5>
+                <ul>
+                    <li><a href="#">Contact Us</a></li>
+                </ul>
             </div>
         </div>
-    </main>
-
-    <script src="js/config.js"></script>
+        <div class="footer-bottom">
+            <p>&copy; 2024 BizConnect. All rights reserved.</p>
+            <p>Made with ❤️ for Indian businesses</p>
+        </div>
+        </footer>
+    </div>
     <script src="js/storage.js"></script>
     <script src="js/api.js"></script>
     <script src="js/auth.js"></script>
-    <script>
-        // Protect this page - only 'customer' role is allowed
-        Auth.protectPage(['vendor']);
-        
-        // Personalize the page
-        const user = Auth.getCurrentUser();
-        if (user) {
-            document.getElementById('userName').textContent = `Welcome, ${user.name}`;
-        }
-    </script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/vendor-dashboard.js"></script>
 </body>
 </html>
 
