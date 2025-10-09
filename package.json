@@ -24,6 +24,8 @@
   "homepage": "https://github.com/Soham-26/BizConnect-AI#readme",
   "dependencies": {
     "body-parser": "^2.2.0",
+    "dotenv": "^17.2.3",
+    "env": "^0.0.2",
     "express": "^5.1.0",
     "mongoose": "^8.19.1"
   }

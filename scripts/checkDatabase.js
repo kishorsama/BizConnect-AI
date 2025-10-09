@@ -1,4 +1,5 @@
 // scripts/checkDatabase.js
+require('dotenv').config();
 const mongoose = require('mongoose');
 
 // User Schema (same as in server.js)
@@ -14,7 +15,7 @@ const userSchema = new mongoose.Schema({
 const User = mongoose.model('User', userSchema);
 
 // MongoDB Connection
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/bizconnect-ai';
+const MONGODB_URI = process.env.MONGODB_URI;
 
 async function checkDatabase() {
   try {

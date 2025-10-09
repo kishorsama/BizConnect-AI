@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require('express')
 const app = express()
 const port = 3000;
@@ -11,7 +13,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // MongoDB Connection
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/bizconnect-ai';
+const MONGODB_URI = process.env.MONGODB_URI; 
 
 mongoose.connect(MONGODB_URI, {
   useNewUrlParser: true,
@@ -60,10 +62,7 @@ const userSchema = new mongoose.Schema({
 });
 
 // Update the updatedAt field before saving
-userSchema.pre('save', function(next) {
-  this.updatedAt = Date.now();
-  next();
-});
+
 
 const User = mongoose.model('User', userSchema);
 
