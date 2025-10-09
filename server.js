@@ -13,12 +13,15 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // MongoDB Connection
-const MONGODB_URI = process.env.MONGODB_URI; 
+const MONGODB_URI = process.env.MONGODB_URI;
 
-mongoose.connect(MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
+if (!MONGODB_URI) {
+  console.error('❌ MONGODB_URI environment variable is required but not set');
+  console.error('Please set MONGODB_URI in your environment variables');
+  process.exit(1);
+}
+
+mongoose.connect(MONGODB_URI)
 .then(() => {
   console.log('Connected to MongoDB successfully');
 })
