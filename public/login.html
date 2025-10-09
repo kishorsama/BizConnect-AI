@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Marketplace</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- CSS Variables for Easy Theming --- */
+        :root {
+            --primary-color: #007bff;
+            --primary-hover: #0056b3;
+            --text-dark: #333;
+            --text-light: #fff;
+            --error-color: #dc3545;
+            --card-bg: #ffffff;
+            --shadow-subtle: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        /* --- Global Reset & Typography --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%); /* Soft, appealing background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--text-dark);
+            padding: 20px;
+        }
+
+        /* --- Login Container & Card --- */
+        .login-container {
+            width: 100%;
+            max-width: 400px; /* Standard login form width */
+        }
+
+        .login-card {
+            background-color: var(--card-bg);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-subtle);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .login-card:hover {
+            transform: translateY(-5px); /* Subtle lift effect */
+        }
+
+        .login-card h1 {
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        /* --- Form Groups & Inputs --- */
+        .form-group {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .form-group input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25); /* Focus ring */
+            outline: none;
+        }
+
+        /* --- Buttons --- */
+        .btn-primary {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary-color);
+            color: var(--text-light);
+            border: none;
+            border-radius: 6px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            margin-top: 10px;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn-primary:disabled {
+            background-color: #a0c3e7; /* Lighter shade when disabled */
+            cursor: not-allowed;
+        }
+
+        /* --- Messages & Spinner --- */
+        .error-message {
+            background-color: #f8d7da;
+            color: var(--error-color);
+            border: 1px solid var(--error-color);
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            text-align: left;
+        }
+        
+        .loading-spinner {
+            padding: 10px;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        /* --- Footer Link --- */
+        .register-link p {
+            margin-top: 25px;
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+        
+        .register-link a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .register-link a:hover {
+            color: var(--primary-hover);
+            text-decoration: underline;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <h1>Sign in to Marketplace</h1>
+            
+            <form id="loginForm">
+                <div id="errorMessage" class="error-message" style="display: none;"></div>
+                
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" required placeholder="name@example.com">
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required placeholder="••••••••">
+                </div>
+                
+                <button type="submit" id="loginBtn" class="btn-primary">Sign In</button>
+                
+                <div class="loading-spinner" id="loadingSpinner" style="display: none;">Loading...</div>
+            </form>
+
+            <div class="register-link">
+                <p>
+                    Don't have an account? <a href="register.html">Register here</a>
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    
+    <script>
+        // Redirect if already logged in
+        if (Auth.isAuthenticated()) {
+            Auth.redirectToDashboard();
+        }
+        
+        // Handle form submission
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('errorMessage');
+            const loginBtn = document.getElementById('loginBtn');
+            const spinner = document.getElementById('loadingSpinner');
+            
+            errorDiv.style.display = 'none';
+            
+            if (!email || !password) {
+                errorDiv.textContent = 'Please fill in all fields.';
+                errorDiv.style.display = 'block';
+                return;
+            }
+            
+            try {
+                // Disable button and show spinner
+                loginBtn.disabled = true;
+                spinner.style.display = 'block';
+                
+                // Simulate an API call (Replace with your actual Auth.login)
+                // await new Promise(resolve => setTimeout(resolve, 1500)); 
+                await Auth.login(email, password);
+                
+                // On success, redirect to the user's specific dashboard
+                Auth.redirectToDashboard();
+                
+            } catch (error) {
+                errorDiv.textContent = error.message || 'Login failed. Please check your credentials.';
+                errorDiv.style.display = 'block';
+            } finally {
+                // Re-enable button and hide spinner
+                loginBtn.disabled = false;
+                spinner.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
