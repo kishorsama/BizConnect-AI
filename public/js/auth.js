@@ -55,7 +55,7 @@ const Auth = {
         break;
       default:
         // Fallback dashboard
-        window.location.href = '/dashboard.html';
+        window.location.href = '/login.html';
     }
   },
   
