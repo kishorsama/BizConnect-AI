@@ -94,6 +94,110 @@
     });
   }
 
+<<<<<<< HEAD
+  // Add Product Modal functionality
+  const addProductBtn = document.getElementById('add-product-btn');
+  const addProductModal = document.getElementById('add-product-modal');
+  const closeAddProductModal = document.getElementById('close-add-product-modal');
+  const cancelAddProduct = document.getElementById('cancel-add-product');
+  const addProductForm = document.getElementById('add-product-form');
+
+  // Open Add Product Modal
+  if (addProductBtn && addProductModal) {
+    addProductBtn.addEventListener('click', function() {
+      addProductModal.removeAttribute('hidden');
+    });
+  }
+
+  // Close Add Product Modal
+  function closeModal() {
+    if (addProductModal) {
+      addProductModal.setAttribute('hidden', '');
+      if (addProductForm) {
+        addProductForm.reset();
+      }
+    }
+  }
+
+  if (closeAddProductModal) {
+    closeAddProductModal.addEventListener('click', function(e) {
+      e.preventDefault();
+      closeModal();
+    });
+  }
+
+  if (cancelAddProduct) {
+    cancelAddProduct.addEventListener('click', function(e) {
+      e.preventDefault();
+      closeModal();
+    });
+  }
+
+  // Close modal when clicking outside
+  if (addProductModal) {
+    addProductModal.addEventListener('click', function(e) {
+      if (e.target === addProductModal) {
+        closeModal();
+      }
+    });
+  }
+
+  // Close modal with Escape key
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && addProductModal && !addProductModal.hasAttribute('hidden')) {
+      closeModal();
+    }
+  });
+
+  // Handle Add Product Form Submission
+  if (addProductForm) {
+    addProductForm.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const formData = new FormData(addProductForm);
+      const productData = {
+        name: formData.get('name'),
+        description: formData.get('description'),
+        price: parseFloat(formData.get('price')),
+        stock: parseInt(formData.get('stock')),
+        category: formData.get('category'),
+        image: formData.get('image') || '',
+        isActive: formData.get('isActive') === 'on'
+      };
+
+      try {
+        // Show loading state
+        const submitBtn = addProductForm.querySelector('button[type="submit"]');
+        const originalText = submitBtn.textContent;
+        submitBtn.textContent = 'Adding...';
+        submitBtn.disabled = true;
+
+        // Add product via API
+        const newProduct = await Products.addProduct(productData);
+        
+        // Show success message
+        Products.showMessage('Product added successfully!', 'success');
+        
+        // Close modal and reset form
+        closeModal();
+        
+        // Reload vendor products
+        await Products.loadProductsForVendor();
+        
+      } catch (error) {
+        console.error('Error adding product:', error);
+        Products.showMessage(error.message || 'Failed to add product', 'error');
+      } finally {
+        // Reset button state
+        const submitBtn = addProductForm.querySelector('button[type="submit"]');
+        submitBtn.textContent = 'Add Product';
+        submitBtn.disabled = false;
+      }
+    });
+  }
+
+=======
+>>>>>>> 51b6fc2876e28e250d13b5c6fc7f4a55df584577
   // Menu removed per request; no dropdown logic needed
 })();
 

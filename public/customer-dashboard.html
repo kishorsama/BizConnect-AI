@@ -14,6 +14,11 @@
     <link rel="stylesheet" href="css/dashboard.css">
     <!-- Existing styles (if any) -->
     <link rel="stylesheet" href="css/style.css">
+<<<<<<< HEAD
+    <!-- Product and Cart styles -->
+    <link rel="stylesheet" href="css/products.css">
+=======
+>>>>>>> 51b6fc2876e28e250d13b5c6fc7f4a55df584577
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>
@@ -242,6 +247,63 @@
             </div>
         </section>
 
+<<<<<<< HEAD
+        <!-- Products Section -->
+        <section class="mb-10">
+            <div class="flex items-center justify-between mb-3">
+                <h2 class="text-lg font-semibold text-gray-900">Available Products</h2>
+                <div class="flex items-center gap-2">
+                    <span id="cart-count" class="text-sm text-gray-600">0 items in cart</span>
+                    <span id="cart-total" class="text-sm font-semibold text-green-600">₹0</span>
+                </div>
+            </div>
+            <div id="products-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                <!-- Products will be loaded here -->
+            </div>
+        </section>
+
+        <!-- Cart Section -->
+        <section class="mb-10" id="cart-section" style="display: none;">
+            <div class="bg-white rounded-2xl shadow-sm p-4 sm:p-5">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-lg font-semibold text-gray-900">Your Cart</h2>
+                    <button id="checkout-btn-main" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition">
+                        Proceed to Checkout
+                    </button>
+                </div>
+                <div id="cart-items" class="space-y-3">
+                    <!-- Cart items will be loaded here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Checkout Form -->
+        <section class="mb-10" id="checkout-form" style="display: none;">
+            <div class="bg-white rounded-2xl shadow-sm p-4 sm:p-5">
+                <h2 class="text-lg font-semibold text-gray-900 mb-4">Checkout</h2>
+                <div class="space-y-4">
+                    <div>
+                        <label for="shipping-address" class="block text-sm font-medium text-gray-700 mb-2">
+                            Shipping Address
+                        </label>
+                        <textarea 
+                            id="shipping-address" 
+                            rows="3" 
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Enter your complete shipping address"
+                        ></textarea>
+                    </div>
+                    <div class="flex gap-3">
+                        <button id="process-checkout-btn" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition">
+                            Place Order
+                        </button>
+                        <button onclick="Cart.hideCheckoutForm()" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-lg transition">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+=======
         <!-- Recommended For You -->
         <section class="mb-10">
             <div class="flex items-center justify-between mb-3">
@@ -258,6 +320,7 @@
                 <a href="#" class="text-sm text-blue-600 hover:text-blue-700">More</a>
             </div>
             <div id="dealsGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"></div>
+>>>>>>> 51b6fc2876e28e250d13b5c6fc7f4a55df584577
         </section>
 
         <!-- Two-Column Layout -->
@@ -354,12 +417,32 @@
     <script src="js/storage.js"></script>
     <script src="js/api.js"></script>
     <script src="js/auth.js"></script>
+<<<<<<< HEAD
+    <script src="js/products.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/favourites.js"></script>
+    <script src="js/orders.js"></script>
+    <script src="js/dashboard-functionality.js"></script>
+    <script>
+        Auth.protectPage(['customer']);
+        
+        // Load products when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('Customer dashboard loaded');
+            console.log('Auth status:', Auth.isAuthenticated());
+            console.log('Current user:', Auth.getCurrentUser());
+            console.log('Token:', Storage.getToken() ? 'Present' : 'Missing');
+            
+            Products.loadProductsForCustomer();
+        });
+=======
     <script src="js/cart.js"></script>
     <script src="js/favourites.js"></script>
     <script src="js/orders.js"></script>
     <script src="js/dashboard.js"></script>
     <script>
         Auth.protectPage(['customer']);
+>>>>>>> 51b6fc2876e28e250d13b5c6fc7f4a55df584577
     </script>
 
     <!-- Cart Drawer -->

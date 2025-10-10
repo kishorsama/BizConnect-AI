@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Add Product</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
+        .success { color: green; }
+        .error { color: red; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Test Add Product Functionality</h1>
+    
+    <div class="test-section">
+        <h2>Test Vendor Login</h2>
+        <button onclick="testVendorLogin()">Login as Vendor</button>
+        <div id="login-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test Add Product API</h2>
+        <button onclick="testAddProduct()">Test Add Product</button>
+        <div id="add-product-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test Get Vendor Products</h2>
+        <button onclick="testGetVendorProducts()">Get Vendor Products</button>
+        <div id="vendor-products-result"></div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/products.js"></script>
+    
+    <script>
+        async function testVendorLogin() {
+            const resultDiv = document.getElementById('login-result');
+            try {
+                const response = await API.post('/auth/login', {
+                    email: 'rajesh@grocery.com',
+                    password: 'vendor123'
+                });
+                
+                Storage.setToken(response.token);
+                Storage.setUser(response.user);
+                
+                resultDiv.innerHTML = '<div class="success">✅ Login successful! User: ' + response.user.name + '</div>';
+            } catch (error) {
+                resultDiv.innerHTML = '<div class="error">❌ Login failed: ' + error.message + '</div>';
+            }
+        }
+        
+        async function testAddProduct() {
+            const resultDiv = document.getElementById('add-product-result');
+            try {
+                const productData = {
+                    name: 'Test Product',
+                    description: 'This is a test product',
+                    price: 99.99,
+                    stock: 50,
+                    category: 'Electronics',
+                    image: 'https://via.placeholder.com/300x300',
+                    isActive: true
+                };
+                
+                const newProduct = await Products.addProduct(productData);
+                resultDiv.innerHTML = '<div class="success">✅ Product added successfully! ID: ' + newProduct._id + '</div>';
+            } catch (error) {
+                resultDiv.innerHTML = '<div class="error">❌ Add product failed: ' + error.message + '</div>';
+            }
+        }
+        
+        async function testGetVendorProducts() {
+            const resultDiv = document.getElementById('vendor-products-result');
+            try {
+                const products = await Products.getVendorProducts();
+                resultDiv.innerHTML = '<div class="success">✅ Found ' + products.length + ' vendor products</div>';
+                console.log('Vendor products:', products);
+            } catch (error) {
+                resultDiv.innerHTML = '<div class="error">❌ Get vendor products failed: ' + error.message + '</div>';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Dashboard Debug</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .debug-section { margin: 20px 0; padding: 20px; border: 1px solid #ccc; }
+        button { padding: 10px 20px; margin: 5px; }
+        .error { color: red; }
+        .success { color: green; }
+        .product-card { border: 1px solid #ddd; padding: 10px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h1>Customer Dashboard Debug</h1>
+    
+    <div class="debug-section">
+        <h2>Authentication Status</h2>
+        <div id="auth-status"></div>
+        <button onclick="checkAuth()">Check Auth</button>
+        <button onclick="testAddToCart()">Test Add to Cart</button>
+    </div>
+
+    <div class="debug-section">
+        <h2>Products</h2>
+        <button onclick="loadProducts()">Load Products</button>
+        <div id="products-display"></div>
+    </div>
+
+    <div class="debug-section">
+        <h2>Cart</h2>
+        <button onclick="loadCart()">Load Cart</button>
+        <div id="cart-display"></div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/products.js"></script>
+    <script src="js/cart.js"></script>
+
+    <script>
+        function checkAuth() {
+            const token = Storage.getToken();
+            const user = Storage.getUser();
+            const isAuth = Auth.isAuthenticated();
+            
+            document.getElementById('auth-status').innerHTML = `
+                <p><strong>Token:</strong> ${token ? 'Present' : 'Missing'}</p>
+                <p><strong>User:</strong> ${user ? user.name : 'None'}</p>
+                <p><strong>Is Authenticated:</strong> ${isAuth ? 'Yes' : 'No'}</p>
+                <p><strong>Token Value:</strong> ${token ? token.substring(0, 20) + '...' : 'None'}</p>
+            `;
+        }
+
+        async function loadProducts() {
+            try {
+                const products = await Products.getAllProducts();
+                document.getElementById('products-display').innerHTML = 
+                    products.slice(0, 3).map(product => `
+                        <div class="product-card">
+                            <h3>${product.name}</h3>
+                            <p>Price: ₹${product.price}</p>
+                            <p>Stock: ${product.stock}</p>
+                            <button onclick="addToCart('${product._id}')">Add to Cart</button>
+                        </div>
+                    `).join('');
+            } catch (error) {
+                document.getElementById('products-display').innerHTML = 
+                    `<p class="error">Error: ${error.message}</p>`;
+                console.error('Products error:', error);
+            }
+        }
+
+        async function addToCart(productId) {
+            try {
+                console.log('Adding to cart:', productId);
+                await Cart.addToCart(productId, 1);
+                document.getElementById('cart-display').innerHTML = 
+                    `<p class="success">Added product to cart successfully!</p>`;
+            } catch (error) {
+                document.getElementById('cart-display').innerHTML = 
+                    `<p class="error">Add to cart error: ${error.message}</p>`;
+                console.error('Add to cart error:', error);
+            }
+        }
+
+        async function loadCart() {
+            try {
+                await Cart.loadCart();
+                document.getElementById('cart-display').innerHTML = 
+                    `<p class="success">Cart loaded successfully</p>`;
+            } catch (error) {
+                document.getElementById('cart-display').innerHTML = 
+                    `<p class="error">Cart error: ${error.message}</p>`;
+                console.error('Cart error:', error);
+            }
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('Page loaded, checking auth...');
+            checkAuth();
+            
+            // Initialize cart
+            if (typeof Cart !== 'undefined' && Cart.init) {
+                Cart.init();
+                console.log('Cart initialized');
+            }
+        });
+    </script>
+</body>
+</html>
