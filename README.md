@@ -73,25 +73,68 @@ BizConnect AI empowers these vendors by providing an affordable, AI-driven solut
 
 ---
 
-## 👩‍💻 Installation and Usage
+## 🚀 Quick Setup & Run
 
-
-## 🚀 Setup & Run the Project
+### Prerequisites
+- **Node.js** (v16 or higher)
+- **MongoDB** (v4.4 or higher)
+- **Git**
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/<your-username>/BizConnect-AI.git
+git clone https://github.com/omkar-90/BizConnect-AI.git
 cd BizConnect-AI
 ```
 
-### 2. Install dependencies
-
-```
+### 2. Install Dependencies
+```bash
 npm install
 ```
 
-### 2. Run project
+### 3. Start MongoDB
+**Windows:**
+```bash
+net start MongoDB
+```
 
+**macOS/Linux:**
+```bash
+sudo systemctl start mongod
 ```
-node server.js
+
+### 4. Seed the Database
+```bash
+npm run seed
 ```
+
+### 5. Start the Application
+```bash
+npm start
+```
+
+The application will be available at: `http://localhost:3000`
+
+## 🔑 Test Accounts
+
+After seeding, you can use these test accounts:
+
+- **Admin**: `admin@test.com` / `admin123`
+- **Customer**: `customer@test.com` / `customer123`
+- **Vendors**: `rajesh@grocery.com` / `vendor123`, `priya@electronics.com` / `vendor123`, etc.
+
+## 📱 Available Pages
+
+- **Homepage**: `http://localhost:3000`
+- **Customer Dashboard**: `http://localhost:3000/customer-dashboard`
+- **Vendor Dashboard**: `http://localhost:3000/vendor-dashboard`
+
+## 🛠️ Development Commands
+
+```bash
+npm start          # Start production server
+npm run dev        # Start development server with auto-reload
+npm run seed       # Seed database with test data
+npm run check-db   # Check database connection
+```
+
+For detailed setup instructions, see [SETUP_GUIDE.md](SETUP_GUIDE.md)
