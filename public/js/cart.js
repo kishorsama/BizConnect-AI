@@ -14,9 +14,20 @@ const Cart = {
 
   // Render cart items
   renderCart(cart) {
+    console.log('Rendering cart:', cart);
     const cartItemsContainer = document.getElementById('cartItems');
     const cartCount = document.getElementById('cartCount');
     const cartTotal = document.getElementById('cartTotal');
+    const cartCountText = document.getElementById('cart-count');
+    const cartTotalText = document.getElementById('cart-total');
+    
+    console.log('Cart elements found:', {
+      cartItemsContainer: !!cartItemsContainer,
+      cartCount: !!cartCount,
+      cartTotal: !!cartTotal,
+      cartCountText: !!cartCountText,
+      cartTotalText: !!cartTotalText
+    });
     
     if (!cartItemsContainer) return;
 
@@ -24,6 +35,8 @@ const Cart = {
       cartItemsContainer.innerHTML = '<div class="text-center py-8 text-gray-500">Your cart is empty</div>';
       if (cartCount) cartCount.textContent = '0';
       if (cartTotal) cartTotal.textContent = '₹0';
+      if (cartCountText) cartCountText.textContent = '0 items in cart';
+      if (cartTotalText) cartTotalText.textContent = '₹0';
       return;
     }
 
@@ -49,8 +62,14 @@ const Cart = {
       `;
     }).join('');
 
-    if (cartCount) cartCount.textContent = cart.items.reduce((sum, item) => sum + item.quantity, 0);
+    const totalCount = cart.items.reduce((sum, item) => sum + item.quantity, 0);
+    console.log('Updating cart display:', { totalCount, total });
+    
+    // Update all cart count and total elements
+    if (cartCount) cartCount.textContent = totalCount;
     if (cartTotal) cartTotal.textContent = `₹${total}`;
+    if (cartCountText) cartCountText.textContent = `${totalCount} items in cart`;
+    if (cartTotalText) cartTotalText.textContent = `₹${total}`;
   },
 
   // Add item to cart
@@ -70,6 +89,8 @@ const Cart = {
 
   // Update item quantity
   async updateQuantity(productId, newQuantity) {
+    console.log('Updating quantity:', { productId, newQuantity });
+    
     if (newQuantity < 1) {
       await this.removeItem(productId);
       return;
@@ -77,11 +98,16 @@ const Cart = {
 
     try {
       // For now, remove and re-add with new quantity
+      console.log('Removing item from cart...');
       await API.delete(`${API_CONFIG.endpoints.removeFromCart}/${productId}`);
+      
+      console.log('Adding item back with new quantity...');
       await API.post(API_CONFIG.endpoints.addToCart, {
         productId,
         quantity: newQuantity
       });
+      
+      console.log('Reloading cart...');
       this.loadCart();
     } catch (error) {
       console.error('Error updating quantity:', error);
