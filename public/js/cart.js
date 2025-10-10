@@ -183,21 +183,88 @@ const Cart = {
 
   closeCartDrawer() {
     Drawer.close();
+  },
+
+  // Initialize cart functionality
+  init() {
+    console.log('Cart.init() called');
+    
+    // Load cart when page loads
+    this.loadCart();
+    
+    // Bind cart drawer controls
+    const cartButton = document.getElementById('cartButton');
+    const cartClose = document.getElementById('cartClose');
+    const cartBackdrop = document.getElementById('cartBackdrop');
+    
+    console.log('Cart elements found:', {
+      cartButton: !!cartButton,
+      cartClose: !!cartClose,
+      cartBackdrop: !!cartBackdrop
+    });
+    
+    if (cartButton) {
+      cartButton.addEventListener('click', () => {
+        console.log('Cart button clicked');
+        Drawer.open();
+      });
+    }
+    if (cartClose) {
+      cartClose.addEventListener('click', () => {
+        console.log('Cart close clicked');
+        Drawer.close();
+      });
+    }
+    if (cartBackdrop) {
+      cartBackdrop.addEventListener('click', () => {
+        console.log('Cart backdrop clicked');
+        Drawer.close();
+      });
+    }
+    
+    // Bind checkout buttons
+    const checkoutBtn = document.getElementById('checkout-btn');
+    const checkoutBtnMain = document.getElementById('checkout-btn-main');
+    
+    if (checkoutBtn) {
+      checkoutBtn.addEventListener('click', () => {
+        this.showCheckoutForm();
+      });
+    }
+    
+    if (checkoutBtnMain) {
+      checkoutBtnMain.addEventListener('click', () => {
+        this.showCheckoutForm();
+      });
+    }
   }
 };
 
 // Drawer functionality
 const Drawer = {
   open() {
+    console.log('Drawer.open() called');
     const drawer = document.getElementById('cartDrawer');
     const panel = drawer?.querySelector('aside');
     const backdrop = document.getElementById('cartBackdrop');
-    if (!drawer || !panel || !backdrop) return;
+    
+    console.log('Drawer elements found:', {
+      drawer: !!drawer,
+      panel: !!panel,
+      backdrop: !!backdrop
+    });
+    
+    if (!drawer || !panel || !backdrop) {
+      console.error('Missing drawer elements');
+      return;
+    }
+    
     drawer.classList.remove('hidden');
     requestAnimationFrame(() => {
       backdrop.classList.remove('opacity-0');
       panel.classList.remove('translate-x-full');
     });
+    console.log('Drawer opened successfully');
   },
   close() {
     const drawer = document.getElementById('cartDrawer');
