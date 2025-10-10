@@ -94,7 +94,6 @@
     });
   }
 
-<<<<<<< HEAD
   // Add Product Modal functionality
   const addProductBtn = document.getElementById('add-product-btn');
   const addProductModal = document.getElementById('add-product-modal');
@@ -196,8 +195,6 @@
     });
   }
 
-=======
->>>>>>> 51b6fc2876e28e250d13b5c6fc7f4a55df584577
   // Menu removed per request; no dropdown logic needed
 })();
 
