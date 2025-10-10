@@ -14,8 +14,8 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model('User', userSchema);
 
-// MongoDB Connection
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://sohamghadge26:soham2005@users.nhkzuqo.mongodb.net/bizconnect-ai';
+// MongoDB Connection - Local Database
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/bizconnect-ai';
 
 async function checkDatabase() {
   try {

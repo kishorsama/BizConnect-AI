@@ -36,10 +36,60 @@ const userSchema = new mongoose.Schema({
   }
 });
 
-const User = mongoose.model('User', userSchema);
+// Product Schema
+const productSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  description: {
+    type: String,
+    required: true
+  },
+  price: {
+    type: Number,
+    required: true,
+    min: 0
+  },
+  category: {
+    type: String,
+    required: true
+  },
+  vendorId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
+  stock: {
+    type: Number,
+    required: true,
+    min: 0,
+    default: 0
+  },
+  image: {
+    type: String,
+    default: ''
+  },
+  isActive: {
+    type: Boolean,
+    default: true
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
+  },
+  updatedAt: {
+    type: Date,
+    default: Date.now
+  }
+});
 
-// MongoDB Connection
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://sohamghadge26:soham2005@users.nhkzuqo.mongodb.net/bizconnect-ai';
+const User = mongoose.model('User', userSchema);
+const Product = mongoose.model('Product', productSchema);
+
+// MongoDB Connection - Local Database
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/bizconnect-ai';
 
 async function seedDatabase() {
   try {
@@ -47,9 +97,10 @@ async function seedDatabase() {
 
     console.log('Connected to MongoDB for seeding...');
 
-    // Clear existing users
+    // Clear existing data
     await User.deleteMany({});
-    console.log('Cleared existing users...');
+    await Product.deleteMany({});
+    console.log('Cleared existing data...');
 
     // Create test users
     const testUsers = [
@@ -60,8 +111,32 @@ async function seedDatabase() {
         role: 'admin'
       },
       {
-        name: 'Vendor User',
-        email: 'vendor@test.com',
+        name: 'Rajesh Grocery Store',
+        email: 'rajesh@grocery.com',
+        password: 'vendor123',
+        role: 'vendor'
+      },
+      {
+        name: 'Priya Electronics',
+        email: 'priya@electronics.com',
+        password: 'vendor123',
+        role: 'vendor'
+      },
+      {
+        name: 'Amit Clothing Store',
+        email: 'amit@clothing.com',
+        password: 'vendor123',
+        role: 'vendor'
+      },
+      {
+        name: 'Sunita Pharmacy',
+        email: 'sunita@pharmacy.com',
+        password: 'vendor123',
+        role: 'vendor'
+      },
+      {
+        name: 'Vikram Hardware',
+        email: 'vikram@hardware.com',
         password: 'vendor123',
         role: 'vendor'
       },
@@ -73,17 +148,164 @@ async function seedDatabase() {
       }
     ];
 
+    const createdUsers = [];
     for (const userData of testUsers) {
       const user = new User(userData);
       await user.save();
+      createdUsers.push(user);
       console.log(`Created ${userData.role} user: ${userData.email}`);
     }
 
-    console.log('Database seeded successfully!');
+    // Create sample products for each vendor
+    const vendors = createdUsers.filter(user => user.role === 'vendor');
+    
+    const sampleProducts = [
+      // Rajesh Grocery Store
+      {
+        name: 'Fresh Tomatoes',
+        description: 'Fresh red tomatoes, perfect for cooking',
+        price: 40,
+        category: 'Vegetables',
+        vendorId: vendors[0]._id,
+        stock: 50
+      },
+      {
+        name: 'Basmati Rice',
+        description: 'Premium quality basmati rice, 1kg pack',
+        price: 120,
+        category: 'Grains',
+        vendorId: vendors[0]._id,
+        stock: 30
+      },
+      {
+        name: 'Cooking Oil',
+        description: 'Sunflower oil, 1 liter bottle',
+        price: 150,
+        category: 'Cooking Essentials',
+        vendorId: vendors[0]._id,
+        stock: 25
+      },
+
+      // Priya Electronics
+      {
+        name: 'Smartphone Charger',
+        description: 'Fast charging USB-C cable, 2m length',
+        price: 299,
+        category: 'Mobile Accessories',
+        vendorId: vendors[1]._id,
+        stock: 40
+      },
+      {
+        name: 'Bluetooth Headphones',
+        description: 'Wireless headphones with noise cancellation',
+        price: 1299,
+        category: 'Audio',
+        vendorId: vendors[1]._id,
+        stock: 15
+      },
+      {
+        name: 'Power Bank',
+        description: '10000mAh portable power bank',
+        price: 899,
+        category: 'Mobile Accessories',
+        vendorId: vendors[1]._id,
+        stock: 20
+      },
+
+      // Amit Clothing Store
+      {
+        name: 'Cotton T-Shirt',
+        description: 'Comfortable cotton t-shirt, various sizes available',
+        price: 399,
+        category: 'Clothing',
+        vendorId: vendors[2]._id,
+        stock: 60
+      },
+      {
+        name: 'Denim Jeans',
+        description: 'Classic blue denim jeans, regular fit',
+        price: 1299,
+        category: 'Clothing',
+        vendorId: vendors[2]._id,
+        stock: 25
+      },
+      {
+        name: 'Sports Shoes',
+        description: 'Comfortable running shoes, all sizes',
+        price: 1999,
+        category: 'Footwear',
+        vendorId: vendors[2]._id,
+        stock: 30
+      },
+
+      // Sunita Pharmacy
+      {
+        name: 'Paracetamol Tablets',
+        description: 'Pain relief tablets, 10 tablets strip',
+        price: 25,
+        category: 'Medicine',
+        vendorId: vendors[3]._id,
+        stock: 100
+      },
+      {
+        name: 'Vitamin C Tablets',
+        description: 'Immune booster vitamin C, 30 tablets',
+        price: 199,
+        category: 'Supplements',
+        vendorId: vendors[3]._id,
+        stock: 50
+      },
+      {
+        name: 'Bandage Roll',
+        description: 'Medical bandage roll, 5cm width',
+        price: 45,
+        category: 'First Aid',
+        vendorId: vendors[3]._id,
+        stock: 40
+      },
+
+      // Vikram Hardware
+      {
+        name: 'Screwdriver Set',
+        description: 'Professional screwdriver set with 10 pieces',
+        price: 299,
+        category: 'Tools',
+        vendorId: vendors[4]._id,
+        stock: 20
+      },
+      {
+        name: 'LED Bulb',
+        description: 'Energy efficient LED bulb, 9W',
+        price: 89,
+        category: 'Electrical',
+        vendorId: vendors[4]._id,
+        stock: 50
+      },
+      {
+        name: 'Water Pipe',
+        description: 'PVC water pipe, 1 inch diameter, 6 feet',
+        price: 199,
+        category: 'Plumbing',
+        vendorId: vendors[4]._id,
+        stock: 30
+      }
+    ];
+
+    for (const productData of sampleProducts) {
+      const product = new Product(productData);
+      await product.save();
+      console.log(`Created product: ${productData.name} for ${productData.category}`);
+    }
+
+    console.log('\nDatabase seeded successfully!');
     console.log('\nTest users created:');
     console.log('Admin: admin@test.com / admin123');
-    console.log('Vendor: vendor@test.com / vendor123');
     console.log('Customer: customer@test.com / customer123');
+    console.log('\nVendors created:');
+    vendors.forEach((vendor, index) => {
+      console.log(`${index + 1}. ${vendor.name} - ${vendor.email} / vendor123`);
+    });
+    console.log(`\nTotal products created: ${sampleProducts.length}`);
 
   } catch (error) {
     console.error('Seeding error:', error);

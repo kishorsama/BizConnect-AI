@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 20px; border: 1px solid #ccc; }
+        button { padding: 10px 20px; margin: 5px; }
+        .cart-display { background: #f5f5f5; padding: 10px; margin: 10px 0; }
+        .error { color: red; }
+        .success { color: green; }
+    </style>
+</head>
+<body>
+    <h1>Cart Functionality Test</h1>
+    
+    <div class="test-section">
+        <h2>Login Test</h2>
+        <input type="email" id="email" placeholder="Email" value="customer@test.com">
+        <input type="password" id="password" placeholder="Password" value="customer123">
+        <button onclick="testLogin()">Login</button>
+        <div id="login-status"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Products Test</h2>
+        <button onclick="loadProducts()">Load Products</button>
+        <div id="products-display"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Cart Test</h2>
+        <button onclick="loadCart()">Load Cart</button>
+        <button onclick="addTestItem()">Add Test Item</button>
+        <div id="cart-display" class="cart-display"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Debug Info</h2>
+        <div id="debug-info"></div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/products.js"></script>
+    <script src="js/cart.js"></script>
+
+    <script>
+        // Debug function to show current state
+        function showDebugInfo() {
+            const debugDiv = document.getElementById('debug-info');
+            debugDiv.innerHTML = `
+                <p><strong>Auth Status:</strong> ${Auth.isAuthenticated() ? 'Logged In' : 'Not Logged In'}</p>
+                <p><strong>Current User:</strong> ${Auth.getCurrentUser() ? Auth.getCurrentUser().name : 'None'}</p>
+                <p><strong>Cart Object:</strong> ${typeof Cart}</p>
+                <p><strong>Products Object:</strong> ${typeof Products}</p>
+                <p><strong>API Object:</strong> ${typeof API}</p>
+            `;
+        }
+
+        async function testLogin() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            try {
+                const user = await Auth.login(email, password);
+                document.getElementById('login-status').innerHTML = 
+                    `<p class="success">Logged in as: ${user.name} (${user.role})</p>`;
+                showDebugInfo();
+            } catch (error) {
+                document.getElementById('login-status').innerHTML = 
+                    `<p class="error">Login failed: ${error.message}</p>`;
+                console.error('Login error:', error);
+            }
+        }
+
+        async function loadProducts() {
+            try {
+                const products = await Products.getAllProducts();
+                document.getElementById('products-display').innerHTML = 
+                    `<p class="success">Found ${products.length} products</p>` +
+                    products.slice(0, 3).map(p => `<div>${p.name} - ₹${p.price} (${p.stock} in stock)</div>`).join('');
+            } catch (error) {
+                document.getElementById('products-display').innerHTML = 
+                    `<p class="error">Error: ${error.message}</p>`;
+                console.error('Products error:', error);
+            }
+        }
+
+        async function loadCart() {
+            try {
+                await Cart.loadCart();
+                document.getElementById('cart-display').innerHTML = 
+                    `<p class="success">Cart loaded successfully</p>`;
+            } catch (error) {
+                document.getElementById('cart-display').innerHTML = 
+                    `<p class="error">Cart error: ${error.message}</p>`;
+                console.error('Cart error:', error);
+            }
+        }
+
+        async function addTestItem() {
+            try {
+                // First get products to get a valid product ID
+                const products = await Products.getAllProducts();
+                if (products.length > 0) {
+                    const productId = products[0]._id;
+                    await Cart.addToCart(productId, 1);
+                    document.getElementById('cart-display').innerHTML = 
+                        `<p class="success">Added ${products[0].name} to cart</p>`;
+                } else {
+                    document.getElementById('cart-display').innerHTML = 
+                        `<p class="error">No products available</p>`;
+                }
+            } catch (error) {
+                document.getElementById('cart-display').innerHTML = 
+                    `<p class="error">Add to cart error: ${error.message}</p>`;
+                console.error('Add to cart error:', error);
+            }
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('Page loaded, initializing...');
+            showDebugInfo();
+            
+            // Initialize cart
+            if (typeof Cart !== 'undefined' && Cart.init) {
+                Cart.init();
+                console.log('Cart initialized');
+            } else {
+                console.error('Cart object not found or init method missing');
+            }
+        });
+    </script>
+</body>
+</html>
