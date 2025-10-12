@@ -3,65 +3,159 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vendor Dashboard</title>
+    <title>Vendor Dashboard - BizConnect AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/dashboard.css">
     <link rel="stylesheet" href="css/vendor-dashboard.css">
     <link rel="stylesheet" href="css/products.css">
 </head>
-<body>
+<body class="vendor-dashboard">
     <div class="vd-layout">
         <aside class="vd-sidebar">
             <div class="vd-brand">
-                <img src="img/landing-page-image.jpg" alt="BizConnect" style="width:28px;height:28px;border-radius:6px;object-fit:cover;">
-                <span>BizConnect • Vendor</span>
+                <div class="brand-icon">
+                    <i class="fas fa-store"></i>
+                </div>
+                <div class="brand-text">
+                    <span class="brand-name">BizConnect AI</span>
+                    <span class="brand-subtitle">Vendor Portal</span>
+                </div>
         </div>
             <nav class="vd-nav">
-                <a class="active" href="#"><span>🏠</span>Dashboard</a>
-                <a href="items.html"><span>📦</span>Items</a>
-                <a href="invoices.html"><span>🧮</span>Invoices</a>
-                <a href="reports.html"><span>📈</span>Reports</a>
+                <a class="active" href="#">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="items.html">
+                    <i class="fas fa-box"></i>
+                    <span>Items</span>
+                </a>
+                <a href="invoices.html">
+                    <i class="fas fa-file-invoice"></i>
+                    <span>Invoices</span>
+                </a>
+                <a href="reports.html">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Reports</span>
+                </a>
     </nav>
         </aside>
 
         <section class="vd-main">
             <div class="vd-topbar">
-                <div class="muted" id="shopAddress">123 Market Lane, Main City</div>
-                <div style="text-align:center;flex:1;">
-                    <h2 style="margin:0;font-size:20px;font-weight:700;color:#0f766e;" id="shopName">BizConnect Demo Shop</h2>
+                <div class="topbar-left">
+                    <div class="shop-info">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span id="shopAddress">123 Market Lane, Main City</span>
+                    </div>
                 </div>
-                <div class="user-info" style="position:relative;display:flex;align-items:center;gap:10px;">
-                  <span id="userName" class="muted"></span>
-                  <button id="profileMenuButton" style="background:none;border:none;outline:none;padding:0 8px;cursor:pointer;">
-                    <span style="display:inline-block;border-radius:50%;background:#bae6fd;width:35px;height:35px;display:flex;align-items:center;justify-content:center;font-size:20px;">👤</span>
+                <div class="topbar-center">
+                    <h2 id="shopName">BizConnect Demo Shop</h2>
+                </div>
+                <div class="topbar-right">
+                    <div class="user-profile">
+                        <div class="user-info">
+                            <span id="userName" class="user-name"></span>
+                            <span class="user-role">Vendor</span>
+                </div>
+                        <button id="profileMenuButton" class="profile-avatar">
+                            <i class="fas fa-user"></i>
+                        </button>
+                        <div id="profileMenu" class="profile-dropdown" hidden>
+                            <button id="profileInfoBtn" class="dropdown-item">
+                                <i class="fas fa-user-edit"></i>
+                                Profile Info
+                            </button>
+                            <button id="logoutBtn" class="dropdown-item logout">
+                                <i class="fas fa-sign-out-alt"></i>
+                                Logout
                   </button>
-                  <div id="profileMenu" class="vd-card" style="position:absolute;right:0;top:45px;width:160px;padding:0;display:none;z-index:50;">
-                    <button id="profileInfoBtn" class="primary-btn" style="width:100%;padding:8px 14px 8px 14px;border-radius:13px 13px 0 0;background:#f1f5f9;color:#0f172a;font-weight:600;">Profile Info</button>
-                    <button id="logoutBtn" class="primary-btn" style="width:100%;padding:8px 14px;border-radius: 0 0 13px 13px;">Logout</button>
+                        </div>
                   </div>
                 </div>
-                <div id="profileInfoModal" class="profile-modal" hidden>
-                  <div class="profile-modal-card vd-card">
-                    <h3 style="margin-bottom:14px;">Profile Info</h3>
-                    <form id="profileInfoForm" autocomplete="off">
-                      <div style="margin-bottom:7px"><strong>Shop Name:</strong><br>
-                        <input type="text" id="piShopNameIn" class="nice-input" style="width:100%;margin-top:1.5px;">
+                <!-- Enhanced Profile Modal -->
+                <div id="profileInfoModal" class="modal" hidden>
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3><i class="fas fa-user-edit"></i> Complete Your Profile</h3>
+                            <button id="profileInfoClose" class="close-btn">&times;</button>
+                        </div>
+                        <form id="profileInfoForm" class="modal-form" autocomplete="off">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="piShopNameIn">Shop Name *</label>
+                                    <input type="text" id="piShopNameIn" class="form-input" required>
+                        </div>
+                                <div class="form-group">
+                                    <label for="piPhoneIn">Phone *</label>
+                                    <input type="tel" id="piPhoneIn" class="form-input" required>
+                        </div>
                       </div>
-                      <div style="margin-bottom:7px"><strong>Vendor Name:</strong><br>
-                        <input type="text" id="piVendorNameIn" class="nice-input" style="width:100%;margin-top:1.5px;">
+                      
+                            <div class="form-group">
+                                <label for="piBusinessTypeIn">Business Type</label>
+                                <select id="piBusinessTypeIn" class="form-input">
+                          <option value="">Select Business Type</option>
+                          <option value="Electronics Retail">Electronics Retail</option>
+                          <option value="Fashion Retail">Fashion Retail</option>
+                          <option value="Food & Beverages">Food & Beverages</option>
+                          <option value="Home & Garden">Home & Garden</option>
+                          <option value="Sports & Recreation">Sports & Recreation</option>
+                          <option value="Health & Beauty">Health & Beauty</option>
+                          <option value="Books & Stationery">Books & Stationery</option>
+                          <option value="Automotive">Automotive</option>
+                          <option value="Other">Other</option>
+                        </select>
                       </div>
-                      <div style="margin-bottom:7px"><strong>Email:</strong><br>
-                        <input type="email" id="piEmailIn" class="nice-input" style="width:100%;margin-top:1.5px;">
+
+                            <div class="form-group">
+                                <label for="piAddressIn">Business Address *</label>
+                                <textarea id="piAddressIn" class="form-input" rows="3" required></textarea>
                       </div>
-                      <div style="margin-bottom:7px"><strong>Phone:</strong><br>
-                        <input type="text" id="piPhoneIn" class="nice-input" style="width:100%;margin-top:1.5px;">
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="piGstIn">GST Number</label>
+                                    <input type="text" id="piGstIn" class="form-input" placeholder="29ABCDE1234F1Z5">
+                        </div>
+                                <div class="form-group">
+                                    <label for="piPanIn">PAN Number</label>
+                                    <input type="text" id="piPanIn" class="form-input" placeholder="ABCDE1234F">
+                        </div>
                       </div>
-                      <div><strong>Address:</strong><br>
-                        <textarea id="piAddressIn" class="nice-input" style="width:100%;min-height:55px;margin-top:1.5px;"></textarea>
+
+                            <div class="form-group">
+                                <label for="piDescriptionIn">Business Description</label>
+                                <textarea id="piDescriptionIn" class="form-input" rows="3" placeholder="Describe your business, products, and services"></textarea>
                       </div>
-                      <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:18px;">
-                        <button type="submit" id="profileInfoSave" class="primary-btn" style="padding:8px 28px;">Save</button>
-                        <button type="button" id="profileInfoClose" class="primary-btn" style="padding:8px 21px;background:#e5e7eb;color:#111827;">Close</button>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="piTurnoverIn">Annual Turnover</label>
+                                    <input type="text" id="piTurnoverIn" class="form-input" placeholder="₹50,00,000">
+                        </div>
+                                <div class="form-group">
+                                    <label for="piEmployeesIn">Employee Count</label>
+                                    <input type="text" id="piEmployeesIn" class="form-input" placeholder="15">
+                        </div>
+                      </div>
+
+                            <div class="form-group">
+                                <label for="piAadharUpload">Update Aadhar Card</label>
+                                <input type="file" id="piAadharUpload" class="form-input" accept=".pdf,.jpg,.jpeg,.png">
+                                <small style="color: #6b7280; font-size: 0.85rem; margin-top: 5px; display: block;">
+                          Upload a new Aadhar card (Max 5MB) - Optional
+                        </small>
+                      </div>
+
+                            <div class="form-actions">
+                                <button type="button" id="profileInfoCloseBtn" class="btn-secondary">Cancel</button>
+                                <button type="submit" id="profileInfoSave" class="btn-primary">
+                                    <i class="fas fa-save"></i>
+                                    Save Profile
+                                </button>
                       </div>
                     </form>
                   </div>
@@ -77,51 +171,48 @@
 
                 <!-- Key Metrics -->
                 <div class="metrics-grid">
-                    <div class="metric-card">
-                        <div class="metric-icon">📦</div>
+                    <div class="metric-card" id="kpi-packed">
+                        <div class="metric-icon">
+                            <i class="fas fa-box"></i>
+                        </div>
                         <div class="metric-content">
-                            <div class="metric-number" id="kpi-packed">228</div>
+                            <div class="metric-number" id="kpi-packed-number">0</div>
                             <div class="metric-label">To be Packed</div>
                         </div>
                     </div>
-                    <div class="metric-card">
-                        <div class="metric-icon">🚚</div>
+                    <div class="metric-card" id="kpi-shipped">
+                        <div class="metric-icon">
+                            <i class="fas fa-shipping-fast"></i>
+                        </div>
                         <div class="metric-content">
-                            <div class="metric-number" id="kpi-shipped">6</div>
+                            <div class="metric-number" id="kpi-shipped-number">0</div>
                             <div class="metric-label">To be Shipped</div>
                         </div>
                     </div>
-                    <div class="metric-card">
-                        <div class="metric-icon">✅</div>
+                    <div class="metric-card" id="kpi-delivered">
+                        <div class="metric-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
                         <div class="metric-content">
-                            <div class="metric-number" id="kpi-delivered">10</div>
+                            <div class="metric-number" id="kpi-delivered-number">0</div>
                             <div class="metric-label">To be Delivered</div>
                         </div>
                     </div>
-                    <div class="metric-card">
-                        <div class="metric-icon">🧾</div>
+                    <div class="metric-card" id="kpi-invoiced">
+                        <div class="metric-icon">
+                            <i class="fas fa-file-invoice"></i>
+                        </div>
                         <div class="metric-content">
-                            <div class="metric-number" id="kpi-invoiced">474</div>
+                            <div class="metric-number" id="kpi-invoiced-number">0</div>
                             <div class="metric-label">To be Invoiced</div>
                         </div>
-                    </div>
-                </div>
-
-                <!-- Products Management Section -->
-                <div class="dashboard-card">
-                    <div class="card-header">
-                        <h3>📦 My Products</h3>
-                        <button id="add-product-btn" class="primary-btn">Add Product</button>
-                    </div>
-                    <div id="vendor-products-container" class="products-grid">
-                        <!-- Products will be loaded here -->
                     </div>
                 </div>
 
                 <!-- Orders Management Section -->
                 <div class="dashboard-card">
                     <div class="card-header">
-                        <h3>📋 Recent Orders</h3>
+                        <h3><i class="fas fa-clipboard-list"></i> Recent Orders</h3>
                     </div>
                     <div id="vendor-orders-container" class="orders-list">
                         <!-- Orders will be loaded here -->
@@ -133,9 +224,9 @@
                     <!-- Left Column -->
                     <div class="left-column">
                         <!-- Inventory Overview -->
-                        <div class="dashboard-card">
+                        <div class="dashboard-card" id="inventory-overview">
                             <div class="card-header">
-                                <h3>📊 Inventory Overview</h3>
+                                <h3><i class="fas fa-chart-pie"></i> Inventory Overview</h3>
                             </div>
                             <div class="inventory-stats">
                                 <div class="stat-item">
@@ -162,9 +253,9 @@
                         </div>
 
                         <!-- Sales Orders -->
-                        <div class="dashboard-card">
+                        <div class="dashboard-card" id="sales-orders">
                             <div class="card-header">
-                                <h3>📋 Sales Orders</h3>
+                                <h3><i class="fas fa-shopping-cart"></i> Sales Orders</h3>
                             </div>
                             <div class="sales-channel">
                                 <div class="channel-header">
@@ -199,9 +290,9 @@
                     <!-- Right Column -->
                     <div class="right-column">
                         <!-- Top Products -->
-                        <div class="dashboard-card">
+                        <div class="dashboard-card" id="top-products">
                             <div class="card-header">
-                                <h3>🏆 Top Products</h3>
+                                <h3><i class="fas fa-trophy"></i> Top Products</h3>
                             </div>
                             <div class="top-products">
                                 <div class="product-item">
@@ -228,19 +319,19 @@
                         <!-- Quick Actions -->
                         <div class="dashboard-card">
                             <div class="card-header">
-                                <h3>⚡ Quick Actions</h3>
+                                <h3><i class="fas fa-bolt"></i> Quick Actions</h3>
                             </div>
                             <div class="quick-actions">
                                 <a href="items.html" class="action-btn">
-                                    <span class="action-icon">📦</span>
+                                    <span class="action-icon"><i class="fas fa-box"></i></span>
                                     <span>Manage Items</span>
                                 </a>
                                 <a href="invoices.html" class="action-btn">
-                                    <span class="action-icon">🧾</span>
+                                    <span class="action-icon"><i class="fas fa-file-invoice"></i></span>
                                     <span>View Invoices</span>
                                 </a>
                                 <a href="reports.html" class="action-btn">
-                                    <span class="action-icon">📈</span>
+                                    <span class="action-icon"><i class="fas fa-chart-line"></i></span>
                                     <span>View Reports</span>
                                 </a>
                             </div>
@@ -249,73 +340,6 @@
                 </div>
             </div>
         </section>
-
-        <!-- Add Product Modal -->
-        <div id="add-product-modal" class="modal" hidden>
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3>Add New Product</h3>
-                    <button id="close-add-product-modal" class="close-btn">&times;</button>
-                </div>
-                <form id="add-product-form" class="modal-form">
-                    <div class="form-group">
-                        <label for="product-name">Product Name *</label>
-                        <input type="text" id="product-name" name="name" required class="form-input">
-                    </div>
-                    <div class="form-group">
-                        <label for="product-description">Description *</label>
-                        <textarea id="product-description" name="description" required class="form-input" rows="3"></textarea>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="product-price">Price (₹) *</label>
-                            <input type="number" id="product-price" name="price" required class="form-input" min="0" step="0.01">
-                        </div>
-                        <div class="form-group">
-                            <label for="product-stock">Stock Quantity *</label>
-                            <input type="number" id="product-stock" name="stock" required class="form-input" min="0">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="product-category">Category *</label>
-                        <select id="product-category" name="category" required class="form-input">
-                            <option value="">Select Category</option>
-                            <option value="Vegetables">Vegetables</option>
-                            <option value="Grains">Grains</option>
-                            <option value="Dairy">Dairy</option>
-                            <option value="Electronics">Electronics</option>
-                            <option value="Mobile Accessories">Mobile Accessories</option>
-                            <option value="Audio">Audio</option>
-                            <option value="Clothing">Clothing</option>
-                            <option value="Kids Clothing">Kids Clothing</option>
-                            <option value="Medicine">Medicine</option>
-                            <option value="Supplements">Supplements</option>
-                            <option value="First Aid">First Aid</option>
-                            <option value="Medical Devices">Medical Devices</option>
-                            <option value="Tools">Tools</option>
-                            <option value="Electrical">Electrical</option>
-                            <option value="Plumbing">Plumbing</option>
-                            <option value="Cooking Essentials">Cooking Essentials</option>
-                            <option value="Bakery">Bakery</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="product-image">Image URL (optional)</label>
-                        <input type="url" id="product-image" name="image" class="form-input" placeholder="https://example.com/image.jpg">
-                    </div>
-                    <div class="form-group">
-                        <label class="checkbox-label">
-                            <input type="checkbox" id="product-active" name="isActive" checked>
-                            <span>Product is active</span>
-                        </label>
-                    </div>
-                    <div class="form-actions">
-                        <button type="button" id="cancel-add-product" class="btn-secondary">Cancel</button>
-                        <button type="submit" class="btn-primary">Add Product</button>
-                    </div>
-                </form>
-            </div>
-        </div>
 
         <!-- Footer -->
         <footer class="vendor-footer">
@@ -395,7 +419,6 @@
         
         // Load vendor data when page loads
         document.addEventListener('DOMContentLoaded', () => {
-            Products.loadProductsForVendor();
             Orders.loadVendorOrders();
         });
     </script>

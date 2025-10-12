@@ -2,110 +2,18 @@
 (function() {
     'use strict';
 
-    // Mock vendor data
-    const mockVendors = [
-        {
-            id: 1,
-            name: 'Rajesh Kumar',
-            email: 'rajesh@example.com',
-            phone: '+91 98765 43210',
-            businessName: 'Kumar Electronics',
-            businessType: 'Electronics Retail',
-            address: '123 MG Road, Bangalore, Karnataka',
-            gstNumber: '29ABCDE1234F1Z5',
-            panNumber: 'ABCDE1234F',
-            documents: ['PAN Card', 'GST Certificate', 'Business License'],
-            status: 'pending',
-            appliedDate: '2024-01-15',
-            businessDescription: 'Leading electronics retailer with 10+ years experience',
-            annualTurnover: '₹50,00,000',
-            employeeCount: '15',
-            website: 'www.kumarelectronics.com'
-        },
-        {
-            id: 2,
-            name: 'Priya Sharma',
-            email: 'priya@example.com',
-            phone: '+91 87654 32109',
-            businessName: 'Sharma Fashion House',
-            businessType: 'Fashion Retail',
-            address: '456 Commercial Street, Mumbai, Maharashtra',
-            gstNumber: '27FGHIJ5678G2H6',
-            panNumber: 'FGHIJ5678G',
-            documents: ['PAN Card', 'GST Certificate', 'Trade License'],
-            status: 'pending',
-            appliedDate: '2024-01-14',
-            businessDescription: 'Premium fashion retailer specializing in ethnic wear',
-            annualTurnover: '₹25,00,000',
-            employeeCount: '8',
-            website: 'www.sharmafashion.com'
-        },
-        {
-            id: 3,
-            name: 'Amit Patel',
-            email: 'amit@example.com',
-            phone: '+91 76543 21098',
-            businessName: 'Patel Home Decor',
-            businessType: 'Home & Garden',
-            address: '789 Sector 17, Chandigarh, Punjab',
-            gstNumber: '03KLMNO9012L3M7',
-            panNumber: 'KLMNO9012L',
-            documents: ['PAN Card', 'GST Certificate', 'Business Registration'],
-            status: 'approved',
-            appliedDate: '2024-01-13',
-            businessDescription: 'Modern home decor solutions and furniture',
-            annualTurnover: '₹75,00,000',
-            employeeCount: '25',
-            website: 'www.patelhomedecor.com'
-        },
-        {
-            id: 4,
-            name: 'Sunita Singh',
-            email: 'sunita@example.com',
-            phone: '+91 65432 10987',
-            businessName: 'Singh Grocery Store',
-            businessType: 'Food & Beverages',
-            address: '321 Nehru Place, Delhi, Delhi',
-            gstNumber: '07PQRST3456Q4R8',
-            panNumber: 'PQRST3456Q',
-            documents: ['PAN Card', 'GST Certificate', 'FSSAI License'],
-            status: 'rejected',
-            appliedDate: '2024-01-12',
-            businessDescription: 'Fresh groceries and daily essentials',
-            annualTurnover: '₹15,00,000',
-            employeeCount: '5',
-            website: 'www.singhgrocery.com'
-        },
-        {
-            id: 5,
-            name: 'Vikram Reddy',
-            email: 'vikram@example.com',
-            phone: '+91 54321 09876',
-            businessName: 'Reddy Sports Equipment',
-            businessType: 'Sports & Recreation',
-            address: '654 Brigade Road, Hyderabad, Telangana',
-            gstNumber: '36UVWXY7890U5V9',
-            panNumber: 'UVWXY7890U',
-            documents: ['PAN Card', 'GST Certificate', 'Business License'],
-            status: 'pending',
-            appliedDate: '2024-01-11',
-            businessDescription: 'Professional sports equipment and fitness gear',
-            annualTurnover: '₹40,00,000',
-            employeeCount: '12',
-            website: 'www.reddysports.com'
-        }
-    ];
-
-    let currentVendors = [...mockVendors];
+    let currentVendors = [];
     let notifications = [];
 
     // Initialize the dashboard
-    function init() {
+    async function init() {
+        console.log('Initializing admin dashboard...');
         // Protect this page - only 'admin' role is allowed
         Auth.protectPage(['admin']);
         
         // Personalize the page
         const user = Auth.getCurrentUser();
+        console.log('Current admin user:', user);
         if (user) {
             document.getElementById('adminUserName').textContent = `Welcome, ${user.name}`;
         }
@@ -116,6 +24,10 @@
         // Initialize modal
         initializeModal();
         
+        // Load vendors from API
+        console.log('Loading vendors...');
+        await loadVendors();
+        
         // Render initial data
         updateStats();
         renderVendorTable();
@@ -123,6 +35,35 @@
         
         // Setup event listeners
         setupEventListeners();
+        console.log('Admin dashboard initialized successfully');
+    }
+
+    // Load vendors from API
+    async function loadVendors() {
+        try {
+            console.log('Loading vendors from API...');
+            const response = await API.get(API_CONFIG.endpoints.adminVendors);
+            console.log('API response:', response);
+            currentVendors = response.vendors || [];
+            console.log('Current vendors:', currentVendors);
+            console.log('Vendor IDs:', currentVendors.map(v => ({ name: v.name, id: v._id })));
+            
+            // Add notifications for pending vendors
+            currentVendors.filter(v => v.approvalStatus === 'pending').forEach(vendor => {
+                addNotification({
+                    id: Date.now() + Math.random(),
+                    type: 'vendor_application',
+                    title: 'New Vendor Application',
+                    message: `${vendor.name} from ${vendor.shopName || 'Unknown Business'} has applied for vendor approval`,
+                    vendorId: vendor._id,
+                    timestamp: new Date(vendor.createdAt),
+                    read: false
+                });
+            });
+        } catch (error) {
+            console.error('Error loading vendors:', error);
+            showToast('Failed to load vendor applications', 'error');
+        }
     }
 
     // Setup event listeners
@@ -147,9 +88,9 @@
 
     // Update statistics
     function updateStats() {
-        const pending = currentVendors.filter(v => v.status === 'pending').length;
-        const approved = currentVendors.filter(v => v.status === 'approved').length;
-        const rejected = currentVendors.filter(v => v.status === 'rejected').length;
+        const pending = currentVendors.filter(v => v.approvalStatus === 'pending').length;
+        const approved = currentVendors.filter(v => v.approvalStatus === 'approved').length;
+        const rejected = currentVendors.filter(v => v.approvalStatus === 'rejected').length;
         const total = currentVendors.length;
 
         document.getElementById('pendingCount').textContent = pending;
@@ -162,23 +103,31 @@
     function handleFilterChange(e) {
         const filter = e.target.value;
         if (filter === 'all') {
-            currentVendors = [...mockVendors];
+            // Show all vendors
+            renderVendorTable();
         } else {
-            currentVendors = mockVendors.filter(v => v.status === filter);
+            // Filter by status
+            const filteredVendors = currentVendors.filter(v => v.approvalStatus === filter);
+            renderVendorTable(filteredVendors);
         }
-        renderVendorTable();
         updateStats();
     }
 
     // Render vendor table
-    function renderVendorTable() {
+    function renderVendorTable(vendorsToRender = null) {
+        console.log('Rendering vendor table...');
         const tbody = document.getElementById('vendorTableBody');
         tbody.innerHTML = '';
 
-        currentVendors.forEach(vendor => {
+        const vendors = vendorsToRender || currentVendors;
+        console.log('Vendors to render:', vendors);
+        
+        vendors.forEach(vendor => {
             const row = createVendorRow(vendor);
             tbody.appendChild(row);
         });
+        
+        console.log('Vendor table rendered with', vendors.length, 'vendors');
     }
 
     // Create vendor table row
@@ -195,38 +144,38 @@
                     <div class="vendor-details">
                         <h4>${vendor.name}</h4>
                         <p>${vendor.email}</p>
-                        <p>${vendor.phone}</p>
+                        <p>${vendor.phone || 'N/A'}</p>
                     </div>
                 </div>
             </td>
             <td>
                 <div class="business-details">
-                    <h4>${vendor.businessName}</h4>
-                    <p>${vendor.businessType}</p>
-                    <p>${vendor.address}</p>
-                    <p>GST: ${vendor.gstNumber}</p>
+                    <h4>${vendor.shopName || 'N/A'}</h4>
+                    <p>${vendor.businessType || 'N/A'}</p>
+                    <p>${vendor.address || 'N/A'}</p>
+                    <p>GST: ${vendor.gstNumber || 'N/A'}</p>
                 </div>
             </td>
             <td>
                 <div class="documents-list">
-                    ${vendor.documents.map(doc => `
+                    ${(vendor.documents && vendor.documents.length > 0) ? vendor.documents.map(doc => `
                         <div class="document-item">
                             <span>📄</span>
                             <span>${doc}</span>
                         </div>
-                    `).join('')}
+                    `).join('') : '<span class="muted">No documents</span>'}
                 </div>
             </td>
             <td>
-                <span class="status-badge status-${vendor.status}">${vendor.status}</span>
+                <span class="status-badge status-${vendor.approvalStatus}">${vendor.approvalStatus}</span>
             </td>
-            <td>${formatDate(vendor.appliedDate)}</td>
+            <td>${formatDate(vendor.createdAt)}</td>
             <td>
                 <div class="action-buttons">
-                    <button class="btn-view" onclick="viewVendor(${vendor.id})">View</button>
-                    ${vendor.status === 'pending' ? `
-                        <button class="btn-approve" onclick="approveVendor(${vendor.id})">Approve</button>
-                        <button class="btn-reject" onclick="rejectVendor(${vendor.id})">Reject</button>
+                    <button class="btn-view" onclick="viewVendor('${vendor._id}')">View</button>
+                    ${vendor.approvalStatus === 'pending' ? `
+                        <button class="btn-approve" onclick="approveVendor('${vendor._id}')">Approve</button>
+                        <button class="btn-reject" onclick="rejectVendor('${vendor._id}')">Reject</button>
                     ` : ''}
                 </div>
             </td>
@@ -237,18 +186,7 @@
 
     // Initialize notifications
     function initializeNotifications() {
-        // Add initial notifications for pending vendors
-        mockVendors.filter(v => v.status === 'pending').forEach(vendor => {
-            addNotification({
-                id: Date.now() + Math.random(),
-                type: 'vendor_application',
-                title: 'New Vendor Application',
-                message: `${vendor.name} from ${vendor.businessName} has applied for vendor approval`,
-                vendorId: vendor.id,
-                timestamp: new Date(),
-                read: false
-            });
-        });
+        // Notifications are now added in loadVendors function
     }
 
     // Initialize modal
@@ -295,7 +233,7 @@
 
         // Show notification summary
         const vendorNames = unreadNotifications.map(n => {
-            const vendor = mockVendors.find(v => v.id === n.vendorId);
+            const vendor = currentVendors.find(v => v.id === n.vendorId);
             return vendor ? vendor.name : 'Unknown Vendor';
         }).join(', ');
 
@@ -305,7 +243,7 @@
     // View vendor details (shows in modal)
     function viewVendor(vendorId) {
         console.log('Opening modal for vendor:', vendorId);
-        const vendor = mockVendors.find(v => v.id === vendorId);
+        const vendor = currentVendors.find(v => v._id === vendorId);
         if (!vendor) {
             console.log('Vendor not found:', vendorId);
             return;
@@ -333,11 +271,11 @@
                     </div>
                     <div class="detail-item">
                         <div class="detail-label">Phone Number</div>
-                        <div class="detail-value">${vendor.phone}</div>
+                        <div class="detail-value">${vendor.phone || 'N/A'}</div>
                     </div>
                     <div class="detail-item">
                         <div class="detail-label">PAN Number</div>
-                        <div class="detail-value">${vendor.panNumber}</div>
+                        <div class="detail-value">${vendor.panNumber || 'N/A'}</div>
                     </div>
                 </div>
             </div>
@@ -347,53 +285,72 @@
                 <div class="detail-grid">
                     <div class="detail-item">
                         <div class="detail-label">Business Name</div>
-                        <div class="detail-value">${vendor.businessName}</div>
+                        <div class="detail-value">${vendor.shopName || 'N/A'}</div>
                     </div>
                     <div class="detail-item">
                         <div class="detail-label">Business Type</div>
-                        <div class="detail-value">${vendor.businessType}</div>
+                        <div class="detail-value">${vendor.businessType || 'N/A'}</div>
                     </div>
                     <div class="detail-item">
                         <div class="detail-label">GST Number</div>
-                        <div class="detail-value">${vendor.gstNumber}</div>
+                        <div class="detail-value">${vendor.gstNumber || 'N/A'}</div>
                     </div>
                     <div class="detail-item">
                         <div class="detail-label">Website</div>
-                        <div class="detail-value">${vendor.website}</div>
+                        <div class="detail-value">${vendor.website || 'N/A'}</div>
                     </div>
                     <div class="detail-item">
                         <div class="detail-label">Business Address</div>
-                        <div class="detail-value">${vendor.address}</div>
+                        <div class="detail-value">${vendor.address || 'N/A'}</div>
                     </div>
                     <div class="detail-item">
                         <div class="detail-label">Annual Turnover</div>
-                        <div class="detail-value">${vendor.annualTurnover}</div>
+                        <div class="detail-value">${vendor.annualTurnover || 'N/A'}</div>
                     </div>
                     <div class="detail-item">
                         <div class="detail-label">Employee Count</div>
-                        <div class="detail-value">${vendor.employeeCount}</div>
+                        <div class="detail-value">${vendor.employeeCount || 'N/A'}</div>
                     </div>
                     <div class="detail-item">
                         <div class="detail-label">Applied Date</div>
-                        <div class="detail-value">${formatDate(vendor.appliedDate)}</div>
+                        <div class="detail-value">${formatDate(vendor.createdAt)}</div>
                     </div>
                 </div>
             </div>
             
             <div class="vendor-detail-section">
                 <h4>📝 Business Description</h4>
-                <div class="detail-description">${vendor.businessDescription}</div>
+                <div class="detail-description">${vendor.businessDescription || 'No description provided'}</div>
             </div>
             
             <div class="vendor-detail-section">
                 <h4>📄 Documents Submitted</h4>
                 <div class="documents-list">
-                    ${vendor.documents.map(doc => `
+                    ${vendor.aadharFile ? `
+                        <div class="document-item" style="background: #f0f8ff; border: 1px solid #3b82f6; padding: 15px; border-radius: 8px; margin-bottom: 10px;">
+                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                                <span style="font-size: 1.2rem;">🆔</span>
+                                <span style="font-weight: 600; color: #1e40af;">Aadhar Card</span>
+                            </div>
+                            <div style="font-size: 0.9rem; color: #666;">
+                                <div><strong>File:</strong> ${vendor.aadharFile.name}</div>
+                                <div><strong>Type:</strong> ${vendor.aadharFile.type}</div>
+                                <div><strong>Size:</strong> ${(vendor.aadharFile.size / 1024 / 1024).toFixed(2)} MB</div>
+                            </div>
+                            <div style="margin-top: 10px;">
+                                <button onclick="viewAadharFile('${vendor._id}')" style="background: #3b82f6; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 0.9rem;">
+                                    View Aadhar Card
+                                </button>
+                            </div>
+                        </div>
+                    ` : '<span class="muted">No Aadhar card uploaded</span>'}
+                    
+                    ${(vendor.documents && vendor.documents.length > 0) ? vendor.documents.map(doc => `
                         <div class="document-item">
                             <span>📄</span>
                             <span>${doc}</span>
                         </div>
-                    `).join('')}
+                    `).join('') : ''}
                 </div>
             </div>
             
@@ -401,10 +358,16 @@
                 <h4>📊 Application Status</h4>
                 <div class="detail-item">
                     <div class="detail-label">Current Status</div>
-                    <div class="detail-value" style="background: ${vendor.status === 'pending' ? '#fef3c7' : vendor.status === 'approved' ? '#d1fae5' : '#fee2e2'}; color: ${vendor.status === 'pending' ? '#d97706' : vendor.status === 'approved' ? '#059669' : '#dc2626'}; font-weight: 600; text-transform: uppercase;">
-                        ${vendor.status}
+                    <div class="detail-value" style="background: ${vendor.approvalStatus === 'pending' ? '#fef3c7' : vendor.approvalStatus === 'approved' ? '#d1fae5' : '#fee2e2'}; color: ${vendor.approvalStatus === 'pending' ? '#d97706' : vendor.approvalStatus === 'approved' ? '#059669' : '#dc2626'}; font-weight: 600; text-transform: uppercase;">
+                        ${vendor.approvalStatus}
                     </div>
                 </div>
+                ${vendor.rejectionReason ? `
+                    <div class="detail-item">
+                        <div class="detail-label">Rejection Reason</div>
+                        <div class="detail-value">${vendor.rejectionReason}</div>
+                    </div>
+                ` : ''}
             </div>
         `;
         
@@ -427,68 +390,79 @@
     }
 
     // Approve vendor (called from table)
-    function approveVendor(vendorId) {
-        const vendor = mockVendors.find(v => v.id === vendorId);
-        if (vendor) {
-            vendor.status = 'approved';
-            updateVendorStatus(vendorId, 'approved');
+    async function approveVendor(vendorId) {
+        console.log('Approving vendor with ID:', vendorId);
+        try {
+            const response = await API.put(`${API_CONFIG.endpoints.adminVendors}/${vendorId}/approve`);
+            
+            // Update local vendor data
+            const vendor = currentVendors.find(v => v._id === vendorId);
+            if (vendor) {
+                vendor.approvalStatus = 'approved';
+                vendor.approvedAt = new Date();
+            }
+            
+            // Refresh the display
+            renderVendorTable();
+            updateStats();
             
             // Add notification
             addNotification({
                 id: Date.now() + Math.random(),
                 type: 'vendor_approved',
                 title: 'Vendor Approved',
-                message: `${vendor.name} from ${vendor.businessName} has been approved`,
+                message: `${vendor.name} from ${vendor.shopName || 'Unknown Business'} has been approved`,
                 vendorId: vendorId,
                 timestamp: new Date(),
                 read: false
             });
+            
+            showToast('Vendor approved successfully!', 'success');
+        } catch (error) {
+            console.error('Error approving vendor:', error);
+            showToast('Failed to approve vendor', 'error');
         }
     }
 
     // Reject vendor (called from table)
-    function rejectVendor(vendorId) {
-        const vendor = mockVendors.find(v => v.id === vendorId);
-        if (vendor) {
-            vendor.status = 'rejected';
-            updateVendorStatus(vendorId, 'rejected');
+    async function rejectVendor(vendorId) {
+        console.log('Rejecting vendor with ID:', vendorId);
+        const rejectionReason = prompt('Please provide a reason for rejection (optional):');
+        
+        try {
+            const response = await API.put(`${API_CONFIG.endpoints.adminVendors}/${vendorId}/reject`, {
+                rejectionReason: rejectionReason || 'Application rejected'
+            });
+            
+            // Update local vendor data
+            const vendor = currentVendors.find(v => v._id === vendorId);
+            if (vendor) {
+                vendor.approvalStatus = 'rejected';
+                vendor.rejectionReason = rejectionReason || 'Application rejected';
+                vendor.approvedAt = new Date();
+            }
+            
+            // Refresh the display
+            renderVendorTable();
+            updateStats();
             
             // Add notification
             addNotification({
                 id: Date.now() + Math.random(),
                 type: 'vendor_rejected',
                 title: 'Vendor Rejected',
-                message: `${vendor.name} from ${vendor.businessName} has been rejected`,
+                message: `${vendor.name} from ${vendor.shopName || 'Unknown Business'} has been rejected`,
                 vendorId: vendorId,
                 timestamp: new Date(),
                 read: false
             });
+            
+            showToast('Vendor rejected successfully!', 'success');
+        } catch (error) {
+            console.error('Error rejecting vendor:', error);
+            showToast('Failed to reject vendor', 'error');
         }
     }
-
-    // Update vendor status
-    function updateVendorStatus(vendorId, status) {
-        // Update the vendor in the array
-        const vendor = mockVendors.find(v => v.id === vendorId);
-        if (vendor) {
-            vendor.status = status;
-        }
-        
-        // Refresh the display
-        const filter = document.getElementById('statusFilter').value;
-        if (filter === 'all') {
-            currentVendors = [...mockVendors];
-        } else {
-            currentVendors = mockVendors.filter(v => v.status === filter);
-        }
-        
-        renderVendorTable();
-        updateStats();
-        
-        // Show success message
-        showToast(`Vendor ${status} successfully!`, 'success');
-    }
-
 
     // Format date
     function formatDate(dateString) {
@@ -560,10 +534,86 @@
         }, duration);
     }
 
+    // View Aadhar file
+    function viewAadharFile(vendorId) {
+        const vendor = currentVendors.find(v => v._id === vendorId);
+        if (!vendor || !vendor.aadharFile) {
+            showToast('Aadhar file not found', 'error');
+            return;
+        }
+
+        // Create a new window/tab to view the file
+        const newWindow = window.open('', '_blank');
+        newWindow.document.write(`
+            <html>
+                <head>
+                    <title>Aadhar Card - ${vendor.name}</title>
+                    <style>
+                        body { 
+                            margin: 0; 
+                            padding: 20px; 
+                            font-family: Arial, sans-serif; 
+                            background: #f5f5f5;
+                        }
+                        .container {
+                            max-width: 800px;
+                            margin: 0 auto;
+                            background: white;
+                            padding: 20px;
+                            border-radius: 8px;
+                            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                        }
+                        .header {
+                            text-align: center;
+                            margin-bottom: 20px;
+                            padding-bottom: 20px;
+                            border-bottom: 2px solid #e5e7eb;
+                        }
+                        .file-info {
+                            background: #f9fafb;
+                            padding: 15px;
+                            border-radius: 6px;
+                            margin-bottom: 20px;
+                        }
+                        img, embed {
+                            max-width: 100%;
+                            height: auto;
+                            border: 1px solid #d1d5db;
+                            border-radius: 4px;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="container">
+                        <div class="header">
+                            <h1>🆔 Aadhar Card Verification</h1>
+                            <p><strong>Vendor:</strong> ${vendor.name} | <strong>Shop:</strong> ${vendor.shopName}</p>
+                        </div>
+                        
+                        <div class="file-info">
+                            <p><strong>File Name:</strong> ${vendor.aadharFile.name}</p>
+                            <p><strong>File Type:</strong> ${vendor.aadharFile.type}</p>
+                            <p><strong>File Size:</strong> ${(vendor.aadharFile.size / 1024 / 1024).toFixed(2)} MB</p>
+                        </div>
+                        
+                        <div style="text-align: center;">
+                            ${vendor.aadharFile.type.startsWith('image/') ? 
+                                `<img src="${vendor.aadharFile.data}" alt="Aadhar Card" />` :
+                                `<embed src="${vendor.aadharFile.data}" type="${vendor.aadharFile.type}" width="100%" height="600px" />`
+                            }
+                        </div>
+                    </div>
+                </body>
+            </html>
+        `);
+        newWindow.document.close();
+    }
+
     // Make functions globally available
     window.viewVendor = viewVendor;
     window.approveVendor = approveVendor;
     window.rejectVendor = rejectVendor;
+    window.viewAadharFile = viewAadharFile;
 
     // Initialize when DOM is loaded
     if (document.readyState === 'loading') {
@@ -573,3 +623,4 @@
     }
 
 })();
+

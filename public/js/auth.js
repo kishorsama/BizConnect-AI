@@ -20,9 +20,9 @@ const Auth = {
     }
   },
   
-  async register(name, email, password, role) {
+  async register(registrationData) {
     try {
-      const response = await API.post(API_CONFIG.endpoints.register, { name, email, password, role });
+      const response = await API.post(API_CONFIG.endpoints.register, registrationData);
       Storage.setToken(response.accessToken);
       Storage.setUser(response.user);
       return response.user;

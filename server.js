@@ -9,8 +9,8 @@ const bodyParser = require('body-parser');
 const path = require('path');
 
 // Middleware
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
 
 // MongoDB Connection - Local Database
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/bizconnect-ai';
@@ -47,6 +47,73 @@ const userSchema = new mongoose.Schema({
     type: String,
     enum: ['admin', 'vendor', 'customer'],
     required: true
+  },
+  // Vendor-specific fields
+  phone: {
+    type: String,
+    trim: true
+  },
+  shopName: {
+    type: String,
+    trim: true
+  },
+  businessType: {
+    type: String,
+    trim: true
+  },
+  address: {
+    type: String,
+    trim: true
+  },
+  gstNumber: {
+    type: String,
+    trim: true
+  },
+  panNumber: {
+    type: String,
+    trim: true
+  },
+  businessDescription: {
+    type: String,
+    trim: true
+  },
+  annualTurnover: {
+    type: String,
+    trim: true
+  },
+  employeeCount: {
+    type: String,
+    trim: true
+  },
+  website: {
+    type: String,
+    trim: true
+  },
+  documents: [{
+    type: String,
+    trim: true
+  }],
+  aadharFile: {
+    name: { type: String },
+    type: { type: String },
+    size: { type: Number },
+    data: { type: String } // Base64 encoded file data
+  },
+  approvalStatus: {
+    type: String,
+    enum: ['pending', 'approved', 'rejected'],
+    default: 'pending'
+  },
+  approvedAt: {
+    type: Date
+  },
+  approvedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
+  rejectionReason: {
+    type: String,
+    trim: true
   },
   createdAt: {
     type: Date,
@@ -160,6 +227,11 @@ const orderSchema = new mongoose.Schema({
   updatedAt: {
     type: Date,
     default: Date.now
+  },
+  orderNumber: {
+    type: String,
+    unique: true,
+    required: true
   }
 });
 
@@ -248,7 +320,7 @@ app.post('/api/auth/login', async (req, res) => {
 // Register endpoint
 app.post('/api/auth/register', async (req, res) => {
   try {
-    const { name, email, password, role } = req.body;
+    const { name, email, password, role, shopInfo } = req.body;
 
     if (!name || !email || !password || !role) {
       return res.status(400).json({ 
@@ -270,14 +342,48 @@ app.post('/api/auth/register', async (req, res) => {
       });
     }
 
+    // For vendors, require shop information
+    if (role === 'vendor' && !shopInfo) {
+      return res.status(400).json({ 
+        error: 'Shop information is required for vendor registration' 
+      });
+    }
+
     // Create new user
-    const newUser = new User({
+    const userData = {
       name,
       email: email.toLowerCase(),
       password, // In production, hash this password
       role
-    });
+    };
 
+    // Add vendor-specific fields if role is vendor
+    if (role === 'vendor' && shopInfo) {
+      userData.phone = shopInfo.phone || '';
+      userData.shopName = shopInfo.shopName || '';
+      userData.businessType = shopInfo.businessType || '';
+      userData.address = shopInfo.address || '';
+      userData.gstNumber = shopInfo.gstNumber || '';
+      userData.panNumber = shopInfo.panNumber || '';
+      userData.businessDescription = shopInfo.businessDescription || '';
+      userData.annualTurnover = shopInfo.annualTurnover || '';
+      userData.employeeCount = shopInfo.employeeCount || '';
+      userData.documents = shopInfo.documents || [];
+      
+      // Add Aadhar file data if provided
+      if (shopInfo.aadharFile) {
+        userData.aadharFile = {
+          name: shopInfo.aadharFile.name,
+          type: shopInfo.aadharFile.type,
+          size: shopInfo.aadharFile.size,
+          data: shopInfo.aadharFile.data
+        };
+      }
+      
+      userData.approvalStatus = 'pending';
+    }
+
+    const newUser = new User(userData);
     await newUser.save();
 
     // Return user data (excluding password)
@@ -286,11 +392,23 @@ app.post('/api/auth/register', async (req, res) => {
       name: newUser.name,
       email: newUser.email,
       role: newUser.role,
+      phone: newUser.phone,
+      shopName: newUser.shopName,
+      businessType: newUser.businessType,
+      address: newUser.address,
+      gstNumber: newUser.gstNumber,
+      panNumber: newUser.panNumber,
+      businessDescription: newUser.businessDescription,
+      annualTurnover: newUser.annualTurnover,
+      employeeCount: newUser.employeeCount,
+      website: newUser.website,
+      documents: newUser.documents,
+      approvalStatus: newUser.approvalStatus,
       createdAt: newUser.createdAt
     };
 
     res.status(201).json({
-      message: 'User created successfully',
+      message: role === 'vendor' ? 'Vendor registration submitted for approval' : 'User created successfully',
       user: userResponse,
       accessToken: `token-${newUser._id}-${Date.now()}`
     });
@@ -385,8 +503,66 @@ app.get('/api/vendor/products', async (req, res) => {
   }
 });
 
+// Test endpoint to verify server is working
+app.get('/api/test', (req, res) => {
+  res.json({ message: 'Server is working', timestamp: new Date().toISOString() });
+});
+
 // Add product (vendor only)
 app.post('/api/vendor/products', async (req, res) => {
+  try {
+    console.log('POST /api/vendor/products - Request received');
+    console.log('Headers:', req.headers);
+    console.log('Body:', req.body);
+    
+    const token = req.headers.authorization;
+    if (!token) {
+      console.log('No token provided');
+      return res.status(401).json({ error: 'No token provided' });
+    }
+
+    const tokenParts = token.replace('Bearer ', '').split('-');
+    if (tokenParts.length !== 3) {
+      return res.status(401).json({ error: 'Invalid token' });
+    }
+
+    const vendorId = tokenParts[1];
+    const vendor = await User.findById(vendorId);
+    
+    if (!vendor || vendor.role !== 'vendor') {
+      return res.status(403).json({ error: 'Access denied' });
+    }
+
+    const { name, description, price, category, stock, image, isActive } = req.body;
+
+    if (!name || !description || !price || !category || stock === undefined) {
+      return res.status(400).json({ error: 'All required fields must be provided' });
+    }
+
+    const product = new Product({
+      name,
+      description,
+      price,
+      category,
+      vendorId,
+      stock,
+      image: image || '',
+      isActive: isActive !== undefined ? isActive : true
+    });
+
+    await product.save();
+    console.log('Product saved successfully:', product);
+    res.status(201).json({ message: 'Product created successfully', product });
+  } catch (error) {
+    console.error('Create product error:', error);
+    console.error('Error details:', error.message);
+    console.error('Error stack:', error.stack);
+    res.status(500).json({ error: 'Internal server error', details: error.message });
+  }
+});
+
+// Update product (vendor only)
+app.put('/api/vendor/products/:id', async (req, res) => {
   try {
     const token = req.headers.authorization;
     if (!token) {
@@ -405,26 +581,70 @@ app.post('/api/vendor/products', async (req, res) => {
       return res.status(403).json({ error: 'Access denied' });
     }
 
-    const { name, description, price, category, stock, image } = req.body;
-
-    if (!name || !description || !price || !category || stock === undefined) {
-      return res.status(400).json({ error: 'All required fields must be provided' });
+    const productId = req.params.id;
+    const product = await Product.findById(productId);
+    
+    if (!product) {
+      return res.status(404).json({ error: 'Product not found' });
     }
 
-    const product = new Product({
-      name,
-      description,
-      price,
-      category,
-      vendorId,
-      stock,
-      image: image || ''
-    });
+    if (product.vendorId.toString() !== vendorId) {
+      return res.status(403).json({ error: 'You can only update your own products' });
+    }
+
+    const { name, description, price, category, stock, image, isActive } = req.body;
+
+    if (name) product.name = name;
+    if (description) product.description = description;
+    if (price !== undefined) product.price = price;
+    if (category) product.category = category;
+    if (stock !== undefined) product.stock = stock;
+    if (image !== undefined) product.image = image;
+    if (isActive !== undefined) product.isActive = isActive;
 
     await product.save();
-    res.status(201).json({ message: 'Product created successfully', product });
+    res.json({ message: 'Product updated successfully', product });
   } catch (error) {
-    console.error('Create product error:', error);
+    console.error('Update product error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Delete product (vendor only)
+app.delete('/api/vendor/products/:id', async (req, res) => {
+  try {
+    const token = req.headers.authorization;
+    if (!token) {
+      return res.status(401).json({ error: 'No token provided' });
+    }
+
+    const tokenParts = token.replace('Bearer ', '').split('-');
+    if (tokenParts.length !== 3) {
+      return res.status(401).json({ error: 'Invalid token' });
+    }
+
+    const vendorId = tokenParts[1];
+    const vendor = await User.findById(vendorId);
+    
+    if (!vendor || vendor.role !== 'vendor') {
+      return res.status(403).json({ error: 'Access denied' });
+    }
+
+    const productId = req.params.id;
+    const product = await Product.findById(productId);
+    
+    if (!product) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+
+    if (product.vendorId.toString() !== vendorId) {
+      return res.status(403).json({ error: 'You can only delete your own products' });
+    }
+
+    await Product.findByIdAndDelete(productId);
+    res.json({ message: 'Product deleted successfully' });
+  } catch (error) {
+    console.error('Delete product error:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
@@ -557,6 +777,243 @@ app.delete('/api/cart/remove/:productId', async (req, res) => {
   }
 });
 
+// ==================== VENDOR MANAGEMENT API ====================
+
+// Get all vendors for admin approval
+app.get('/api/admin/vendors', async (req, res) => {
+  try {
+    const token = req.headers.authorization;
+    if (!token) {
+      return res.status(401).json({ error: 'No token provided' });
+    }
+
+    const tokenParts = token.replace('Bearer ', '').split('-');
+    if (tokenParts.length !== 3) {
+      return res.status(401).json({ error: 'Invalid token' });
+    }
+
+    const adminId = tokenParts[1];
+    const admin = await User.findById(adminId);
+    
+    if (!admin || admin.role !== 'admin') {
+      return res.status(403).json({ error: 'Access denied' });
+    }
+
+    const vendors = await User.find({ role: 'vendor' })
+      .select('-password')
+      .sort({ createdAt: -1 });
+
+    res.json({ vendors });
+  } catch (error) {
+    console.error('Get vendors error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Approve vendor
+app.put('/api/admin/vendors/:vendorId/approve', async (req, res) => {
+  try {
+    const token = req.headers.authorization;
+    if (!token) {
+      return res.status(401).json({ error: 'No token provided' });
+    }
+
+    const tokenParts = token.replace('Bearer ', '').split('-');
+    if (tokenParts.length !== 3) {
+      return res.status(401).json({ error: 'Invalid token' });
+    }
+
+    const adminId = tokenParts[1];
+    const admin = await User.findById(adminId);
+    
+    if (!admin || admin.role !== 'admin') {
+      return res.status(403).json({ error: 'Access denied' });
+    }
+
+    const { vendorId } = req.params;
+    console.log('Approve vendor - received vendorId:', vendorId);
+    const vendor = await User.findById(vendorId);
+    
+    if (!vendor || vendor.role !== 'vendor') {
+      return res.status(404).json({ error: 'Vendor not found' });
+    }
+
+    vendor.approvalStatus = 'approved';
+    vendor.approvedAt = new Date();
+    vendor.approvedBy = adminId;
+    vendor.updatedAt = new Date();
+    
+    await vendor.save();
+
+    res.json({ 
+      message: 'Vendor approved successfully', 
+      vendor: {
+        id: vendor._id,
+        name: vendor.name,
+        email: vendor.email,
+        shopName: vendor.shopName,
+        approvalStatus: vendor.approvalStatus,
+        approvedAt: vendor.approvedAt
+      }
+    });
+  } catch (error) {
+    console.error('Approve vendor error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Reject vendor
+app.put('/api/admin/vendors/:vendorId/reject', async (req, res) => {
+  try {
+    const token = req.headers.authorization;
+    if (!token) {
+      return res.status(401).json({ error: 'No token provided' });
+    }
+
+    const tokenParts = token.replace('Bearer ', '').split('-');
+    if (tokenParts.length !== 3) {
+      return res.status(401).json({ error: 'Invalid token' });
+    }
+
+    const adminId = tokenParts[1];
+    const admin = await User.findById(adminId);
+    
+    if (!admin || admin.role !== 'admin') {
+      return res.status(403).json({ error: 'Access denied' });
+    }
+
+    const { vendorId } = req.params;
+    console.log('Reject vendor - received vendorId:', vendorId);
+    const { rejectionReason } = req.body;
+    
+    const vendor = await User.findById(vendorId);
+    
+    if (!vendor || vendor.role !== 'vendor') {
+      return res.status(404).json({ error: 'Vendor not found' });
+    }
+
+    vendor.approvalStatus = 'rejected';
+    vendor.rejectionReason = rejectionReason || 'Application rejected';
+    vendor.approvedAt = new Date();
+    vendor.approvedBy = adminId;
+    vendor.updatedAt = new Date();
+    
+    await vendor.save();
+
+    res.json({ 
+      message: 'Vendor rejected successfully', 
+      vendor: {
+        id: vendor._id,
+        name: vendor.name,
+        email: vendor.email,
+        shopName: vendor.shopName,
+        approvalStatus: vendor.approvalStatus,
+        rejectionReason: vendor.rejectionReason
+      }
+    });
+  } catch (error) {
+    console.error('Reject vendor error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Update vendor profile
+app.put('/api/vendor/profile', async (req, res) => {
+  try {
+    console.log('Vendor profile update request received');
+    console.log('Headers:', req.headers);
+    console.log('Body:', req.body);
+    
+    const token = req.headers.authorization;
+    if (!token) {
+      console.log('No token provided');
+      return res.status(401).json({ error: 'No token provided' });
+    }
+
+    const tokenParts = token.replace('Bearer ', '').split('-');
+    console.log('Token parts:', tokenParts);
+    if (tokenParts.length !== 3) {
+      console.log('Invalid token format');
+      return res.status(401).json({ error: 'Invalid token' });
+    }
+
+    const vendorId = tokenParts[1];
+    console.log('Vendor ID:', vendorId);
+    const vendor = await User.findById(vendorId);
+    console.log('Found vendor:', vendor ? { id: vendor._id, name: vendor.name, role: vendor.role } : 'Not found');
+    
+    if (!vendor) {
+      console.log('Vendor not found');
+      return res.status(404).json({ error: 'Vendor not found' });
+    }
+    
+    if (vendor.role !== 'vendor') {
+      console.log('User is not a vendor, role:', vendor.role);
+      return res.status(403).json({ error: 'Access denied - not a vendor' });
+    }
+
+    const { 
+      phone, shopName, businessType, address, gstNumber, 
+      panNumber, businessDescription, annualTurnover, 
+      employeeCount, documents, aadharFile 
+    } = req.body;
+
+    // Update vendor fields
+    if (phone !== undefined) vendor.phone = phone;
+    if (shopName !== undefined) vendor.shopName = shopName;
+    if (businessType !== undefined) vendor.businessType = businessType;
+    if (address !== undefined) vendor.address = address;
+    if (gstNumber !== undefined) vendor.gstNumber = gstNumber;
+    if (panNumber !== undefined) vendor.panNumber = panNumber;
+    if (businessDescription !== undefined) vendor.businessDescription = businessDescription;
+    if (annualTurnover !== undefined) vendor.annualTurnover = annualTurnover;
+    if (employeeCount !== undefined) vendor.employeeCount = employeeCount;
+    if (documents !== undefined) vendor.documents = documents;
+    
+    // Update Aadhar file if provided
+    if (aadharFile !== undefined) {
+      vendor.aadharFile = {
+        name: aadharFile.name,
+        type: aadharFile.type,
+        size: aadharFile.size,
+        data: aadharFile.data
+      };
+    }
+    
+    vendor.updatedAt = new Date();
+    await vendor.save();
+
+    // Return updated vendor data (excluding password)
+    const vendorResponse = {
+      id: vendor._id,
+      name: vendor.name,
+      email: vendor.email,
+      role: vendor.role,
+      phone: vendor.phone,
+      shopName: vendor.shopName,
+      businessType: vendor.businessType,
+      address: vendor.address,
+      gstNumber: vendor.gstNumber,
+      panNumber: vendor.panNumber,
+      businessDescription: vendor.businessDescription,
+      annualTurnover: vendor.annualTurnover,
+      employeeCount: vendor.employeeCount,
+      documents: vendor.documents,
+      approvalStatus: vendor.approvalStatus,
+      updatedAt: vendor.updatedAt
+    };
+
+    console.log('Profile updated successfully, sending response:', vendorResponse);
+    res.json({ 
+      message: 'Profile updated successfully', 
+      vendor: vendorResponse 
+    });
+  } catch (error) {
+    console.error('Update vendor profile error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 // ==================== ORDER MANAGEMENT API ====================
 
 // Create order from cart
@@ -586,9 +1043,12 @@ app.post('/api/orders/create', async (req, res) => {
     }
 
     const cart = await Cart.findOne({ customerId }).populate('items.productId');
+    console.log('Cart found:', cart);
     if (!cart || cart.items.length === 0) {
       return res.status(400).json({ error: 'Cart is empty' });
     }
+    
+    console.log('Cart items:', cart.items);
 
     // Group items by vendor
     const vendorOrders = {};
@@ -596,6 +1056,14 @@ app.post('/api/orders/create', async (req, res) => {
 
     for (const item of cart.items) {
       const product = item.productId;
+      console.log('Processing item:', item);
+      console.log('Product:', product);
+      
+      if (!product) {
+        console.error('Product not found for item:', item);
+        return res.status(400).json({ error: 'Product not found in cart item' });
+      }
+      
       const vendorId = product.vendorId.toString();
 
       if (!vendorOrders[vendorId]) {
@@ -604,6 +1072,14 @@ app.post('/api/orders/create', async (req, res) => {
           items: [],
           vendorTotal: 0
         };
+      }
+
+      // Check if enough stock is available
+      if (product.stock < item.quantity) {
+        console.error(`Insufficient stock for product ${product.name}. Available: ${product.stock}, Requested: ${item.quantity}`);
+        return res.status(400).json({ 
+          error: `Insufficient stock for ${product.name}. Only ${product.stock} items available.` 
+        });
       }
 
       const itemTotal = product.price * item.quantity;
@@ -623,6 +1099,9 @@ app.post('/api/orders/create', async (req, res) => {
     // Create orders for each vendor
     const orders = [];
     for (const vendorId in vendorOrders) {
+      // Generate unique order number
+      const orderNumber = `ORD-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
+      
       const order = new Order({
         customerId,
         vendorId,
@@ -630,7 +1109,8 @@ app.post('/api/orders/create', async (req, res) => {
         totalAmount: vendorOrders[vendorId].vendorTotal,
         shippingAddress,
         status: 'pending',
-        paymentStatus: 'pending'
+        paymentStatus: 'pending',
+        orderNumber: orderNumber
       });
       await order.save();
       orders.push(order);
@@ -646,6 +1126,155 @@ app.post('/api/orders/create', async (req, res) => {
     });
   } catch (error) {
     console.error('Create order error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Get customer orders
+app.get('/api/customer/orders', async (req, res) => {
+  try {
+    const token = req.headers.authorization;
+    if (!token) {
+      return res.status(401).json({ error: 'No token provided' });
+    }
+
+    const tokenParts = token.replace('Bearer ', '').split('-');
+    if (tokenParts.length !== 3) {
+      return res.status(401).json({ error: 'Invalid token' });
+    }
+
+    const customerId = tokenParts[1];
+    const customer = await User.findById(customerId);
+    
+    if (!customer || customer.role !== 'customer') {
+      return res.status(403).json({ error: 'Access denied' });
+    }
+
+    const orders = await Order.find({ customerId })
+      .populate('vendorId', 'name email')
+      .populate('items.productId', 'name price image')
+      .sort({ createdAt: -1 });
+
+    res.json({ orders });
+  } catch (error) {
+    console.error('Get customer orders error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Get vendor order statistics
+app.get('/api/vendor/order-stats', async (req, res) => {
+  try {
+    const token = req.headers.authorization;
+    if (!token) {
+      return res.status(401).json({ error: 'No token provided' });
+    }
+
+    const tokenParts = token.replace('Bearer ', '').split('-');
+    if (tokenParts.length !== 3) {
+      return res.status(401).json({ error: 'Invalid token' });
+    }
+
+    const vendorId = tokenParts[1];
+    const vendor = await User.findById(vendorId);
+    
+    if (!vendor || vendor.role !== 'vendor') {
+      return res.status(403).json({ error: 'Access denied' });
+    }
+
+    // Get order counts by status
+    const stats = await Order.aggregate([
+      { $match: { vendorId: mongoose.Types.ObjectId.createFromHexString(vendorId) } },
+      { $group: { 
+        _id: '$status', 
+        count: { $sum: 1 },
+        totalAmount: { $sum: '$totalAmount' }
+      }}
+    ]);
+
+    // Format the response
+    const formattedStats = {
+      pending: 0,
+      confirmed: 0,
+      processing: 0,
+      shipped: 0,
+      delivered: 0,
+      cancelled: 0,
+      totalOrders: 0,
+      totalRevenue: 0
+    };
+
+    stats.forEach(stat => {
+      formattedStats[stat._id] = stat.count;
+      formattedStats.totalOrders += stat.count;
+      formattedStats.totalRevenue += stat.totalAmount;
+    });
+
+    // Calculate metrics for dashboard
+    const metrics = {
+      toBePacked: formattedStats.pending + formattedStats.confirmed,
+      toBeShipped: formattedStats.processing,
+      toBeDelivered: formattedStats.shipped,
+      toBeInvoiced: formattedStats.delivered
+    };
+
+    res.json({ 
+      stats: formattedStats,
+      metrics: metrics
+    });
+  } catch (error) {
+    console.error('Get vendor order stats error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Update order status
+app.put('/api/vendor/orders/:orderId/status', async (req, res) => {
+  try {
+    const token = req.headers.authorization;
+    if (!token) {
+      return res.status(401).json({ error: 'No token provided' });
+    }
+
+    const tokenParts = token.replace('Bearer ', '').split('-');
+    if (tokenParts.length !== 3) {
+      return res.status(401).json({ error: 'Invalid token' });
+    }
+
+    const vendorId = tokenParts[1];
+    const vendor = await User.findById(vendorId);
+    
+    if (!vendor || vendor.role !== 'vendor') {
+      return res.status(403).json({ error: 'Access denied' });
+    }
+
+    const { orderId } = req.params;
+    const { status } = req.body;
+
+    if (!status) {
+      return res.status(400).json({ error: 'Status is required' });
+    }
+
+    const validStatuses = ['pending', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled'];
+    if (!validStatuses.includes(status)) {
+      return res.status(400).json({ error: 'Invalid status' });
+    }
+
+    const order = await Order.findOne({ _id: orderId, vendorId: mongoose.Types.ObjectId.createFromHexString(vendorId) });
+    if (!order) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+
+    order.status = status;
+    order.updatedAt = new Date();
+    await order.save();
+
+    res.json({ 
+      message: 'Order status updated successfully',
+      order: order
+    });
+  } catch (error) {
+    console.error('Update order status error:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
@@ -670,7 +1299,7 @@ app.get('/api/vendor/orders', async (req, res) => {
       return res.status(403).json({ error: 'Access denied' });
     }
 
-    const orders = await Order.find({ vendorId })
+    const orders = await Order.find({ vendorId: mongoose.Types.ObjectId.createFromHexString(vendorId) })
       .populate('customerId', 'name email')
       .populate('items.productId', 'name price')
       .sort({ createdAt: -1 });
@@ -749,6 +1378,10 @@ app.get('/customer-dashboard' , (req , res) => {
 
 app.get('/vendor-dashboard' , (req , res) => {
     res.sendFile(path.join(__dirname, 'public', 'vendor-dashboard.html'));
+})
+
+app.get('/admin-dashboard' , (req , res) => {
+    res.sendFile(path.join(__dirname, 'public', 'admin-dashboard.html'));
 })
 
 app.listen(port, () => {

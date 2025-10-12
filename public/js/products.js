@@ -183,5 +183,27 @@ const Products = {
       console.error('Error loading vendor products:', error);
       this.showMessage('Failed to load products', 'error');
     }
+  },
+
+  // Update existing product (vendor only)
+  async updateProduct(productId, productData) {
+    try {
+      const response = await API.put(`${API_CONFIG.endpoints.vendorProducts}/${productId}`, productData);
+      return response.product;
+    } catch (error) {
+      console.error('Error updating product:', error);
+      throw error;
+    }
+  },
+
+  // Delete product (vendor only)
+  async deleteProduct(productId) {
+    try {
+      const response = await API.delete(`${API_CONFIG.endpoints.vendorProducts}/${productId}`);
+      return response;
+    } catch (error) {
+      console.error('Error deleting product:', error);
+      throw error;
+    }
   }
 };

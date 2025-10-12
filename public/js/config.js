@@ -22,6 +22,12 @@ const API_CONFIG = {
     // Order endpoints
     createOrder: '/orders/create',
     vendorOrders: '/vendor/orders',
-    updateOrderStatus: '/vendor/orders'
+    updateOrderStatus: '/vendor/orders',
+    
+    // Vendor endpoints
+    vendorProfile: '/vendor/profile',
+    
+    // Admin endpoints
+    adminVendors: '/admin/vendors'
   }
 };

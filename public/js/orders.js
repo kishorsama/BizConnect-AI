@@ -1,6 +1,17 @@
 // js/orders.js - Order management for vendors
 
 const Orders = {
+  // Get customer orders
+  async getCustomerOrders() {
+    try {
+      const response = await API.get('/customer/orders');
+      return response.orders;
+    } catch (error) {
+      console.error('Error fetching customer orders:', error);
+      throw error;
+    }
+  },
+
   // Get vendor orders
   async getVendorOrders() {
     try {
@@ -25,6 +36,17 @@ const Orders = {
     }
   },
 
+  // Load customer orders
+  async loadCustomerOrders() {
+    try {
+      const orders = await this.getCustomerOrders();
+      this.renderCustomerOrders(orders);
+    } catch (error) {
+      console.error('Error loading customer orders:', error);
+      // Don't show error message to user, just log it
+    }
+  },
+
   // Load vendor orders
   async loadVendorOrders() {
     try {
@@ -32,8 +54,56 @@ const Orders = {
       this.renderVendorOrders(orders);
     } catch (error) {
       console.error('Error loading vendor orders:', error);
-      this.showMessage('Failed to load orders', 'error');
+      // Don't show error message to user, just log it
     }
+  },
+
+  // Render customer orders
+  renderCustomerOrders(orders) {
+    const ordersContainer = document.getElementById('ordersList');
+    if (!ordersContainer) return;
+
+    if (!orders || orders.length === 0) {
+      ordersContainer.innerHTML = '<div class="text-center py-8 text-gray-500"><div class="mb-4"><i data-lucide="package" class="w-12 h-12 mx-auto text-gray-300"></i></div><p class="text-lg font-medium">No orders yet</p><p class="text-sm">Your order history will appear here</p></div>';
+      return;
+    }
+
+    ordersContainer.innerHTML = orders.map(order => `
+      <div class="order-item p-4 border border-gray-200 rounded-lg mb-4">
+        <div class="flex justify-between items-start mb-3">
+          <div>
+            <h4 class="font-semibold text-gray-900">Order #${order.orderNumber || order._id.slice(-8)}</h4>
+            <p class="text-sm text-gray-600 mt-1"><i data-lucide="store" class="w-4 h-4 inline mr-1"></i>${order.vendorId.name}</p>
+            <p class="text-sm text-gray-600"><i data-lucide="calendar" class="w-4 h-4 inline mr-1"></i>${new Date(order.createdAt).toLocaleDateString()}</p>
+          </div>
+          <div class="text-right">
+            <p class="font-semibold text-green-600">₹${order.totalAmount}</p>
+            <span class="badge ${this.getStatusClass(order.status)} mt-1">${order.status}</span>
+          </div>
+        </div>
+        
+        <div class="mb-3">
+          <h5 class="font-medium text-gray-900 mb-2 flex items-center">
+            <i data-lucide="package" class="w-4 h-4 mr-2"></i>Items Ordered
+          </h5>
+          <div class="space-y-2">
+            ${order.items.map(item => `
+              <div class="flex justify-between items-center text-sm bg-gray-50 p-2 rounded">
+                <span class="font-medium">${item.productId.name} x${item.quantity}</span>
+                <span class="font-semibold text-green-600">₹${item.price * item.quantity}</span>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+        
+        <div class="mb-3">
+          <p class="text-sm text-gray-600 mb-1 flex items-center">
+            <i data-lucide="map-pin" class="w-4 h-4 mr-2"></i><strong>Shipping Address:</strong>
+          </p>
+          <p class="text-sm text-gray-600 bg-gray-50 p-2 rounded">${order.shippingAddress}</p>
+        </div>
+      </div>
+    `).join('');
   },
 
   // Render vendor orders
@@ -42,43 +112,47 @@ const Orders = {
     if (!ordersContainer) return;
 
     if (!orders || orders.length === 0) {
-      ordersContainer.innerHTML = '<div class="text-center py-8 text-gray-500">No orders found</div>';
+      ordersContainer.innerHTML = '<div class="text-center py-8 text-gray-500"><div class="mb-4"><i data-lucide="package" class="w-12 h-12 mx-auto text-gray-300"></i></div><p class="text-lg font-medium">No orders yet</p><p class="text-sm">Customer orders will appear here</p></div>';
       return;
     }
 
     ordersContainer.innerHTML = orders.map(order => `
       <div class="order-item p-4 border border-gray-200 rounded-lg mb-4">
-        <div class="flex justify-between items-start mb-2">
+        <div class="flex justify-between items-start mb-3">
           <div>
-            <h4 class="font-semibold text-gray-900">Order #${order._id.slice(-8)}</h4>
-            <p class="text-sm text-gray-600">Customer: ${order.customerId.name}</p>
-            <p class="text-sm text-gray-600">Email: ${order.customerId.email}</p>
+            <h4 class="font-semibold text-gray-900">Order #${order.orderNumber || order._id.slice(-8)}</h4>
+            <p class="text-sm text-gray-600 mt-1"><i data-lucide="user" class="w-4 h-4 inline mr-1"></i>${order.customerId.name}</p>
+            <p class="text-sm text-gray-600"><i data-lucide="mail" class="w-4 h-4 inline mr-1"></i>${order.customerId.email}</p>
           </div>
           <div class="text-right">
             <p class="font-semibold text-green-600">₹${order.totalAmount}</p>
-            <span class="badge ${this.getStatusClass(order.status)}">${order.status}</span>
+            <span class="badge ${this.getStatusClass(order.status)} mt-1">${order.status}</span>
           </div>
         </div>
         
         <div class="mb-3">
-          <h5 class="font-medium text-gray-900 mb-2">Items:</h5>
-          <div class="space-y-1">
+          <h5 class="font-medium text-gray-900 mb-2 flex items-center">
+            <i data-lucide="package" class="w-4 h-4 mr-2"></i>Items Ordered
+          </h5>
+          <div class="space-y-2">
             ${order.items.map(item => `
-              <div class="flex justify-between text-sm">
-                <span>${item.productId.name} x${item.quantity}</span>
-                <span>₹${item.price * item.quantity}</span>
+              <div class="flex justify-between items-center text-sm bg-gray-50 p-2 rounded">
+                <span class="font-medium">${item.productId.name} x${item.quantity}</span>
+                <span class="font-semibold text-green-600">₹${item.price * item.quantity}</span>
               </div>
             `).join('')}
           </div>
         </div>
         
         <div class="mb-3">
-          <p class="text-sm text-gray-600"><strong>Shipping Address:</strong></p>
-          <p class="text-sm text-gray-600">${order.shippingAddress}</p>
+          <p class="text-sm text-gray-600 mb-1 flex items-center">
+            <i data-lucide="map-pin" class="w-4 h-4 mr-2"></i><strong>Shipping Address:</strong>
+          </p>
+          <p class="text-sm text-gray-600 bg-gray-50 p-2 rounded">${order.shippingAddress}</p>
         </div>
         
         <div class="flex gap-2">
-          <select onchange="Orders.updateOrderStatus('${order._id}', this.value)" class="form-select text-sm">
+          <select onchange="Orders.updateOrderStatus('${order._id}', this.value)" class="form-select text-sm bg-white border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
             <option value="pending" ${order.status === 'pending' ? 'selected' : ''}>Pending</option>
             <option value="confirmed" ${order.status === 'confirmed' ? 'selected' : ''}>Confirmed</option>
             <option value="processing" ${order.status === 'processing' ? 'selected' : ''}>Processing</option>

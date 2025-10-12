@@ -183,6 +183,82 @@
             text-decoration: underline;
         }
 
+        /* --- Vendor Shop Information Styles --- */
+        #vendorShopInfo {
+            border-top: 2px solid #e9ecef;
+            padding-top: 20px;
+            margin-top: 20px;
+        }
+
+        #vendorShopInfo h3 {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+            font-family: inherit;
+        }
+
+        .checkbox-label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        .checkbox-label:hover {
+            background-color: #f8f9fa;
+        }
+
+        .checkbox-label input[type="checkbox"] {
+            margin: 0;
+            width: auto;
+        }
+
+        /* File input styling */
+        input[type="file"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        input[type="file"]:hover {
+            border-color: var(--primary-color);
+            background-color: #f0f8ff;
+        }
+
+        input[type="file"]:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        /* --- Responsive Design --- */
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 10px;
+            }
+            
+            .login-card {
+                padding: 30px 20px;
+            }
+            
+            .login-card h1 {
+                font-size: 1.5rem;
+            }
+        }
+
     </style>
 </head>
 <body>
@@ -229,6 +305,77 @@
                     </div>
                 </div>
 
+                <!-- Vendor Shop Information Section -->
+                <div id="vendorShopInfo" style="display: none;">
+                    <h3 style="margin: 20px 0 15px 0; color: var(--primary-color); font-size: 1.2rem;">Shop Information</h3>
+                    
+                    <div class="form-group">
+                        <label for="shopName">Shop/Business Name *</label>
+                        <input type="text" id="shopName" name="shopName" placeholder="Enter your shop or business name" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Phone Number *</label>
+                        <input type="tel" id="phone" name="phone" placeholder="+91 98765 43210" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="businessType">Business Type *</label>
+                        <div class="select-wrapper">
+                            <select id="businessType" name="businessType">
+                                <option value="">Select Business Type</option>
+                                <option value="Electronics Retail">Electronics Retail</option>
+                                <option value="Fashion Retail">Fashion Retail</option>
+                                <option value="Food & Beverages">Food & Beverages</option>
+                                <option value="Home & Garden">Home & Garden</option>
+                                <option value="Sports & Recreation">Sports & Recreation</option>
+                                <option value="Health & Beauty">Health & Beauty</option>
+                                <option value="Books & Stationery">Books & Stationery</option>
+                                <option value="Automotive">Automotive</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="address">Business Address *</label>
+                        <textarea id="address" name="address" rows="3" placeholder="Enter your complete business address"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="gstNumber">GST Number</label>
+                        <input type="text" id="gstNumber" name="gstNumber" placeholder="29ABCDE1234F1Z5" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="panNumber">PAN Number</label>
+                        <input type="text" id="panNumber" name="panNumber" placeholder="ABCDE1234F" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="businessDescription">Business Description</label>
+                        <textarea id="businessDescription" name="businessDescription" rows="3" placeholder="Describe your business, products, and services"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="annualTurnover">Annual Turnover (₹)</label>
+                        <input type="text" id="annualTurnover" name="annualTurnover" placeholder="e.g., ₹50,00,000" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="employeeCount">Number of Employees</label>
+                        <input type="text" id="employeeCount" name="employeeCount" placeholder="e.g., 15" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="aadharUpload">Aadhar Card Upload *</label>
+                        <input type="file" id="aadharUpload" name="aadharUpload" accept=".pdf,.jpg,.jpeg,.png" required />
+                        <small style="color: #666; font-size: 0.85rem; margin-top: 5px; display: block;">
+                            Upload a clear image or PDF of your Aadhar card (Max 5MB)
+                        </small>
+                    </div>
+                </div>
+
                 <button type="submit" id="registerBtn" class="btn-primary">Register</button>
                 <div class="loading-spinner" id="loadingSpinner" style="display:none">Registering...</div>
             </form>
@@ -243,7 +390,47 @@
     <script src="js/api.js"></script>
     <script src="js/auth.js"></script>
     <script>
-        // Mock register implementation
+        // Show/hide vendor shop information based on role selection
+        document.getElementById('role').addEventListener('change', function() {
+            const vendorShopInfo = document.getElementById('vendorShopInfo');
+            if (this.value === 'vendor') {
+                vendorShopInfo.style.display = 'block';
+            } else {
+                vendorShopInfo.style.display = 'none';
+            }
+        });
+
+        // Image compression function
+        function compressImage(file, maxWidth = 800, quality = 0.8) {
+            return new Promise((resolve) => {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                const img = new Image();
+                
+                img.onload = function() {
+                    // Calculate new dimensions
+                    let { width, height } = img;
+                    if (width > maxWidth) {
+                        height = (height * maxWidth) / width;
+                        width = maxWidth;
+                    }
+                    
+                    canvas.width = width;
+                    canvas.height = height;
+                    
+                    // Draw and compress
+                    ctx.drawImage(img, 0, 0, width, height);
+                    
+                    canvas.toBlob((blob) => {
+                        resolve(blob);
+                    }, file.type, quality);
+                };
+                
+                img.src = URL.createObjectURL(file);
+            });
+        }
+
+        // Register form submission
         document.getElementById('registerForm').addEventListener('submit', async (e) => {
             e.preventDefault();
 
@@ -278,24 +465,140 @@
                 return;
             }
 
+            // Vendor-specific validation
+            if (role === 'vendor') {
+                const shopName = document.getElementById('shopName').value.trim();
+                const phone = document.getElementById('phone').value.trim();
+                const businessType = document.getElementById('businessType').value;
+                const address = document.getElementById('address').value.trim();
+                const aadharFile = document.getElementById('aadharUpload').files[0];
+
+                if (!shopName || !phone || !businessType || !address) {
+                    errorDiv.textContent = 'Please fill in all required shop information fields.';
+                    errorDiv.style.display = 'block';
+                    return;
+                }
+
+                if (!aadharFile) {
+                    errorDiv.textContent = 'Please upload your Aadhar card.';
+                    errorDiv.style.display = 'block';
+                    return;
+                }
+
+                // Validate file size (5MB max)
+                if (aadharFile.size > 5 * 1024 * 1024) {
+                    errorDiv.textContent = 'Aadhar file size must be less than 5MB.';
+                    errorDiv.style.display = 'block';
+                    return;
+                }
+
+                // Validate file type
+                const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'];
+                if (!allowedTypes.includes(aadharFile.type)) {
+                    errorDiv.textContent = 'Please upload a valid image (JPG, PNG) or PDF file.';
+                    errorDiv.style.display = 'block';
+                    return;
+                }
+            }
+
             try {
                 registerBtn.disabled = true;
                 loadingSpinner.style.display = 'block';
 
+                // Prepare registration data
+                const registrationData = {
+                    name,
+                    email,
+                    password,
+                    role
+                };
+
+                // Add shop information for vendors
+                if (role === 'vendor') {
+                    const aadharFile = document.getElementById('aadharUpload').files[0];
+                    
+                    // Compress image if it's an image file
+                    let processedFile = aadharFile;
+                    if (aadharFile.type.startsWith('image/')) {
+                        loadingSpinner.textContent = 'Processing Aadhar file...';
+                        processedFile = await compressImage(aadharFile);
+                    }
+                    
+                    // Convert file to base64 for storage
+                    const fileReader = new FileReader();
+                    fileReader.onload = async function(e) {
+                        const aadharBase64 = e.target.result;
+                        
+                        registrationData.shopInfo = {
+                            shopName: document.getElementById('shopName').value.trim(),
+                            phone: document.getElementById('phone').value.trim(),
+                            businessType: document.getElementById('businessType').value,
+                            address: document.getElementById('address').value.trim(),
+                            gstNumber: document.getElementById('gstNumber').value.trim(),
+                            panNumber: document.getElementById('panNumber').value.trim(),
+                            businessDescription: document.getElementById('businessDescription').value.trim(),
+                            annualTurnover: document.getElementById('annualTurnover').value.trim(),
+                            employeeCount: document.getElementById('employeeCount').value.trim(),
+                            aadharFile: {
+                                name: processedFile.name || aadharFile.name,
+                                type: processedFile.type || aadharFile.type,
+                                size: processedFile.size,
+                                data: aadharBase64
+                            }
+                        };
+
+                        // Proceed with registration
+                        await Auth.register(registrationData);
+                        
+                        // Success message
+                        errorDiv.style.backgroundColor = '#d4edda';
+                        errorDiv.style.color = '#155724';
+                        errorDiv.style.border = '1px solid #c3e6cb';
+                        
+                        if (role === 'vendor') {
+                            errorDiv.textContent = 'Vendor registration submitted for approval! You will be notified once approved.';
+                        } else {
+                            errorDiv.textContent = 'Registration successful! Redirecting to login...';
+                        }
+                        
+                        errorDiv.style.display = 'block';
+                        
+                        // Redirect after 2 seconds
+                        setTimeout(() => {
+                            window.location.href = 'login.html';
+                        }, 2000);
+                    };
+                    
+                    fileReader.onerror = function() {
+                        registerBtn.disabled = false;
+                        loadingSpinner.style.display = 'none';
+                        errorDiv.textContent = 'Error processing Aadhar file. Please try again.';
+                        errorDiv.style.display = 'block';
+                    };
+                    
+                    fileReader.readAsDataURL(processedFile);
+                    return; // Exit early, registration will continue in the file reader callback
+                }
+
                 // Real API call to register user
-                await Auth.register(name, email, password, role);
+                await Auth.register(registrationData);
                 
                 // Success message
                 errorDiv.style.backgroundColor = '#d4edda';
                 errorDiv.style.color = '#155724';
                 errorDiv.style.border = '1px solid #c3e6cb';
-                errorDiv.textContent = 'Registration successful! Redirecting...';
+                
+                if (role === 'vendor') {
+                    errorDiv.textContent = 'Vendor registration submitted for approval! You will be notified once approved.';
+                } else {
+                    errorDiv.textContent = 'Registration successful! Redirecting...';
+                }
                 errorDiv.style.display = 'block';
                 
                 // Redirect to appropriate dashboard
                 setTimeout(() => {
                     Auth.redirectToDashboard();
-                }, 1500);
+                }, 2000);
                 
             } catch (err) {
                 errorDiv.style.backgroundColor = '#f8d7da';

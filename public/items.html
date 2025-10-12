@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Items • Vendor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/dashboard.css">
     <link rel="stylesheet" href="css/vendor-dashboard.css">
@@ -17,10 +19,22 @@
                 <span>BizConnect • Vendor</span>
             </div>
             <nav class="vd-nav">
-                <a href="vendor-dashboard.html"><span>🏠</span>Dashboard</a>
-                <a class="active" href="#"><span>📦</span>Items</a>
-                <a href="invoices.html"><span>🧮</span>Invoices</a>
-                <a href="reports.html"><span>📈</span>Reports</a>
+                <a href="vendor-dashboard.html">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a class="active" href="#">
+                    <i class="fas fa-box"></i>
+                    <span>Items</span>
+                </a>
+                <a href="invoices.html">
+                    <i class="fas fa-file-invoice"></i>
+                    <span>Invoices</span>
+                </a>
+                <a href="reports.html">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Reports</span>
+                </a>
             </nav>
         </aside>
 
@@ -117,25 +131,67 @@
         </div>
         </footer>
     </div>
-    <div id="itemDialog" class="item-dialog" hidden>
-        <div class="item-dialog__card vd-card">
-            <h3 id="dialogTitle" style="margin-bottom:10px;">Add Item</h3>
-            <div class="form-grid">
-                <label>Name<input id="fName" type="text" class="nice-input"></label>
-                <label>SKU<input id="fSku" type="text" class="nice-input"></label>
-                <label>Price<input id="fPrice" type="number" step="0.01" class="nice-input"></label>
-                <label>Stock<input id="fStock" type="number" class="nice-input"></label>
-                <label>Status
-                    <select id="fStatus" class="nice-input">
-                        <option value="active">Active</option>
-                        <option value="inactive">Inactive</option>
+    <!-- Enhanced Product Management Modal -->
+    <div id="productModal" class="modal" hidden>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Add New Product</h3>
+                <button id="closeModal" class="close-btn">&times;</button>
+            </div>
+            <form id="productForm" class="modal-form">
+                <div class="form-group">
+                    <label for="productName">Product Name *</label>
+                    <input type="text" id="productName" name="name" required class="form-input" placeholder="Enter product name">
+                </div>
+                
+                <div class="form-group">
+                    <label for="productDescription">Description *</label>
+                    <textarea id="productDescription" name="description" required class="form-input" rows="3" placeholder="Describe your product"></textarea>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="productPrice">Price (₹) *</label>
+                        <input type="number" id="productPrice" name="price" required class="form-input" min="0" step="0.01" placeholder="0.00">
+                    </div>
+                    <div class="form-group">
+                        <label for="productStock">Stock Quantity *</label>
+                        <input type="number" id="productStock" name="stock" required class="form-input" min="0" placeholder="0">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="productCategory">Category *</label>
+                    <select id="productCategory" name="category" required class="form-input">
+                        <option value="">Select Category</option>
+                        <option value="Fruits & Vegetables">Fruits & Vegetables</option>
+                        <option value="Dairy & Eggs">Dairy & Eggs</option>
+                        <option value="Bakery">Bakery</option>
+                        <option value="Snacks">Snacks</option>
+                        <option value="Beverages">Beverages</option>
+                        <option value="Breakfast & Instant">Breakfast & Instant</option>
+                        <option value="Household Essentials">Household Essentials</option>
+                        <option value="Personal Care">Personal Care</option>
                     </select>
-                </label>
-            </div>
-            <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:12px;">
-                <button id="btnCancel" class="add-btn" style="padding:8px 14px;background:#e5e7eb;color:#111827;">Cancel</button>
-                <button id="btnSave" class="primary-btn" style="padding:8px 14px;">Save</button>
-            </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="productImage">Image URL (optional)</label>
+                    <input type="url" id="productImage" name="image" class="form-input" placeholder="https://example.com/image.jpg">
+                </div>
+                
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="productActive" name="isActive" checked>
+                        <span>Product is active</span>
+                    </label>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" id="cancelBtn" class="btn-secondary">Cancel</button>
+                    <button type="submit" id="saveBtn" class="btn-primary">Save Product</button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -143,6 +199,7 @@
     <script src="js/storage.js"></script>
     <script src="js/api.js"></script>
     <script src="js/auth.js"></script>
+    <script src="js/products.js"></script>
     <script src="js/items.js"></script>
 </body>
 </html>

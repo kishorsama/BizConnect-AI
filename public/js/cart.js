@@ -4,7 +4,9 @@ const Cart = {
   // Load cart from backend
   async loadCart() {
     try {
+      console.log('Loading cart from backend...');
       const response = await API.get(API_CONFIG.endpoints.cart);
+      console.log('Cart API response:', response);
       this.renderCart(response.cart);
     } catch (error) {
       console.error('Error loading cart:', error);
@@ -14,36 +16,57 @@ const Cart = {
 
   // Render cart items
   renderCart(cart) {
-    console.log('Rendering cart:', cart);
+    console.log('=== RENDER CART START ===');
+    console.log('Cart data received:', JSON.stringify(cart, null, 2));
+    console.log('Cart items:', cart.items);
+    console.log('Cart items length:', cart.items ? cart.items.length : 'undefined');
+    
     const cartItemsContainer = document.getElementById('cartItems');
     const cartCount = document.getElementById('cartCount');
-    const cartTotal = document.getElementById('cartTotal');
+    const cartSubtotal = document.getElementById('cartSubtotal');
     const cartCountText = document.getElementById('cart-count');
     const cartTotalText = document.getElementById('cart-total');
     
     console.log('Cart elements found:', {
       cartItemsContainer: !!cartItemsContainer,
       cartCount: !!cartCount,
-      cartTotal: !!cartTotal,
+      cartSubtotal: !!cartSubtotal,
       cartCountText: !!cartCountText,
       cartTotalText: !!cartTotalText
     });
     
-    if (!cartItemsContainer) return;
+    if (!cartItemsContainer) {
+      console.error('cartItemsContainer not found!');
+      return;
+    }
 
     if (!cart.items || cart.items.length === 0) {
+      console.log('Cart is empty, showing empty message');
       cartItemsContainer.innerHTML = '<div class="text-center py-8 text-gray-500">Your cart is empty</div>';
       if (cartCount) cartCount.textContent = '0';
-      if (cartTotal) cartTotal.textContent = '₹0';
+      if (cartSubtotal) cartSubtotal.textContent = '₹0';
       if (cartCountText) cartCountText.textContent = '0 items in cart';
       if (cartTotalText) cartTotalText.textContent = '₹0';
+      console.log('=== RENDER CART END (EMPTY) ===');
       return;
     }
 
     let total = 0;
-    cartItemsContainer.innerHTML = cart.items.map(item => {
+    console.log('Processing cart items...');
+    cartItemsContainer.innerHTML = cart.items.map((item, index) => {
+      console.log(`Processing item ${index}:`, item);
+      console.log(`Item productId:`, item.productId);
+      console.log(`Item quantity:`, item.quantity);
+      
+      if (!item.productId) {
+        console.error(`Item ${index} has no productId!`);
+        return '';
+      }
+      
       const itemTotal = item.productId.price * item.quantity;
       total += itemTotal;
+      
+      console.log(`Item ${index} total:`, itemTotal);
       
       return `
         <div class="flex items-center gap-3 p-3 border-b border-gray-100">
@@ -67,14 +90,19 @@ const Cart = {
     
     // Update all cart count and total elements
     if (cartCount) cartCount.textContent = totalCount;
-    if (cartTotal) cartTotal.textContent = `₹${total}`;
+    if (cartSubtotal) cartSubtotal.textContent = `₹${total}`;
     if (cartCountText) cartCountText.textContent = `${totalCount} items in cart`;
     if (cartTotalText) cartTotalText.textContent = `₹${total}`;
+    
+    console.log('Cart count updated to:', cartCount ? cartCount.textContent : 'not found');
+    console.log('Cart subtotal updated to:', cartSubtotal ? cartSubtotal.textContent : 'not found');
+    console.log('=== RENDER CART END (WITH ITEMS) ===');
   },
 
   // Add item to cart
-  async addToCart(productId, quantity = 1) {
+  async addItem(productId, quantity = 1) {
     try {
+      console.log('Adding to cart:', { productId, quantity });
       await API.post(API_CONFIG.endpoints.addToCart, {
         productId,
         quantity
@@ -85,6 +113,11 @@ const Cart = {
       console.error('Error adding to cart:', error);
       this.showMessage('Failed to add item to cart', 'error');
     }
+  },
+
+  // Alias for backward compatibility
+  async addToCart(productId, quantity = 1) {
+    return this.addItem(productId, quantity);
   },
 
   // Update item quantity
@@ -147,10 +180,74 @@ const Cart = {
 
   // Show checkout form
   showCheckoutForm() {
+    console.log('showCheckoutForm() called');
     const checkoutForm = document.getElementById('checkout-form');
+    console.log('Checkout form element:', checkoutForm);
+    
     if (checkoutForm) {
+      // Load current cart and populate checkout form
+      this.loadCartForCheckout();
       checkoutForm.style.display = 'block';
+      console.log('Checkout form shown');
+    } else {
+      console.error('Checkout form element not found');
     }
+  },
+
+  // Load cart data for checkout form
+  async loadCartForCheckout() {
+    console.log('loadCartForCheckout() called');
+    try {
+      const response = await API.get(API_CONFIG.endpoints.cart);
+      console.log('Cart data for checkout:', response);
+      this.populateCheckoutForm(response.cart);
+    } catch (error) {
+      console.error('Error loading cart for checkout:', error);
+      this.showMessage('Failed to load cart for checkout', 'error');
+    }
+  },
+
+  // Populate checkout form with cart items
+  populateCheckoutForm(cart) {
+    console.log('populateCheckoutForm() called with cart:', cart);
+    const checkoutItems = document.getElementById('checkout-items');
+    const checkoutTotal = document.getElementById('checkout-total');
+    
+    console.log('Checkout form elements:', {
+      checkoutItems: !!checkoutItems,
+      checkoutTotal: !!checkoutTotal
+    });
+    
+    if (!checkoutItems || !checkoutTotal) {
+      console.error('Checkout form elements not found');
+      return;
+    }
+
+    if (!cart.items || cart.items.length === 0) {
+      console.log('Cart is empty');
+      checkoutItems.innerHTML = '<p class="text-gray-500">No items in cart</p>';
+      checkoutTotal.textContent = '₹0';
+      return;
+    }
+
+    let total = 0;
+    checkoutItems.innerHTML = cart.items.map(item => {
+      const itemTotal = item.productId.price * item.quantity;
+      total += itemTotal;
+      
+      return `
+        <div class="flex justify-between items-center text-sm">
+          <div class="flex-1">
+            <span class="font-medium">${item.productId.name}</span>
+            <span class="text-gray-600"> x${item.quantity}</span>
+          </div>
+          <span class="font-medium">₹${itemTotal}</span>
+        </div>
+      `;
+    }).join('');
+
+    console.log('Checkout total calculated:', total);
+    checkoutTotal.textContent = `₹${total}`;
   },
 
   // Hide checkout form
@@ -162,7 +259,14 @@ const Cart = {
   },
 
   // Process checkout
-  async processCheckout(shippingAddress) {
+  async processCheckout() {
+    const shippingAddress = document.getElementById('shipping-address').value.trim();
+    
+    if (!shippingAddress) {
+      this.showMessage('Please enter a shipping address', 'error');
+      return;
+    }
+
     try {
       const response = await API.post(API_CONFIG.endpoints.createOrder, {
         shippingAddress
@@ -213,9 +317,11 @@ const Cart = {
 
   // Initialize cart functionality
   init() {
-    console.log('Cart.init() called');
+    console.log('=== Cart.init() START ===');
+    console.log('Initializing cart functionality...');
     
     // Load cart when page loads
+    console.log('Loading initial cart...');
     this.loadCart();
     
     // Bind cart drawer controls
@@ -231,9 +337,11 @@ const Cart = {
     
     if (cartButton) {
       cartButton.addEventListener('click', () => {
-        console.log('Cart button clicked');
+        console.log('Cart button clicked - opening drawer');
         Drawer.open();
       });
+    } else {
+      console.error('Cart button not found!');
     }
     if (cartClose) {
       cartClose.addEventListener('click', () => {
@@ -251,18 +359,36 @@ const Cart = {
     // Bind checkout buttons
     const checkoutBtn = document.getElementById('checkout-btn');
     const checkoutBtnMain = document.getElementById('checkout-btn-main');
+    const processCheckoutBtn = document.getElementById('process-checkout-btn');
+    
+    console.log('Checkout buttons found:', {
+      checkoutBtn: !!checkoutBtn,
+      checkoutBtnMain: !!checkoutBtnMain,
+      processCheckoutBtn: !!processCheckoutBtn
+    });
     
     if (checkoutBtn) {
       checkoutBtn.addEventListener('click', () => {
+        console.log('Checkout button clicked');
         this.showCheckoutForm();
       });
     }
     
     if (checkoutBtnMain) {
       checkoutBtnMain.addEventListener('click', () => {
+        console.log('Checkout main button clicked');
         this.showCheckoutForm();
       });
     }
+    
+    if (processCheckoutBtn) {
+      processCheckoutBtn.addEventListener('click', () => {
+        console.log('Process checkout button clicked');
+        this.processCheckout();
+      });
+    }
+    
+    console.log('=== Cart.init() END ===');
   }
 };
 
@@ -285,6 +411,10 @@ const Drawer = {
       return;
     }
     
+    // Reload cart when opening drawer
+    console.log('Reloading cart before opening drawer...');
+    Cart.loadCart();
+    
     drawer.classList.remove('hidden');
     requestAnimationFrame(() => {
       backdrop.classList.remove('opacity-0');
@@ -306,5 +436,8 @@ const Drawer = {
 
 // Initialize cart when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
+  console.log('=== CART INITIALIZATION START ===');
+  console.log('DOM loaded, initializing cart...');
   Cart.init();
+  console.log('=== CART INITIALIZATION END ===');
 });

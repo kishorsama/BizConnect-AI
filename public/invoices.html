@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Invoices • Vendor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/dashboard.css">
     <link rel="stylesheet" href="css/vendor-dashboard.css">
@@ -17,10 +19,22 @@
                 <span>BizConnect • Vendor</span>
             </div>
             <nav class="vd-nav">
-                <a href="vendor-dashboard.html"><span>🏠</span>Dashboard</a>
-                <a href="items.html"><span>📦</span>Items</a>
-                <a class="active" href="#"><span>🧮</span>Invoices</a>
-                <a href="reports.html"><span>📈</span>Reports</a>
+                <a href="vendor-dashboard.html">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="items.html">
+                    <i class="fas fa-box"></i>
+                    <span>Items</span>
+                </a>
+                <a class="active" href="#">
+                    <i class="fas fa-file-invoice"></i>
+                    <span>Invoices</span>
+                </a>
+                <a href="reports.html">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Reports</span>
+                </a>
             </nav>
         </aside>
 
@@ -53,28 +67,28 @@
                     <div class="metric-card">
                         <div class="metric-icon">📄</div>
                         <div class="metric-content">
-                            <div class="metric-number">6</div>
+                            <div class="metric-number" id="total-invoices">0</div>
                             <div class="metric-label">Total Invoices</div>
                         </div>
                     </div>
                     <div class="metric-card">
                         <div class="metric-icon">✅</div>
                         <div class="metric-content">
-                            <div class="metric-number">3</div>
+                            <div class="metric-number" id="paid-invoices">0</div>
                             <div class="metric-label">Paid</div>
                         </div>
                     </div>
                     <div class="metric-card">
                         <div class="metric-icon">⏳</div>
                         <div class="metric-content">
-                            <div class="metric-number">3</div>
+                            <div class="metric-number" id="pending-invoices">0</div>
                             <div class="metric-label">Pending</div>
                         </div>
                     </div>
                     <div class="metric-card">
                         <div class="metric-icon">💰</div>
                         <div class="metric-content">
-                            <div class="metric-number">₹343</div>
+                            <div class="metric-number" id="total-value">₹0</div>
                             <div class="metric-label">Total Value</div>
                         </div>
                     </div>

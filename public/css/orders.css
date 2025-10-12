@@ -1,0 +1,165 @@
+/* Orders Section - Minimal & Clean */
+
+/* Orders Drawer */
+#ordersDrawer {
+  z-index: 50;
+}
+
+#ordersDrawer aside {
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Orders Header */
+#ordersDrawer .flex.items-center.justify-between {
+  background: #3b82f6;
+  color: white;
+}
+
+#ordersDrawer h3 {
+  font-weight: 600;
+}
+
+#ordersClose {
+  color: white;
+  transition: opacity 0.2s ease;
+}
+
+#ordersClose:hover {
+  opacity: 0.8;
+}
+
+/* Order Items */
+.order-item {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  transition: box-shadow 0.2s ease;
+}
+
+.order-item:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Order Header */
+.order-item h4 {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.order-item .text-sm {
+  color: #6b7280;
+}
+
+/* Order Amount */
+.order-item .font-semibold.text-green-600 {
+  font-weight: 600;
+  color: #059669;
+}
+
+/* Status Badge */
+.badge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.badge.bg-yellow-100 {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.badge.bg-blue-100 {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+.badge.bg-purple-100 {
+  background-color: #e9d5ff;
+  color: #7c3aed;
+}
+
+.badge.bg-indigo-100 {
+  background-color: #e0e7ff;
+  color: #4338ca;
+}
+
+.badge.bg-green-100 {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+.badge.bg-red-100 {
+  background-color: #fee2e2;
+  color: #dc2626;
+}
+
+.badge.bg-gray-100 {
+  background-color: #f3f4f6;
+  color: #374151;
+}
+
+/* Items Section */
+.order-item .space-y-2 > div {
+  background-color: #f9fafb;
+  padding: 0.5rem;
+  border-radius: 4px;
+}
+
+.order-item .space-y-2 span:first-child {
+  color: #374151;
+  font-weight: 500;
+}
+
+.order-item .space-y-2 span:last-child {
+  color: #059669;
+  font-weight: 600;
+}
+
+/* Shipping Address */
+.order-item .bg-gray-50 {
+  background-color: #f9fafb;
+  padding: 0.75rem;
+  border-radius: 4px;
+}
+
+/* Empty State */
+#ordersList .text-center {
+  padding: 2rem 1rem;
+}
+
+#ordersList .text-center .text-lg {
+  font-weight: 600;
+  color: #374151;
+}
+
+#ordersList .text-center .text-sm {
+  color: #6b7280;
+}
+
+/* Scrollbar */
+#ordersList {
+  scrollbar-width: thin;
+  scrollbar-color: #d1d5db transparent;
+}
+
+#ordersList::-webkit-scrollbar {
+  width: 4px;
+}
+
+#ordersList::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#ordersList::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 2px;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  #ordersDrawer aside {
+    width: 100%;
+  }
+}

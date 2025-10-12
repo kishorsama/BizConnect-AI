@@ -107,16 +107,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ------- Dynamic products rendering -------
   const products = [
-    { id: 'p1', name: 'Banana (1 kg)', price: 40, mrp: 55, image: 'https://placehold.co/300x200?text=Banana', category: 'fruits-veg' },
-    { id: 'p2', name: 'Tomato (1 kg)', price: 32, mrp: 45, image: 'https://placehold.co/300x200?text=Tomato', category: 'fruits-veg' },
-    { id: 'p3', name: 'Milk (1 L)', price: 55, mrp: 60, image: 'https://placehold.co/300x200?text=Milk', category: 'dairy-eggs' },
-    { id: 'p4', name: 'Eggs (12 pcs)', price: 78, mrp: 90, image: 'https://placehold.co/300x200?text=Eggs', category: 'dairy-eggs' },
-    { id: 'p5', name: 'Bread (400g)', price: 35, mrp: 40, image: 'https://placehold.co/300x200?text=Bread', category: 'bakery' },
-    { id: 'p6', name: 'Potato Chips', price: 20, mrp: 25, image: 'https://placehold.co/300x200?text=Chips', category: 'snacks' },
-    { id: 'p7', name: 'Cola (1.25 L)', price: 75, mrp: 85, image: 'https://placehold.co/300x200?text=Cola', category: 'beverages' },
-    { id: 'p8', name: 'Instant Noodles', price: 12, mrp: 15, image: 'https://placehold.co/300x200?text=Noodles', category: 'breakfast' },
-    { id: 'p9', name: 'Dishwash Liquid', price: 85, mrp: 99, image: 'https://placehold.co/300x200?text=Dishwash', category: 'household' },
-    { id: 'p10', name: 'Shampoo (180ml)', price: 115, mrp: 140, image: 'https://placehold.co/300x200?text=Shampoo', category: 'personal-care' }
+    { id: 'p1', name: 'Banana (1 kg)', price: 40, mrp: 55, image: 'https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=300&h=200&fit=crop', category: 'Fruits & Vegetables' },
+    { id: 'p2', name: 'Tomato (1 kg)', price: 32, mrp: 45, image: 'https://images.unsplash.com/photo-1546470427-5a4b0b0b0b0b?w=300&h=200&fit=crop', category: 'Fruits & Vegetables' },
+    { id: 'p3', name: 'Apple (1 kg)', price: 120, mrp: 150, image: 'https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=300&h=200&fit=crop', category: 'Fruits & Vegetables' },
+    { id: 'p4', name: 'Milk (1 L)', price: 55, mrp: 60, image: 'https://images.unsplash.com/photo-1550583724-b2692b85b150?w=300&h=200&fit=crop', category: 'Dairy & Eggs' },
+    { id: 'p5', name: 'Eggs (12 pcs)', price: 78, mrp: 90, image: 'https://images.unsplash.com/photo-1518569656558-1c25a1a0b3b3?w=300&h=200&fit=crop', category: 'Dairy & Eggs' },
+    { id: 'p6', name: 'Butter (200g)', price: 45, mrp: 55, image: 'https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?w=300&h=200&fit=crop', category: 'Dairy & Eggs' },
+    { id: 'p7', name: 'Bread (400g)', price: 35, mrp: 40, image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=300&h=200&fit=crop', category: 'Bakery' },
+    { id: 'p8', name: 'Croissants (6 pcs)', price: 85, mrp: 100, image: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=300&h=200&fit=crop', category: 'Bakery' },
+    { id: 'p9', name: 'Potato Chips', price: 20, mrp: 25, image: 'https://images.unsplash.com/photo-1566478989037-eec170784d0b?w=300&h=200&fit=crop', category: 'Snacks' },
+    { id: 'p10', name: 'Mixed Nuts', price: 150, mrp: 180, image: 'https://images.unsplash.com/photo-1553456558-a0c0a4a0b0b0b?w=300&h=200&fit=crop', category: 'Snacks' },
+    { id: 'p11', name: 'Cola (1.25 L)', price: 75, mrp: 85, image: 'https://images.unsplash.com/photo-1581636625402-29b2a704ef13?w=300&h=200&fit=crop', category: 'Beverages' },
+    { id: 'p12', name: 'Orange Juice (1 L)', price: 65, mrp: 75, image: 'https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?w=300&h=200&fit=crop', category: 'Beverages' },
+    { id: 'p13', name: 'Instant Noodles', price: 12, mrp: 15, image: 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=300&h=200&fit=crop', category: 'Breakfast & Instant' },
+    { id: 'p14', name: 'Cereal (500g)', price: 95, mrp: 110, image: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=300&h=200&fit=crop', category: 'Breakfast & Instant' },
+    { id: 'p15', name: 'Dishwash Liquid', price: 85, mrp: 99, image: 'https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?w=300&h=200&fit=crop', category: 'Household Essentials' },
+    { id: 'p16', name: 'Toilet Paper (12 rolls)', price: 120, mrp: 140, image: 'https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?w=300&h=200&fit=crop', category: 'Household Essentials' },
+    { id: 'p17', name: 'Shampoo (180ml)', price: 115, mrp: 140, image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=300&h=200&fit=crop', category: 'Personal Care' },
+    { id: 'p18', name: 'Toothpaste (100g)', price: 45, mrp: 55, image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=300&h=200&fit=crop', category: 'Personal Care' }
   ];
 
   const recommendedGrid = document.getElementById('recommendedGrid');
@@ -270,19 +278,45 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  // Set default active category (All)
+  const allCategoryBtn = document.querySelector('.js-category[data-category="all"]');
+  if (allCategoryBtn) {
+    allCategoryBtn.classList.add('ring-2', 'ring-blue-500', 'bg-blue-50');
+    allCategoryBtn.querySelector('div').classList.add('bg-blue-50', 'border-blue-200');
+  }
+
   // Category filters
   document.querySelectorAll('.js-category').forEach((btn) => {
     btn.addEventListener('click', () => {
+      console.log('Category button clicked');
+      
+      // Remove active class from all buttons
+      document.querySelectorAll('.js-category').forEach(b => {
+        b.classList.remove('ring-2', 'ring-blue-500', 'bg-blue-50');
+        b.querySelector('div').classList.remove('bg-blue-50', 'border-blue-200');
+      });
+      
+      // Add active class to clicked button
+      btn.classList.add('ring-2', 'ring-blue-500', 'bg-blue-50');
+      btn.querySelector('div').classList.add('bg-blue-50', 'border-blue-200');
+      
       const cat = btn.getAttribute('data-category');
+      console.log('Selected category:', cat);
+      console.log('Available products:', products);
+      
       let list;
       if (cat === 'all') {
         list = products;
+        console.log('Showing all products:', list.length);
       } else {
         list = products.filter((p) => p.category === cat);
-        // If none, default fallback
-        list = list.length ? list : products;
+        console.log(`Filtered products for ${cat}:`, list.length, list);
+        // Show empty grid if no products found for this category
       }
+      
+      // Update BOTH grids with the filtered list
       renderProducts(filterByQuery(list), recommendedGrid);
+      renderProducts(filterByQuery(list), dealsGrid);
     });
   });
 

@@ -22,7 +22,18 @@ const API = {
         body: JSON.stringify(body)
       });
 
-      const data = await response.json();
+      let data;
+      const responseText = await response.text();
+      
+      try {
+        data = JSON.parse(responseText);
+      } catch (jsonError) {
+        console.error('Failed to parse JSON response:', jsonError);
+        console.error('Response status:', response.status);
+        console.error('Response headers:', response.headers);
+        console.error('Response text:', responseText.substring(0, 200));
+        throw new Error(`Server returned non-JSON response (${response.status}): ${responseText.substring(0, 100)}...`);
+      }
 
       if (!response.ok) {
         throw new Error(data.error || 'Request failed');

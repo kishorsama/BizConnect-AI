@@ -44,15 +44,93 @@
   var dialogContent = document.getElementById('invoiceDetailContent');
   var btnCloseDialog = document.getElementById('closeInvoiceDialog');
 
-  // Change item structure to have product and quantity fields
-  var invoices = [
-    { id: 'INV-1021', items: [ { name: 'Cotton T-Shirt', qty: 2 }, { name: 'Kids Romper', qty: 1 } ], date: '2024-06-10', amount: 34.99, status: 'paid' },
-    { id: 'INV-1031', items: [ { name: 'Winter Jacket', qty: 1 } ], date: '2024-06-12', amount: 39.95, status: 'unpaid' },
-    { id: 'INV-1042', items: [ { name: 'Kids Romper', qty: 2 } ], date: '2024-06-14', amount: 19.98, status: 'paid' },
-    { id: 'INV-1060', items: [ { name: 'Cotton T-Shirt', qty: 1 }, { name: 'Winter Jacket', qty: 2 } ], date: '2024-06-20', amount: 92.40, status: 'paid' }
-  ];
+  // Real invoices data will be loaded from API
+  var invoices = [];
 
   function fmtAmt(n){ return '₹' + Number(n).toFixed(2); }
+
+  // Load real invoice data from API
+  async function loadInvoiceData() {
+    try {
+      const token = localStorage.getItem('accessToken');
+      if (!token) {
+        console.log('No token found for invoice data');
+        return;
+      }
+
+      // Fetch vendor orders (these become invoices)
+      const response = await fetch('/api/vendor/orders', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      const orders = data.orders || [];
+
+      // Convert orders to invoice format
+      invoices = orders.map(order => ({
+        id: order.orderNumber || order._id.slice(-8),
+        items: order.items.map(item => ({
+          name: item.productId.name,
+          qty: item.quantity
+        })),
+        date: new Date(order.createdAt).toISOString().split('T')[0],
+        amount: order.totalAmount,
+        status: getInvoiceStatus(order.status),
+        orderId: order._id
+      }));
+
+      // Update summary cards
+      updateSummaryCards();
+      
+      // Render the table
+      render(invoices);
+
+    } catch (error) {
+      console.error('Error loading invoice data:', error);
+      // Show error message or fallback data
+      updateSummaryCards();
+      render([]);
+    }
+  }
+
+  // Convert order status to invoice status
+  function getInvoiceStatus(orderStatus) {
+    const statusMap = {
+      'pending': 'unpaid',
+      'confirmed': 'unpaid', 
+      'processing': 'unpaid',
+      'shipped': 'paid',
+      'delivered': 'paid',
+      'cancelled': 'unpaid'
+    };
+    return statusMap[orderStatus] || 'unpaid';
+  }
+
+  // Update summary cards with real data
+  function updateSummaryCards() {
+    const totalInvoices = invoices.length;
+    const paidInvoices = invoices.filter(inv => inv.status === 'paid').length;
+    const pendingInvoices = invoices.filter(inv => inv.status === 'unpaid').length;
+    const totalValue = invoices.reduce((sum, inv) => sum + inv.amount, 0);
+
+    // Update metric cards using IDs
+    const totalCard = document.getElementById('total-invoices');
+    const paidCard = document.getElementById('paid-invoices');
+    const pendingCard = document.getElementById('pending-invoices');
+    const valueCard = document.getElementById('total-value');
+
+    if (totalCard) totalCard.textContent = totalInvoices;
+    if (paidCard) paidCard.textContent = paidInvoices;
+    if (pendingCard) pendingCard.textContent = pendingInvoices;
+    if (valueCard) valueCard.textContent = fmtAmt(totalValue);
+  }
 
   function render(list){
     if (!tableBody) return;
@@ -95,7 +173,10 @@
     });
   }
 
-  render(invoices);
+  // Load invoice data when page loads
+  document.addEventListener('DOMContentLoaded', function() {
+    loadInvoiceData();
+  });
 
   // Dialog close
   if (btnCloseDialog) btnCloseDialog.addEventListener('click', function(){ if(dialog){ dialog.setAttribute('hidden',''); dialog.style.display = 'none'; }});
