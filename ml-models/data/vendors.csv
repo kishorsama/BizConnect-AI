@@ -1,0 +1,51 @@
+vendor_id,name,email,business_type,city,annual_turnover,employee_count,created_at
+1,Vendor 1,vendor1@example.com,Agency,Mumbai,1L-10L,11-50,2023-12-11 02:51:19.055483
+2,Vendor 2,vendor2@example.com,Consultant,Jaipur,>1Cr,51-200,2024-04-26 02:51:19.055497
+3,Vendor 3,vendor3@example.com,Manufacturer,Ahmedabad,50L-1Cr,11-50,2023-07-02 02:51:19.055503
+4,Vendor 4,vendor4@example.com,Manufacturer,Kolkata,>1Cr,11-50,2024-12-05 02:51:19.055508
+5,Vendor 5,vendor5@example.com,Wholesale,Jaipur,1L-10L,51-200,2023-12-17 02:51:19.055512
+6,Vendor 6,vendor6@example.com,Consultant,Surat,<1L,11-50,2023-02-11 02:51:19.055516
+7,Vendor 7,vendor7@example.com,Wholesale,Jaipur,<1L,51-200,2023-08-23 02:51:19.055520
+8,Vendor 8,vendor8@example.com,Service Provider,Bangalore,<1L,200+,2023-05-14 02:51:19.055524
+9,Vendor 9,vendor9@example.com,Agency,Chennai,1L-10L,200+,2023-09-29 02:51:19.055528
+10,Vendor 10,vendor10@example.com,Consultant,Pune,>1Cr,200+,2023-11-11 02:51:19.055533
+11,Vendor 11,vendor11@example.com,Online Store,Jaipur,<1L,11-50,2023-07-17 02:51:19.055537
+12,Vendor 12,vendor12@example.com,Wholesale,Delhi,10L-50L,200+,2023-12-21 02:51:19.055541
+13,Vendor 13,vendor13@example.com,Manufacturer,Pune,>1Cr,11-50,2025-06-19 02:51:19.055544
+14,Vendor 14,vendor14@example.com,Wholesale,Bangalore,50L-1Cr,1-10,2023-01-13 02:51:19.055548
+15,Vendor 15,vendor15@example.com,Distributor,Delhi,>1Cr,51-200,2025-08-18 02:51:19.055552
+16,Vendor 16,vendor16@example.com,Consultant,Bangalore,1L-10L,11-50,2022-11-18 02:51:19.055556
+17,Vendor 17,vendor17@example.com,Wholesale,Chennai,50L-1Cr,200+,2024-05-08 02:51:19.055560
+18,Vendor 18,vendor18@example.com,Retail Store,Jaipur,1L-10L,200+,2023-10-04 02:51:19.055563
+19,Vendor 19,vendor19@example.com,Online Store,Pune,50L-1Cr,200+,2023-05-14 02:51:19.055567
+20,Vendor 20,vendor20@example.com,Distributor,Ahmedabad,<1L,200+,2023-04-22 02:51:19.055571
+21,Vendor 21,vendor21@example.com,Distributor,Pune,10L-50L,200+,2024-01-19 02:51:19.055574
+22,Vendor 22,vendor22@example.com,Wholesale,Bangalore,<1L,51-200,2025-09-29 02:51:19.055578
+23,Vendor 23,vendor23@example.com,Agency,Chennai,50L-1Cr,11-50,2022-12-15 02:51:19.055582
+24,Vendor 24,vendor24@example.com,Service Provider,Surat,1L-10L,51-200,2025-01-30 02:51:19.055585
+25,Vendor 25,vendor25@example.com,Online Store,Hyderabad,>1Cr,51-200,2023-07-20 02:51:19.055589
+26,Vendor 26,vendor26@example.com,Manufacturer,Ahmedabad,10L-50L,51-200,2024-07-21 02:51:19.055593
+27,Vendor 27,vendor27@example.com,Agency,Bangalore,50L-1Cr,1-10,2025-09-01 02:51:19.055597
+28,Vendor 28,vendor28@example.com,Service Provider,Delhi,1L-10L,51-200,2025-02-01 02:51:19.055601
+29,Vendor 29,vendor29@example.com,Agency,Chennai,10L-50L,51-200,2023-04-15 02:51:19.055605
+30,Vendor 30,vendor30@example.com,Service Provider,Mumbai,>1Cr,51-200,2023-05-24 02:51:19.055608
+31,Vendor 31,vendor31@example.com,Retail Store,Kolkata,>1Cr,11-50,2023-12-24 02:51:19.055612
+32,Vendor 32,vendor32@example.com,Retail Store,Delhi,50L-1Cr,11-50,2022-11-10 02:51:19.055616
+33,Vendor 33,vendor33@example.com,Wholesale,Pune,>1Cr,11-50,2023-09-11 02:51:19.055619
+34,Vendor 34,vendor34@example.com,Retail Store,Kolkata,1L-10L,51-200,2024-02-07 02:51:19.055623
+35,Vendor 35,vendor35@example.com,Online Store,Pune,50L-1Cr,1-10,2024-07-04 02:51:19.055627
+36,Vendor 36,vendor36@example.com,Retail Store,Hyderabad,50L-1Cr,11-50,2023-04-02 02:51:19.055631
+37,Vendor 37,vendor37@example.com,Retail Store,Mumbai,>1Cr,51-200,2024-04-25 02:51:19.055635
+38,Vendor 38,vendor38@example.com,Retail Store,Jaipur,>1Cr,200+,2023-07-10 02:51:19.055638
+39,Vendor 39,vendor39@example.com,Service Provider,Kolkata,50L-1Cr,200+,2025-09-01 02:51:19.055642
+40,Vendor 40,vendor40@example.com,Distributor,Jaipur,50L-1Cr,1-10,2024-08-17 02:51:19.055646
+41,Vendor 41,vendor41@example.com,Wholesale,Bangalore,>1Cr,1-10,2025-09-05 02:51:19.055650
+42,Vendor 42,vendor42@example.com,Agency,Kolkata,>1Cr,51-200,2022-11-12 02:51:19.055654
+43,Vendor 43,vendor43@example.com,Wholesale,Bangalore,50L-1Cr,200+,2023-09-22 02:51:19.055657
+44,Vendor 44,vendor44@example.com,Online Store,Surat,50L-1Cr,51-200,2024-03-03 02:51:19.055661
+45,Vendor 45,vendor45@example.com,Manufacturer,Ahmedabad,50L-1Cr,1-10,2024-11-12 02:51:19.055664
+46,Vendor 46,vendor46@example.com,Manufacturer,Bangalore,50L-1Cr,11-50,2023-11-07 02:51:19.055669
+47,Vendor 47,vendor47@example.com,Consultant,Kolkata,10L-50L,11-50,2023-04-01 02:51:19.055673
+48,Vendor 48,vendor48@example.com,Manufacturer,Surat,1L-10L,11-50,2025-08-27 02:51:19.055676
+49,Vendor 49,vendor49@example.com,Service Provider,Surat,50L-1Cr,200+,2023-08-23 02:51:19.055680
+50,Vendor 50,vendor50@example.com,Online Store,Ahmedabad,1L-10L,1-10,2023-11-25 02:51:19.055684

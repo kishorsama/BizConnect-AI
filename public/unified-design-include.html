@@ -1,0 +1,88 @@
+<!-- Unified Design System Auto-Loader -->
+<!-- Include this in the <head> section of all HTML pages -->
+<link rel="stylesheet" href="/css/unified-design.css">
+<script src="/js/unified-design.js"></script>
+
+<!-- Optional: Add this to the <body> for enhanced functionality -->
+<script>
+// Auto-enhance page on load
+document.addEventListener('DOMContentLoaded', function() {
+    // Add fade-in animation to main content
+    const mainContent = document.querySelector('.dashboard-content, .login-container, .register-container, main');
+    if (mainContent) {
+        mainContent.classList.add('fade-in');
+    }
+    
+    // Add scale-in animation to cards
+    const cards = document.querySelectorAll('.card, .dashboard-card, .product-card');
+    cards.forEach((card, index) => {
+        card.style.animationDelay = `${index * 0.1}s`;
+        card.classList.add('scale-in');
+    });
+    
+    // Enhance existing alerts
+    const alerts = document.querySelectorAll('.alert, .error-message, .success-message');
+    alerts.forEach(alert => {
+        if (alert.classList.contains('error-message')) {
+            alert.classList.add('alert-error');
+        } else if (alert.classList.contains('success-message')) {
+            alert.classList.add('alert-success');
+        } else if (!alert.classList.contains('alert')) {
+            alert.classList.add('alert-info');
+        }
+    });
+    
+    // Add responsive enhancements
+    if (window.innerWidth <= 768) {
+        document.body.classList.add('mobile-view');
+    }
+    
+    window.addEventListener('resize', function() {
+        if (window.innerWidth <= 768) {
+            document.body.classList.add('mobile-view');
+        } else {
+            document.body.classList.remove('mobile-view');
+        }
+    });
+});
+</script>
+
+<!-- Mobile-specific enhancements -->
+<style>
+@media (max-width: 768px) {
+    .mobile-view .card {
+        margin-bottom: 1rem;
+    }
+    
+    .mobile-view .btn {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+    
+    .mobile-view .grid {
+        grid-template-columns: 1fr !important;
+    }
+    
+    .mobile-view .sidebar {
+        position: fixed;
+        top: 0;
+        left: -100%;
+        width: 80%;
+        height: 100vh;
+        z-index: 1000;
+        transition: left 0.3s ease;
+    }
+    
+    .mobile-view .sidebar.open {
+        left: 0;
+    }
+    
+    .mobile-view .navbar {
+        padding: 1rem;
+    }
+    
+    .mobile-view .dashboard-content {
+        padding: 1rem;
+    }
+}
+</style>

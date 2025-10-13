@@ -4,7 +4,7 @@ const Orders = {
   // Get customer orders
   async getCustomerOrders() {
     try {
-      const response = await API.get('/customer/orders');
+      const response = await API.get(API_CONFIG.endpoints.customerOrders);
       return response.orders;
     } catch (error) {
       console.error('Error fetching customer orders:', error);

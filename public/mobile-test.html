@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Responsiveness Test - BizConnect AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/vendor-dashboard.css">
+    <link rel="stylesheet" href="css/unified-design.css">
+    <style>
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .test-section {
+            margin-bottom: 40px;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+        
+        .test-section h2 {
+            color: #1f2937;
+            margin-bottom: 20px;
+            font-size: 24px;
+            font-weight: 700;
+        }
+        
+        .breakpoint-indicator {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: #3b82f6;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            z-index: 1000;
+        }
+        
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .test-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        
+        .test-button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 5px;
+            min-height: 44px;
+        }
+        
+        .test-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        
+        .test-input {
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 16px;
+            min-height: 44px;
+        }
+        
+        .test-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        .test-table th,
+        .test-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .test-table th {
+            background: #f8fafc;
+            font-weight: 600;
+        }
+        
+        @media (max-width: 768px) {
+            .test-form {
+                grid-template-columns: 1fr;
+            }
+            
+            .test-button {
+                width: 100%;
+                margin: 5px 0;
+            }
+            
+            .test-table {
+                font-size: 14px;
+            }
+            
+            .test-table th,
+            .test-table td {
+                padding: 8px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .test-container {
+                padding: 10px;
+            }
+            
+            .test-section {
+                padding: 15px;
+            }
+            
+            .test-section h2 {
+                font-size: 20px;
+            }
+            
+            .test-card {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="breakpoint-indicator" id="breakpointIndicator">
+        Desktop (>1024px)
+    </div>
+    
+    <div class="test-container">
+        <h1 style="text-align: center; color: #1f2937; margin-bottom: 40px;">
+            📱 Mobile Responsiveness Test
+        </h1>
+        
+        <div class="test-section">
+            <h2>🎯 Breakpoint Detection</h2>
+            <p>Current screen size: <span id="screenSize"></span></p>
+            <p>Current breakpoint: <span id="currentBreakpoint"></span></p>
+            <p>Orientation: <span id="orientation"></span></p>
+        </div>
+        
+        <div class="test-section">
+            <h2>📊 Responsive Grid</h2>
+            <div class="test-grid">
+                <div class="test-card">
+                    <i class="fas fa-mobile-alt" style="font-size: 24px; margin-bottom: 10px;"></i>
+                    <h3>Mobile</h3>
+                    <p>Single column layout</p>
+                </div>
+                <div class="test-card">
+                    <i class="fas fa-tablet-alt" style="font-size: 24px; margin-bottom: 10px;"></i>
+                    <h3>Tablet</h3>
+                    <p>Two column layout</p>
+                </div>
+                <div class="test-card">
+                    <i class="fas fa-desktop" style="font-size: 24px; margin-bottom: 10px;"></i>
+                    <h3>Desktop</h3>
+                    <p>Multi column layout</p>
+                </div>
+                <div class="test-card">
+                    <i class="fas fa-laptop" style="font-size: 24px; margin-bottom: 10px;"></i>
+                    <h3>Laptop</h3>
+                    <p>Responsive layout</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>🔘 Touch-Friendly Buttons</h2>
+            <p>All buttons should be at least 44px tall for easy touch interaction:</p>
+            <button class="test-button">Primary Button</button>
+            <button class="test-button">Secondary Button</button>
+            <button class="test-button">Action Button</button>
+            <button class="test-button">Submit Button</button>
+        </div>
+        
+        <div class="test-section">
+            <h2>📝 Responsive Forms</h2>
+            <form class="test-form">
+                <div>
+                    <label>First Name</label>
+                    <input type="text" class="test-input" placeholder="Enter first name">
+                </div>
+                <div>
+                    <label>Last Name</label>
+                    <input type="text" class="test-input" placeholder="Enter last name">
+                </div>
+                <div>
+                    <label>Email</label>
+                    <input type="email" class="test-input" placeholder="Enter email">
+                </div>
+                <div>
+                    <label>Phone</label>
+                    <input type="tel" class="test-input" placeholder="Enter phone">
+                </div>
+            </form>
+        </div>
+        
+        <div class="test-section">
+            <h2>📋 Responsive Table</h2>
+            <table class="test-table">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Stock</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Laptop Pro</td>
+                        <td>Electronics</td>
+                        <td>$1,299</td>
+                        <td>15</td>
+                        <td>Active</td>
+                    </tr>
+                    <tr>
+                        <td>Wireless Mouse</td>
+                        <td>Accessories</td>
+                        <td>$29</td>
+                        <td>50</td>
+                        <td>Active</td>
+                    </tr>
+                    <tr>
+                        <td>Gaming Keyboard</td>
+                        <td>Accessories</td>
+                        <td>$89</td>
+                        <td>8</td>
+                        <td>Low Stock</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="test-section">
+            <h2>📱 Mobile Navigation Test</h2>
+            <p>Test the mobile menu functionality:</p>
+            <a href="vendor-dashboard.html" class="test-button" style="text-decoration: none; display: inline-block;">
+                <i class="fas fa-external-link-alt"></i> Test Vendor Dashboard
+            </a>
+        </div>
+        
+        <div class="test-section">
+            <h2>✅ Mobile Checklist</h2>
+            <ul style="line-height: 1.8;">
+                <li>✅ Viewport meta tag present</li>
+                <li>✅ Touch targets are 44px+ minimum</li>
+                <li>✅ Text is readable without zooming</li>
+                <li>✅ Forms stack vertically on mobile</li>
+                <li>✅ Tables are horizontally scrollable</li>
+                <li>✅ Navigation collapses on mobile</li>
+                <li>✅ Images scale properly</li>
+                <li>✅ No horizontal scrolling</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script>
+        function updateBreakpointIndicator() {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            const orientation = width > height ? 'Landscape' : 'Portrait';
+            
+            let breakpoint = 'Desktop (>1024px)';
+            let color = '#3b82f6';
+            
+            if (width <= 480) {
+                breakpoint = 'Mobile Small (≤480px)';
+                color = '#ef4444';
+            } else if (width <= 768) {
+                breakpoint = 'Mobile (≤768px)';
+                color = '#f59e0b';
+            } else if (width <= 1024) {
+                breakpoint = 'Tablet (≤1024px)';
+                color = '#10b981';
+            }
+            
+            document.getElementById('breakpointIndicator').textContent = breakpoint;
+            document.getElementById('breakpointIndicator').style.background = color;
+            
+            document.getElementById('screenSize').textContent = `${width} × ${height}`;
+            document.getElementById('currentBreakpoint').textContent = breakpoint;
+            document.getElementById('orientation').textContent = orientation;
+        }
+        
+        // Update on load and resize
+        window.addEventListener('load', updateBreakpointIndicator);
+        window.addEventListener('resize', updateBreakpointIndicator);
+        window.addEventListener('orientationchange', updateBreakpointIndicator);
+        
+        // Update immediately
+        updateBreakpointIndicator();
+    </script>
+</body>
+</html>

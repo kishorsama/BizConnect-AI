@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="css/dashboard.css">
     <link rel="stylesheet" href="css/vendor-dashboard.css">
     <link rel="stylesheet" href="css/products.css">
+    <link rel="stylesheet" href="css/unified-design.css">
 </head>
 <body class="vendor-dashboard">
     <div class="vd-layout">
@@ -42,10 +43,16 @@
                 </a>
     </nav>
         </aside>
+        
+        <!-- Mobile Overlay -->
+        <div class="mobile-overlay" id="mobileOverlay"></div>
 
         <section class="vd-main">
             <div class="vd-topbar">
                 <div class="topbar-left">
+                    <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
                     <div class="shop-info">
                         <i class="fas fa-map-marker-alt"></i>
                         <span id="shopAddress">123 Market Lane, Main City</span>
@@ -213,9 +220,21 @@
                 <div class="dashboard-card">
                     <div class="card-header">
                         <h3><i class="fas fa-clipboard-list"></i> Recent Orders</h3>
+                        <div class="pagination-info">
+                            <span id="orders-pagination-info">Loading...</span>
+                        </div>
                     </div>
                     <div id="vendor-orders-container" class="orders-list">
                         <!-- Orders will be loaded here -->
+                    </div>
+                    <div class="pagination-controls" id="orders-pagination-controls" style="display: none;">
+                        <button id="orders-prev-btn" class="pagination-btn" disabled>
+                            <i class="fas fa-chevron-left"></i> Previous
+                        </button>
+                        <span id="orders-page-info" class="page-info">Page 1 of 1</span>
+                        <button id="orders-next-btn" class="pagination-btn">
+                            Next <i class="fas fa-chevron-right"></i>
+                        </button>
                     </div>
                 </div>
 
@@ -370,36 +389,6 @@
                 </ul>
             </div>
         </div>
-
-        <!-- Footer -->
-        <footer class="vendor-footer">
-        <div class="footer-content">
-            <div class="footer-section">
-                <h4>BizConnect</h4>
-                <p>Empowering vendors with smart business solutions</p>
-                <div class="social-links">
-                    <a href="#" aria-label="Facebook">📘</a>
-                    <a href="#" aria-label="Twitter">🐦</a>
-                    <a href="#" aria-label="LinkedIn">💼</a>
-                    <a href="#" aria-label="Instagram">📷</a>
-                </div>
-            </div>
-            <div class="footer-section">
-                <h5>Quick Links</h5>
-                <ul>
-                    <li><a href="vendor-dashboard.html">Dashboard</a></li>
-                    <li><a href="items.html">Items</a></li>
-                    <li><a href="invoices.html">Invoices</a></li>
-                    <li><a href="reports.html">Reports</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h5>Support</h5>
-                <ul>
-                    <li><a href="#">Contact Us</a></li>
-                </ul>
-            </div>
-        </div>
         <div class="footer-bottom">
             <p>&copy; 2024 BizConnect. All rights reserved.</p>
             <p>Made with ❤️ for Indian businesses</p>
@@ -420,6 +409,47 @@
         // Load vendor data when page loads
         document.addEventListener('DOMContentLoaded', () => {
             Orders.loadVendorOrders();
+            
+            // Mobile menu functionality
+            const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+            const sidebar = document.querySelector('.vd-sidebar');
+            const mobileOverlay = document.getElementById('mobileOverlay');
+            
+            function toggleMobileMenu() {
+                sidebar.classList.toggle('mobile-open');
+                mobileOverlay.classList.toggle('active');
+            }
+            
+            function closeMobileMenu() {
+                sidebar.classList.remove('mobile-open');
+                mobileOverlay.classList.remove('active');
+            }
+            
+            // Toggle menu on button click
+            mobileMenuToggle.addEventListener('click', toggleMobileMenu);
+            
+            // Close menu when clicking overlay
+            mobileOverlay.addEventListener('click', closeMobileMenu);
+            
+            // Close menu when clicking sidebar links
+            const sidebarLinks = document.querySelectorAll('.vd-nav a');
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', closeMobileMenu);
+            });
+            
+            // Close menu on escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    closeMobileMenu();
+                }
+            });
+            
+            // Handle window resize
+            window.addEventListener('resize', () => {
+                if (window.innerWidth > 1024) {
+                    closeMobileMenu();
+                }
+            });
         });
     </script>
 </body>

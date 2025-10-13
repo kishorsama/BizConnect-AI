@@ -11,7 +11,103 @@
 @media (max-width: 850px) { .r-inventory { grid-template-columns: 1fr; } }
 @media (max-width: 650px) { .r-kpis { grid-template-columns: 1fr; } }
 canvas { background: #fff; border-radius: 10px; }
+
+/* Chart Container Styles */
+.chart-container {
+  position: relative;
+  height: 300px;
+  width: 100%;
+  margin: 10px 0;
+}
+
+.chart-container canvas {
+  width: 100% !important;
+  height: 100% !important;
+  max-height: 300px;
+}
+
+/* Ensure chart responsiveness */
+@media (max-width: 768px) {
+  .chart-container {
+    height: 250px;
+  }
+}
+
+@media (max-width: 480px) {
+  .chart-container {
+    height: 200px;
+  }
+}
 .future-predict-list { list-style: none; padding-left: 0; }
-.future-predict-list li { display: flex; align-items: center; padding: 6px 0; font-size: 16px; font-weight: 500; }
+.future-predict-list li { 
+  display: block; 
+  padding: 12px 0; 
+  font-size: 16px; 
+  font-weight: 500; 
+  border-bottom: 1px solid #e5e7eb;
+}
+.future-predict-list li:last-child { border-bottom: none; }
 .future-trend-up { color: #22c55e; margin-right: 7px; font-size:19px; }
 .future-trend-down { color: #64748b; margin-right: 7px; font-size:19px; }
+
+/* ML Predictions Styling */
+.ml-prediction-item {
+  background: #f8fafc;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 8px;
+  border-left: 4px solid #10b981;
+}
+
+.ml-prediction-item.low-performer {
+  border-left-color: #ef4444;
+}
+
+.ml-prediction-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.ml-prediction-metrics {
+  font-size: 14px;
+  color: #64748b;
+}
+
+.ml-prediction-metrics div {
+  margin-bottom: 4px;
+}
+
+.ml-prediction-metrics div:last-child {
+  margin-bottom: 0;
+}
+
+.performance-badge {
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.performance-badge.high {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.performance-badge.low {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.loading-spinner {
+  display: inline-block;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

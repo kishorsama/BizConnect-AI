@@ -106,26 +106,71 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ------- Dynamic products rendering -------
-  const products = [
-    { id: 'p1', name: 'Banana (1 kg)', price: 40, mrp: 55, image: 'https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=300&h=200&fit=crop', category: 'Fruits & Vegetables' },
-    { id: 'p2', name: 'Tomato (1 kg)', price: 32, mrp: 45, image: 'https://images.unsplash.com/photo-1546470427-5a4b0b0b0b0b?w=300&h=200&fit=crop', category: 'Fruits & Vegetables' },
-    { id: 'p3', name: 'Apple (1 kg)', price: 120, mrp: 150, image: 'https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=300&h=200&fit=crop', category: 'Fruits & Vegetables' },
-    { id: 'p4', name: 'Milk (1 L)', price: 55, mrp: 60, image: 'https://images.unsplash.com/photo-1550583724-b2692b85b150?w=300&h=200&fit=crop', category: 'Dairy & Eggs' },
-    { id: 'p5', name: 'Eggs (12 pcs)', price: 78, mrp: 90, image: 'https://images.unsplash.com/photo-1518569656558-1c25a1a0b3b3?w=300&h=200&fit=crop', category: 'Dairy & Eggs' },
-    { id: 'p6', name: 'Butter (200g)', price: 45, mrp: 55, image: 'https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?w=300&h=200&fit=crop', category: 'Dairy & Eggs' },
-    { id: 'p7', name: 'Bread (400g)', price: 35, mrp: 40, image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=300&h=200&fit=crop', category: 'Bakery' },
-    { id: 'p8', name: 'Croissants (6 pcs)', price: 85, mrp: 100, image: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=300&h=200&fit=crop', category: 'Bakery' },
-    { id: 'p9', name: 'Potato Chips', price: 20, mrp: 25, image: 'https://images.unsplash.com/photo-1566478989037-eec170784d0b?w=300&h=200&fit=crop', category: 'Snacks' },
-    { id: 'p10', name: 'Mixed Nuts', price: 150, mrp: 180, image: 'https://images.unsplash.com/photo-1553456558-a0c0a4a0b0b0b?w=300&h=200&fit=crop', category: 'Snacks' },
-    { id: 'p11', name: 'Cola (1.25 L)', price: 75, mrp: 85, image: 'https://images.unsplash.com/photo-1581636625402-29b2a704ef13?w=300&h=200&fit=crop', category: 'Beverages' },
-    { id: 'p12', name: 'Orange Juice (1 L)', price: 65, mrp: 75, image: 'https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?w=300&h=200&fit=crop', category: 'Beverages' },
-    { id: 'p13', name: 'Instant Noodles', price: 12, mrp: 15, image: 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=300&h=200&fit=crop', category: 'Breakfast & Instant' },
-    { id: 'p14', name: 'Cereal (500g)', price: 95, mrp: 110, image: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=300&h=200&fit=crop', category: 'Breakfast & Instant' },
-    { id: 'p15', name: 'Dishwash Liquid', price: 85, mrp: 99, image: 'https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?w=300&h=200&fit=crop', category: 'Household Essentials' },
-    { id: 'p16', name: 'Toilet Paper (12 rolls)', price: 120, mrp: 140, image: 'https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?w=300&h=200&fit=crop', category: 'Household Essentials' },
-    { id: 'p17', name: 'Shampoo (180ml)', price: 115, mrp: 140, image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=300&h=200&fit=crop', category: 'Personal Care' },
-    { id: 'p18', name: 'Toothpaste (100g)', price: 45, mrp: 55, image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=300&h=200&fit=crop', category: 'Personal Care' }
-  ];
+  // Load products from API instead of using hardcoded data
+  let products = [];
+  
+  // Function to load products from API
+  const loadProducts = async () => {
+    try {
+      console.log('🔄 Loading products from API...');
+      const response = await fetch('/api/products');
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      console.log('📦 API Response:', data);
+      
+      if (data.products && Array.isArray(data.products)) {
+        // Transform API data to match expected format
+        products = data.products.map(product => ({
+          id: product._id,
+          name: product.name,
+          price: product.price,
+          mrp: Math.round(product.price * 1.2), // Add 20% markup as MRP
+          image: product.image || 'https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=300&h=200&fit=crop',
+          category: product.category,
+          description: product.description,
+          stock: product.stock
+        }));
+        
+        console.log('✅ Loaded products from API:', products.length);
+        console.log('📋 Sample products:', products.slice(0, 3));
+        
+        // Render products after loading
+        renderAll();
+      } else {
+        console.warn('⚠️ No products found in API response');
+        throw new Error('No products found in API response');
+      }
+    } catch (error) {
+      console.error('❌ Error loading products:', error);
+      // Fallback to mock data if API fails
+      products = [
+        { id: 'p1', name: 'Banana (1 kg)', price: 40, mrp: 55, image: 'https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=300&h=200&fit=crop', category: 'Fruits & Vegetables' },
+        { id: 'p2', name: 'Tomato (1 kg)', price: 32, mrp: 45, image: 'https://images.unsplash.com/photo-1546470427-5a4b0b0b0b0b?w=300&h=200&fit=crop', category: 'Fruits & Vegetables' },
+        { id: 'p3', name: 'Apple (1 kg)', price: 120, mrp: 150, image: 'https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=300&h=200&fit=crop', category: 'Fruits & Vegetables' },
+        { id: 'p4', name: 'Milk (1 L)', price: 55, mrp: 60, image: 'https://images.unsplash.com/photo-1550583724-b2692b85b150?w=300&h=200&fit=crop', category: 'Dairy & Eggs' },
+        { id: 'p5', name: 'Eggs (12 pcs)', price: 78, mrp: 90, image: 'https://images.unsplash.com/photo-1518569656558-1c25a1a0b3b3?w=300&h=200&fit=crop', category: 'Dairy & Eggs' },
+        { id: 'p6', name: 'Butter (200g)', price: 45, mrp: 55, image: 'https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?w=300&h=200&fit=crop', category: 'Dairy & Eggs' },
+        { id: 'p7', name: 'Bread (400g)', price: 35, mrp: 40, image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=300&h=200&fit=crop', category: 'Bakery' },
+        { id: 'p8', name: 'Croissants (6 pcs)', price: 85, mrp: 100, image: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=300&h=200&fit=crop', category: 'Bakery' },
+        { id: 'p9', name: 'Potato Chips', price: 20, mrp: 25, image: 'https://images.unsplash.com/photo-1566478989037-eec170784d0b?w=300&h=200&fit=crop', category: 'Snacks' },
+        { id: 'p10', name: 'Mixed Nuts', price: 150, mrp: 180, image: 'https://images.unsplash.com/photo-1553456558-a0c0a4a0b0b0b?w=300&h=200&fit=crop', category: 'Snacks' },
+        { id: 'p11', name: 'Cola (1.25 L)', price: 75, mrp: 85, image: 'https://images.unsplash.com/photo-1581636625402-29b2a704ef13?w=300&h=200&fit=crop', category: 'Beverages' },
+        { id: 'p12', name: 'Orange Juice (1 L)', price: 65, mrp: 75, image: 'https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?w=300&h=200&fit=crop', category: 'Beverages' },
+        { id: 'p13', name: 'Instant Noodles', price: 12, mrp: 15, image: 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=300&h=200&fit=crop', category: 'Breakfast & Instant' },
+        { id: 'p14', name: 'Cereal (500g)', price: 95, mrp: 110, image: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=300&h=200&fit=crop', category: 'Breakfast & Instant' },
+        { id: 'p15', name: 'Dishwash Liquid', price: 85, mrp: 99, image: 'https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?w=300&h=200&fit=crop', category: 'Household Essentials' },
+        { id: 'p16', name: 'Toilet Paper (12 rolls)', price: 120, mrp: 140, image: 'https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?w=300&h=200&fit=crop', category: 'Household Essentials' },
+        { id: 'p17', name: 'Shampoo (180ml)', price: 115, mrp: 140, image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=300&h=200&fit=crop', category: 'Personal Care' },
+        { id: 'p18', name: 'Toothpaste (100g)', price: 45, mrp: 55, image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=300&h=200&fit=crop', category: 'Personal Care' }
+      ];
+      console.log('🔄 Using fallback mock data:', products.length, 'products');
+      renderAll();
+    }
+  };
 
   const recommendedGrid = document.getElementById('recommendedGrid');
   const dealsGrid = document.getElementById('dealsGrid');
@@ -260,8 +305,7 @@ document.addEventListener('DOMContentLoaded', () => {
     renderProducts(filterByQuery(products), dealsGrid);
   };
 
-  // initial grids
-  renderAll();
+  // Don't render initially - wait for products to load from API
 
   // Repaint favourites when drawer updates
   window.addEventListener('fav:changed', () => {
@@ -329,8 +373,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // Profile menu actions: open Orders/Favourites drawers
   document.querySelector('#profileMenu a:nth-child(1)')?.addEventListener('click', (e) => { e.preventDefault(); window.BCOrders?.open(); });
   document.querySelector('#profileMenu a:nth-child(2)')?.addEventListener('click', (e) => { e.preventDefault(); window.BCFav?.open(); });
-});
 
+  // Load products from API when page loads
+  loadProducts();
+
+  // Helper function for showing added feedback
   const showAddedFeedback = (btn) => {
     // Create or reuse a feedback span
     let fb = btn.parentElement.querySelector('.added-feedback');
@@ -346,5 +393,6 @@ document.addEventListener('DOMContentLoaded', () => {
       if(fb) fb.style.display = 'none';
     }, 1200);
   };
+});
 
 

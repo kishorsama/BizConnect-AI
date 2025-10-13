@@ -8,6 +8,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/unified-design.css">
     <link rel="stylesheet" href="css/vendor-dashboard.css">
     <link rel="stylesheet" href="css/invoices.css">
 </head>
@@ -37,9 +38,13 @@
                 </a>
             </nav>
         </aside>
+        <div class="mobile-overlay" id="mobileOverlay"></div>
 
         <section class="vd-main">
             <div class="vd-topbar">
+                <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
                 <div class="muted" id="shopAddress">123 Market Lane, Main City</div>
                 <div style="text-align:center;flex:1;">
                     <h2 style="margin:0;font-size:20px;font-weight:700;color:#0f766e;" id="shopName">BizConnect Demo Shop</h2>
@@ -168,5 +173,53 @@
     <script src="js/api.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/invoices.js"></script>
+    
+    <!-- Mobile Menu Toggle Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+            const sidebar = document.querySelector('.vd-sidebar');
+            const mobileOverlay = document.getElementById('mobileOverlay');
+            
+            if (mobileMenuToggle && sidebar && mobileOverlay) {
+                // Toggle mobile menu
+                mobileMenuToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('mobile-open');
+                    mobileOverlay.classList.toggle('active');
+                });
+                
+                // Close menu when clicking overlay
+                mobileOverlay.addEventListener('click', function() {
+                    sidebar.classList.remove('mobile-open');
+                    mobileOverlay.classList.remove('active');
+                });
+                
+                // Close menu when clicking on nav links
+                const navLinks = document.querySelectorAll('.vd-nav a');
+                navLinks.forEach(link => {
+                    link.addEventListener('click', function() {
+                        sidebar.classList.remove('mobile-open');
+                        mobileOverlay.classList.remove('active');
+                    });
+                });
+                
+                // Close menu on escape key
+                document.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape') {
+                        sidebar.classList.remove('mobile-open');
+                        mobileOverlay.classList.remove('active');
+                    }
+                });
+                
+                // Handle window resize
+                window.addEventListener('resize', function() {
+                    if (window.innerWidth > 1024) {
+                        sidebar.classList.remove('mobile-open');
+                        mobileOverlay.classList.remove('active');
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>

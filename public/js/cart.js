@@ -130,12 +130,8 @@ const Cart = {
     }
 
     try {
-      // For now, remove and re-add with new quantity
-      console.log('Removing item from cart...');
-      await API.delete(`${API_CONFIG.endpoints.removeFromCart}/${productId}`);
-      
-      console.log('Adding item back with new quantity...');
-      await API.post(API_CONFIG.endpoints.addToCart, {
+      // Use PUT method to update quantity directly
+      await API.put(API_CONFIG.endpoints.updateCart, {
         productId,
         quantity: newQuantity
       });
@@ -144,7 +140,19 @@ const Cart = {
       this.loadCart();
     } catch (error) {
       console.error('Error updating quantity:', error);
-      this.showMessage('Failed to update quantity', 'error');
+      // Fallback to remove and re-add method
+      try {
+        console.log('Fallback: Removing and re-adding item...');
+        await API.delete(`${API_CONFIG.endpoints.removeFromCart}/${productId}`);
+        await API.post(API_CONFIG.endpoints.addToCart, {
+          productId,
+          quantity: newQuantity
+        });
+        this.loadCart();
+      } catch (fallbackError) {
+        console.error('Fallback also failed:', fallbackError);
+        this.showMessage('Failed to update quantity', 'error');
+      }
     }
   },
 

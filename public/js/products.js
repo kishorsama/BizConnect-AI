@@ -60,7 +60,7 @@ const Products = {
             <span class="product-stock">Stock: ${product.stock}</span>
           </div>
           <div class="product-vendor">
-            <small>Sold by: ${product.vendorId.name}</small>
+            <small>Sold by: ${product.vendorId?.name || 'Unknown Vendor'}</small>
           </div>
           <div class="product-actions">
             <div class="quantity-controls">

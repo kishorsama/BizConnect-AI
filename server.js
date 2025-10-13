@@ -7,6 +7,7 @@ const port = 3000;
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const path = require('path');
+const MLService = require('./ml-models/ml_service');
 
 // Middleware
 app.use(bodyParser.json({ limit: '50mb' }));
@@ -265,6 +266,9 @@ const User = mongoose.model('User', userSchema);
 const Product = mongoose.model('Product', productSchema);
 const Order = mongoose.model('Order', orderSchema);
 const Cart = mongoose.model('Cart', cartSchema);
+
+// Initialize ML Service
+const mlService = new MLService();
 
 // API Routes (must come before static middleware)
 // Login endpoint
@@ -739,6 +743,68 @@ app.post('/api/cart/add', async (req, res) => {
   }
 });
 
+// Update cart item quantity
+app.put('/api/cart/update', async (req, res) => {
+  try {
+    const token = req.headers.authorization;
+    if (!token) {
+      return res.status(401).json({ error: 'No token provided' });
+    }
+
+    const tokenParts = token.replace('Bearer ', '').split('-');
+    if (tokenParts.length !== 3) {
+      return res.status(401).json({ error: 'Invalid token' });
+    }
+
+    const customerId = tokenParts[1];
+    const customer = await User.findById(customerId);
+    
+    if (!customer || customer.role !== 'customer') {
+      return res.status(403).json({ error: 'Access denied' });
+    }
+
+    const { productId, quantity } = req.body;
+
+    if (!productId || !quantity) {
+      return res.status(400).json({ error: 'Product ID and quantity are required' });
+    }
+
+    if (quantity < 1) {
+      return res.status(400).json({ error: 'Quantity must be at least 1' });
+    }
+
+    const product = await Product.findById(productId);
+    if (!product || !product.isActive) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+
+    if (product.stock < quantity) {
+      return res.status(400).json({ error: 'Insufficient stock' });
+    }
+
+    const cart = await Cart.findOne({ customerId });
+    
+    if (!cart) {
+      return res.status(404).json({ error: 'Cart not found' });
+    }
+
+    const existingItem = cart.items.find(item => item.productId.toString() === productId);
+    
+    if (!existingItem) {
+      return res.status(404).json({ error: 'Item not found in cart' });
+    }
+
+    existingItem.quantity = quantity;
+    cart.updatedAt = new Date();
+    await cart.save();
+
+    res.json({ message: 'Cart updated successfully', cart });
+  } catch (error) {
+    console.error('Update cart error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 // Remove item from cart
 app.delete('/api/cart/remove/:productId', async (req, res) => {
   try {
@@ -1014,6 +1080,272 @@ app.put('/api/vendor/profile', async (req, res) => {
   }
 });
 
+// ==================== ML PREDICTION API ====================
+
+// Initialize ML pipeline
+app.post('/api/ml/initialize', async (req, res) => {
+  try {
+    console.log('🚀 Initializing ML pipeline...');
+    const success = await mlService.initializeMLPipeline();
+    
+    if (success) {
+      res.json({ 
+        message: 'ML pipeline initialized successfully',
+        status: 'success'
+      });
+    } else {
+      res.status(500).json({ 
+        error: 'Failed to initialize ML pipeline',
+        status: 'error'
+      });
+    }
+  } catch (error) {
+    console.error('ML initialization error:', error);
+    res.status(500).json({ 
+      error: 'Internal server error',
+      status: 'error'
+    });
+  }
+});
+
+// Predict product performance
+app.post('/api/ml/predict-product', async (req, res) => {
+  try {
+    const { productId } = req.body;
+    
+    if (!productId) {
+      return res.status(400).json({ error: 'Product ID is required' });
+    }
+    
+    // Get product data from database
+    const product = await Product.findById(productId);
+    if (!product) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+    
+    // Get sales data for the product
+    const sales = await Order.find({ 'items.productId': productId });
+    
+    // Prepare product data for ML prediction
+    const productData = {
+      product_id: product._id,
+      name: product.name,
+      description: product.description,
+      price: product.price,
+      category: product.category,
+      stock: product.stock,
+      vendor_id: product.vendorId,
+      is_active: product.isActive,
+      created_at: product.createdAt,
+      total_sales: sales.reduce((sum, order) => {
+        return sum + order.items.reduce((itemSum, item) => {
+          return item.productId.toString() === productId.toString() ? itemSum + item.quantity : itemSum;
+        }, 0);
+      }, 0),
+      total_revenue: sales.reduce((sum, order) => {
+        return sum + order.items.reduce((itemSum, item) => {
+          return item.productId.toString() === productId.toString() ? itemSum + (item.quantity * item.price) : itemSum;
+        }, 0);
+      }, 0)
+    };
+    
+    const prediction = await mlService.predictProductPerformance(productData);
+    
+    if (prediction) {
+      res.json({
+        product_id: productId,
+        predictions: prediction,
+        status: 'success'
+      });
+    } else {
+      res.status(500).json({ 
+        error: 'Failed to generate prediction',
+        status: 'error'
+      });
+    }
+  } catch (error) {
+    console.error('Product prediction error:', error);
+    res.status(500).json({ 
+      error: 'Internal server error',
+      status: 'error'
+    });
+  }
+});
+
+// Get sales trends for a product
+app.get('/api/ml/sales-trends/:productId', async (req, res) => {
+  try {
+    const { productId } = req.params;
+    const { days = 30 } = req.query;
+    
+    const trends = await mlService.getSalesTrends(productId, parseInt(days));
+    
+    if (trends) {
+      res.json({
+        product_id: productId,
+        trends: trends,
+        status: 'success'
+      });
+    } else {
+      res.status(404).json({ 
+        error: 'No trend data available for this product',
+        status: 'error'
+      });
+    }
+  } catch (error) {
+    console.error('Sales trends error:', error);
+    res.status(500).json({ 
+      error: 'Internal server error',
+      status: 'error'
+    });
+  }
+});
+
+// Get top performing products
+app.get('/api/ml/top-products', async (req, res) => {
+  try {
+    const { limit = 10 } = req.query;
+    
+    // Extract vendor ID from token for vendor-specific predictions
+    let vendorId = null;
+    const token = req.headers.authorization;
+    console.log('ML Top Products - Token:', token);
+    
+    if (token) {
+      try {
+        const tokenParts = token.replace('Bearer ', '').split('-');
+        console.log('Token parts:', tokenParts);
+        
+        if (tokenParts.length === 3) {
+          const userId = tokenParts[1];
+          console.log('User ID from token:', userId);
+          
+          const user = await User.findById(userId);
+          console.log('User found:', user ? { id: user._id, role: user.role } : 'Not found');
+          
+          if (user && user.role === 'vendor') {
+            vendorId = userId;
+            console.log('Vendor ID set:', vendorId);
+          }
+        }
+      } catch (tokenError) {
+        console.log('Token parsing failed, using global predictions:', tokenError.message);
+      }
+    }
+    
+    console.log('Final vendor ID:', vendorId);
+    
+    const topProducts = await mlService.getTopPerformingProducts(parseInt(limit), vendorId);
+    
+    res.json({
+      products: topProducts,
+      count: topProducts.length,
+      status: 'success'
+    });
+  } catch (error) {
+    console.error('Top products error:', error);
+    res.status(500).json({ 
+      error: 'Internal server error',
+      status: 'error'
+    });
+  }
+});
+
+// Get low performing products
+app.get('/api/ml/low-products', async (req, res) => {
+  try {
+    const { limit = 10 } = req.query;
+    
+    // Extract vendor ID from token for vendor-specific predictions
+    let vendorId = null;
+    const token = req.headers.authorization;
+    if (token) {
+      try {
+        const tokenParts = token.replace('Bearer ', '').split('-');
+        if (tokenParts.length === 3) {
+          const userId = tokenParts[1];
+          const user = await User.findById(userId);
+          if (user && user.role === 'vendor') {
+            vendorId = userId;
+          }
+        }
+      } catch (tokenError) {
+        console.log('Token parsing failed, using global predictions');
+      }
+    }
+    
+    const lowProducts = await mlService.getLowPerformingProducts(parseInt(limit), vendorId);
+    
+    res.json({
+      products: lowProducts,
+      count: lowProducts.length,
+      status: 'success'
+    });
+  } catch (error) {
+    console.error('Low products error:', error);
+    res.status(500).json({ 
+      error: 'Internal server error',
+      status: 'error'
+    });
+  }
+});
+
+// Get category insights
+app.get('/api/ml/category-insights/:category', async (req, res) => {
+  try {
+    const { category } = req.params;
+    
+    const insights = await mlService.getCategoryInsights(category);
+    
+    if (insights) {
+      res.json({
+        category: category,
+        insights: insights,
+        status: 'success'
+      });
+    } else {
+      res.status(404).json({ 
+        error: 'No insights available for this category',
+        status: 'error'
+      });
+    }
+  } catch (error) {
+    console.error('Category insights error:', error);
+    res.status(500).json({ 
+      error: 'Internal server error',
+      status: 'error'
+    });
+  }
+});
+
+// Get vendor insights
+app.get('/api/ml/vendor-insights/:vendorId', async (req, res) => {
+  try {
+    const { vendorId } = req.params;
+    
+    const insights = await mlService.getVendorInsights(vendorId);
+    
+    if (insights) {
+      res.json({
+        vendor_id: vendorId,
+        insights: insights,
+        status: 'success'
+      });
+    } else {
+      res.status(404).json({ 
+        error: 'No insights available for this vendor',
+        status: 'error'
+      });
+    }
+  } catch (error) {
+    console.error('Vendor insights error:', error);
+    res.status(500).json({ 
+      error: 'Internal server error',
+      status: 'error'
+    });
+  }
+});
+
 // ==================== ORDER MANAGEMENT API ====================
 
 // Create order from cart
@@ -1130,8 +1462,40 @@ app.post('/api/orders/create', async (req, res) => {
   }
 });
 
-// Get customer orders
+// Get customer orders (legacy endpoint)
 app.get('/api/customer/orders', async (req, res) => {
+  try {
+    const token = req.headers.authorization;
+    if (!token) {
+      return res.status(401).json({ error: 'No token provided' });
+    }
+
+    const tokenParts = token.replace('Bearer ', '').split('-');
+    if (tokenParts.length !== 3) {
+      return res.status(401).json({ error: 'Invalid token' });
+    }
+
+    const customerId = tokenParts[1];
+    const customer = await User.findById(customerId);
+    
+    if (!customer || customer.role !== 'customer') {
+      return res.status(403).json({ error: 'Access denied' });
+    }
+
+    const orders = await Order.find({ customerId })
+      .populate('vendorId', 'name email')
+      .populate('items.productId', 'name price image')
+      .sort({ createdAt: -1 });
+
+    res.json({ orders });
+  } catch (error) {
+    console.error('Get customer orders error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Get customer orders (new endpoint)
+app.get('/api/orders/customer', async (req, res) => {
   try {
     const token = req.headers.authorization;
     if (!token) {

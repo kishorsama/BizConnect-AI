@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Category Test - BizConnect AI</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
+        .category-button { margin: 5px; padding: 10px 15px; background: #f0f0f0; border: 1px solid #ccc; border-radius: 5px; cursor: pointer; }
+        .category-button:hover { background: #e0e0e0; }
+        .category-button.active { background: #007bff; color: white; }
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; margin-top: 15px; }
+        .product-card { padding: 15px; border: 1px solid #ddd; border-radius: 8px; background: white; }
+        .product-name { font-weight: bold; margin-bottom: 5px; }
+        .product-category { color: #666; font-size: 12px; }
+        .product-price { color: #007bff; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Category Loading Test</h1>
+    
+    <div class="test-section">
+        <h2>📊 Database Categories</h2>
+        <p>Categories loaded from database:</p>
+        <div id="databaseCategories"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>🎯 Category Filtering Test</h2>
+        <p>Click on categories to filter products:</p>
+        <div id="categoryButtons"></div>
+        <div class="products-grid" id="productsGrid"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>📋 Debug Information</h2>
+        <pre id="debugInfo"></pre>
+    </div>
+
+    <script>
+        let allProducts = [];
+        let currentCategory = 'all';
+        
+        // Load products and categories
+        async function loadData() {
+            try {
+                const response = await fetch('/api/products');
+                const data = await response.json();
+                allProducts = data.products || data;
+                
+                console.log('Loaded products:', allProducts.length);
+                console.log('Sample products:', allProducts.slice(0, 3));
+                
+                // Get unique categories
+                const categories = [...new Set(allProducts.map(product => product.category))].sort();
+                console.log('Categories found:', categories);
+                
+                // Display database categories
+                document.getElementById('databaseCategories').innerHTML = 
+                    categories.map(cat => `<span style="background: #e3f2fd; padding: 5px 10px; margin: 5px; border-radius: 15px; display: inline-block;">${cat}</span>`).join('');
+                
+                // Create category buttons
+                createCategoryButtons(categories);
+                
+                // Display all products initially
+                displayProducts(allProducts);
+                
+                // Update debug info
+                updateDebugInfo(categories);
+                
+            } catch (error) {
+                console.error('Error loading data:', error);
+                document.getElementById('debugInfo').textContent = 'Error: ' + error.message;
+            }
+        }
+        
+        function createCategoryButtons(categories) {
+            const container = document.getElementById('categoryButtons');
+            
+            // Add "All" button
+            let html = '<button class="category-button active" data-category="all">All Products</button>';
+            
+            // Add category buttons
+            categories.forEach(category => {
+                html += `<button class="category-button" data-category="${category}">${category}</button>`;
+            });
+            
+            container.innerHTML = html;
+            
+            // Add click listeners
+            container.querySelectorAll('.category-button').forEach(button => {
+                button.addEventListener('click', () => {
+                    // Remove active class from all buttons
+                    container.querySelectorAll('.category-button').forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    button.classList.add('active');
+                    
+                    // Filter products
+                    const category = button.getAttribute('data-category');
+                    currentCategory = category;
+                    
+                    let filteredProducts;
+                    if (category === 'all') {
+                        filteredProducts = allProducts;
+                    } else {
+                        filteredProducts = allProducts.filter(product => product.category === category);
+                    }
+                    
+                    displayProducts(filteredProducts);
+                    console.log(`Filtered ${filteredProducts.length} products for category: ${category}`);
+                });
+            });
+        }
+        
+        function displayProducts(products) {
+            const container = document.getElementById('productsGrid');
+            
+            if (products.length === 0) {
+                container.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #666;">No products found for this category.</p>';
+                return;
+            }
+            
+            container.innerHTML = products.map(product => `
+                <div class="product-card">
+                    <div class="product-name">${product.name}</div>
+                    <div class="product-category">${product.category}</div>
+                    <div class="product-price">₹${product.price}</div>
+                </div>
+            `).join('');
+        }
+        
+        function updateDebugInfo(categories) {
+            const debugInfo = {
+                totalProducts: allProducts.length,
+                categories: categories,
+                categoryCount: categories.length,
+                sampleProducts: allProducts.slice(0, 3).map(p => ({
+                    name: p.name,
+                    category: p.category,
+                    price: p.price
+                })),
+                timestamp: new Date().toISOString()
+            };
+            
+            document.getElementById('debugInfo').textContent = JSON.stringify(debugInfo, null, 2);
+        }
+        
+        // Load data when page loads
+        document.addEventListener('DOMContentLoaded', loadData);
+    </script>
+</body>
+</html>

@@ -5,9 +5,104 @@
 .chip-unpaid { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
 .action-btn { padding:5px 12px; border-radius:7px; background:#f1f5f9; margin-right:5px; border:none; color:#0f172a; font-weight:600; cursor:pointer; transition: background .14s; }
 .action-btn:hover { background: #bae6fd; }
-@media (max-width: 640px) { .table thead { display:none; } .table tr { display:block; margin-bottom:18px; border-bottom:2px solid #eee; } .table td { display:block; padding:12px 6px; }}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+  .metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  
+  .table-wrap {
+    overflow-x: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .metrics-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .metric-card {
+    padding: 16px;
+  }
+  
+  .metric-icon {
+    font-size: 24px;
+  }
+  
+  .metric-number {
+    font-size: 20px;
+  }
+  
+  .metric-label {
+    font-size: 12px;
+  }
+  
+  .action-btn {
+    padding: 6px 10px;
+    font-size: 12px;
+    margin-right: 4px;
+  }
+  
+  .table-wrap {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 640px) { 
+  .table thead { 
+    display: none; 
+  } 
+  
+  .table tr { 
+    display: block; 
+    margin-bottom: 18px; 
+    border-bottom: 2px solid #eee; 
+    background: white;
+    border-radius: 8px;
+    padding: 12px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  } 
+  
+  .table td { 
+    display: block; 
+    padding: 8px 6px; 
+    border: none;
+    text-align: left;
+  }
+  
+  .table td:before {
+    content: attr(data-label) ": ";
+    font-weight: 600;
+    color: #374151;
+    display: inline-block;
+    width: 100px;
+  }
+  
+  .action-btn {
+    padding: 4px 8px;
+    font-size: 11px;
+    margin-right: 2px;
+    margin-top: 4px;
+  }
+  
+  .chip {
+    font-size: 11px;
+    padding: 2px 6px;
+  }
+}
 
 /* Invoice detail modal reuses item-dialog styles */
 .item-dialog { position: fixed; inset: 0; background: rgba(2,6,23,0.45); display: flex; align-items: center; justify-content: center; z-index:500; }
 .item-dialog[hidden] { display:none!important; }
 .item-dialog__card { width: 100%; max-width: 540px; }
+
+/* Mobile modal adjustments */
+@media (max-width: 768px) {
+  .item-dialog__card {
+    max-width: 95%;
+    margin: 20px;
+  }
+}

@@ -97,30 +97,215 @@
     });
   }
 
-  // Profile menu dropdown logic
-  const profileBtn = document.getElementById('profileMenuButton');
-  const profileMenu = document.getElementById('profileMenu');
-  const logoutBtn = document.getElementById('logoutBtn');
-  
-  if (profileBtn && profileMenu) {
-    profileBtn.addEventListener('click', function(e) {
-      e.stopPropagation();
-      profileMenu.style.display = (profileMenu.style.display === 'block') ? 'none' : 'block';
+  // Profile menu dropdown logic - Wait for DOM to be ready
+  document.addEventListener('DOMContentLoaded', function() {
+    const profileBtn = document.getElementById('profileMenuButton');
+    const profileMenu = document.getElementById('profileMenu');
+    const logoutBtn = document.getElementById('logoutBtn');
+    
+    console.log('Profile elements found:', {
+      profileBtn: !!profileBtn,
+      profileMenu: !!profileMenu,
+      logoutBtn: !!logoutBtn
     });
     
-    document.addEventListener('click', function(e) {
-      if (profileMenu.style.display === 'block' && !profileMenu.contains(e.target) && e.target !== profileBtn) {
-        profileMenu.style.display = 'none';
+    if (profileBtn && profileMenu) {
+      profileBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('Profile button clicked, current display:', profileMenu.style.display);
+        profileMenu.style.display = (profileMenu.style.display === 'block') ? 'none' : 'block';
+        console.log('Profile menu display set to:', profileMenu.style.display);
+      });
+      
+      document.addEventListener('click', function(e) {
+        if (profileMenu.style.display === 'block' && !profileMenu.contains(e.target) && e.target !== profileBtn) {
+          console.log('Closing profile menu due to outside click');
+          profileMenu.style.display = 'none';
+        }
+      });
+    } else {
+      console.error('Profile button or menu not found');
+    }
+    
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', function() {
+        if (window.Auth && typeof window.Auth.logout === 'function') return Auth.logout();
+        if (typeof Auth !== 'undefined') Auth.logout();
+      });
+    }
+    
+    // Profile info modal handlers
+    var profileInfoBtn = document.getElementById('profileInfoBtn');
+    var profileInfoModal = document.getElementById('profileInfoModal');
+    var profileInfoClose = document.getElementById('profileInfoClose');
+    var profileInfoCloseBtn = document.getElementById('profileInfoCloseBtn');
+    
+    if (profileInfoBtn && profileInfoModal) {
+      profileInfoBtn.addEventListener('click', function(e){
+        e.preventDefault();
+        console.log('Opening profile modal');
+        console.log('Profile menu element:', profileMenu);
+        console.log('Profile modal element:', profileInfoModal);
+        
+        if (profileMenu) {
+          profileMenu.style.display = 'none';
+        }
+        
+        fillProfileInfo();
+        profileInfoModal.removeAttribute('hidden');
+        profileInfoModal.style.display = 'flex';
+      });
+    } else {
+      console.error('Profile button or modal not found:', {
+        profileInfoBtn: !!profileInfoBtn,
+        profileInfoModal: !!profileInfoModal
+      });
+    }
+    
+    if (profileInfoClose && profileInfoModal) {
+      profileInfoClose.addEventListener('click', closeProfileModal);
+    }
+    
+    if (profileInfoCloseBtn && profileInfoModal) {
+      profileInfoCloseBtn.addEventListener('click', closeProfileModal);
+    }
+    
+    // Close modal when clicking outside
+    if (profileInfoModal) {
+      profileInfoModal.addEventListener('click', function(e) {
+        if (e.target === profileInfoModal) {
+          closeProfileModal();
+        }
+      });
+    }
+    
+    // Close modal with Escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && profileInfoModal && !profileInfoModal.hasAttribute('hidden')) {
+        closeProfileModal();
       }
     });
-  }
-  
-  if (logoutBtn) {
-    logoutBtn.addEventListener('click', function() {
-      if (window.Auth && typeof window.Auth.logout === 'function') return Auth.logout();
-      if (typeof Auth !== 'undefined') Auth.logout();
-    });
-  }
+    
+    // Save profile info in form
+    var piForm = document.getElementById('profileInfoForm');
+    if (piForm) {
+      piForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        try {
+          // Show loading state
+          const saveBtn = document.getElementById('profileInfoSave');
+          const originalText = saveBtn.textContent;
+          saveBtn.textContent = 'Saving...';
+          saveBtn.disabled = true;
+
+          // Prepare profile data
+          const profileData = {
+            phone: document.getElementById('piPhoneIn').value.trim(),
+            shopName: document.getElementById('piShopNameIn').value.trim(),
+            businessType: document.getElementById('piBusinessTypeIn')?.value.trim() || '',
+            address: document.getElementById('piAddressIn').value.trim(),
+            gstNumber: document.getElementById('piGstIn')?.value.trim() || '',
+            panNumber: document.getElementById('piPanIn')?.value.trim() || '',
+            businessDescription: document.getElementById('piDescriptionIn')?.value.trim() || '',
+            annualTurnover: document.getElementById('piTurnoverIn')?.value.trim() || '',
+            employeeCount: document.getElementById('piEmployeesIn')?.value.trim() || ''
+          };
+
+          // Check if Aadhar file is uploaded
+          const aadharFile = document.getElementById('piAadharUpload').files[0];
+          if (aadharFile) {
+            // Validate file size (5MB max)
+            if (aadharFile.size > 5 * 1024 * 1024) {
+              throw new Error('Aadhar file size must be less than 5MB');
+            }
+
+            // Validate file type
+            const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'];
+            if (!allowedTypes.includes(aadharFile.type)) {
+              throw new Error('Please upload a valid image (JPG, PNG) or PDF file');
+            }
+
+            // Compress image if it's an image file
+            let processedFile = aadharFile;
+            if (aadharFile.type.startsWith('image/')) {
+              saveBtn.textContent = 'Processing Aadhar file...';
+              processedFile = await compressImage(aadharFile);
+            }
+
+            // Convert file to base64
+            const aadharBase64 = await fileToBase64(processedFile);
+            profileData.aadharCard = aadharBase64;
+          }
+
+          console.log('Sending profile data:', profileData);
+          console.log('Current timestamp:', new Date().toISOString());
+          
+          let response;
+          try {
+            response = await API.put(API_CONFIG.endpoints.vendorProfile, profileData);
+            console.log('Profile update response:', response);
+          } catch (error) {
+            console.error('API Error Details:', {
+              message: error.message,
+              status: error.status,
+              statusText: error.statusText,
+              response: error.response,
+              stack: error.stack
+            });
+            
+            // Show more detailed error message
+            let errorMsg = 'Failed to update profile. ';
+            if (error.message.includes('fetch')) {
+              errorMsg += 'Network error - please check your connection.';
+            } else if (error.message.includes('401')) {
+              errorMsg += 'Session expired - please login again.';
+            } else if (error.message.includes('500')) {
+              errorMsg += 'Server error - please try again later.';
+            } else {
+              errorMsg += error.message;
+            }
+            
+            throw new Error(errorMsg);
+          }
+          
+          // Update local user data
+          const currentUser = Auth.getCurrentUser();
+          if (currentUser) {
+            Object.assign(currentUser, response.vendor);
+            Storage.setUser(currentUser);
+          }
+
+          // Update UI elements
+          var nameNode = document.getElementById('userName');
+          if (nameNode) nameNode.textContent = currentUser.name;
+          
+          var shopNameNode = document.getElementById('shopName');
+          var shopAddressNode = document.getElementById('shopAddress');
+          if (shopNameNode) shopNameNode.textContent = profileData.shopName;
+          if (shopAddressNode) shopAddressNode.textContent = profileData.address;
+
+          // Show success message
+          showMessage('Profile updated successfully!', 'success');
+          
+          // Close modal
+          closeProfileModal();
+          
+        } catch (error) {
+          console.error('Error updating profile:', error);
+          showMessage(error.message, 'error');
+        } finally {
+          // Reset button state
+          const saveBtn = document.getElementById('profileInfoSave');
+          if (saveBtn) {
+            saveBtn.textContent = 'Save Profile';
+            saveBtn.disabled = false;
+          }
+        }
+      });
+    }
+  });
 
   // Load vendor order statistics
   async function loadVendorOrderStats() {
@@ -664,6 +849,9 @@
       // Load top products
       await loadTopProductsDashboard();
       
+      // Load recent orders with pagination
+      await loadRecentOrders();
+      
     } catch (error) {
       console.error('Error loading dashboard data:', error);
     }
@@ -953,6 +1141,7 @@
   var profileInfoModal = document.getElementById('profileInfoModal');
   var profileInfoClose = document.getElementById('profileInfoClose');
   var profileInfoCloseBtn = document.getElementById('profileInfoCloseBtn');
+  var profileMenu = document.getElementById('profileMenu'); // Add this line to access profileMenu
   
   function fillProfileInfo() {
     var u = (typeof Auth !== 'undefined' && typeof Auth.getCurrentUser === 'function') ? Auth.getCurrentUser() : {};
@@ -979,10 +1168,21 @@
     profileInfoBtn.addEventListener('click', function(e){
       e.preventDefault();
       console.log('Opening profile modal');
-      profileMenu.style.display = 'none';
+      console.log('Profile menu element:', profileMenu);
+      console.log('Profile modal element:', profileInfoModal);
+      
+      if (profileMenu) {
+        profileMenu.style.display = 'none';
+      }
+      
       fillProfileInfo();
       profileInfoModal.removeAttribute('hidden');
       profileInfoModal.style.display = 'flex';
+    });
+  } else {
+    console.error('Profile button or modal not found:', {
+      profileInfoBtn: !!profileInfoBtn,
+      profileInfoModal: !!profileInfoModal
     });
   }
   
@@ -1158,6 +1358,223 @@
       document.body.removeChild(toast);
     }, 3000);
   }
+
+  // Recent Orders Pagination
+  let recentOrdersData = [];
+  let currentOrdersPage = 1;
+  const ordersPerPage = 5;
+
+  // Load recent orders with pagination
+  async function loadRecentOrders(page = 1) {
+    try {
+      const token = localStorage.getItem('accessToken');
+      if (!token) return;
+
+      const response = await fetch('/api/vendor/orders', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      recentOrdersData = data.orders || [];
+      
+      // Sort orders by creation date (most recent first)
+      recentOrdersData.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      
+      currentOrdersPage = page;
+      renderRecentOrdersPage();
+      updateOrdersPaginationControls();
+      
+    } catch (error) {
+      console.error('Error loading recent orders:', error);
+      showOrdersError();
+    }
+  }
+
+  // Render current page of recent orders
+  function renderRecentOrdersPage() {
+    const container = document.getElementById('vendor-orders-container');
+    const paginationInfo = document.getElementById('orders-pagination-info');
+    
+    if (!container) return;
+
+    const startIndex = (currentOrdersPage - 1) * ordersPerPage;
+    const endIndex = startIndex + ordersPerPage;
+    const currentPageOrders = recentOrdersData.slice(startIndex, endIndex);
+
+    if (currentPageOrders.length === 0) {
+      container.innerHTML = `
+        <div class="text-center py-8 text-gray-500">
+          <div class="mb-4">
+            <i class="fas fa-clipboard-list text-4xl text-gray-300"></i>
+          </div>
+          <p class="text-lg font-medium">No orders yet</p>
+          <p class="text-sm">Customer orders will appear here</p>
+        </div>
+      `;
+      paginationInfo.textContent = 'No orders found';
+      return;
+    }
+
+    // Render orders using the existing Orders.renderVendorOrders function
+    if (typeof Orders !== 'undefined' && Orders.renderVendorOrders) {
+      Orders.renderVendorOrders(currentPageOrders);
+    } else {
+      // Fallback rendering if Orders object is not available
+      container.innerHTML = currentPageOrders.map(order => `
+        <div class="order-item p-4 border border-gray-200 rounded-lg mb-4">
+          <div class="flex justify-between items-start mb-3">
+            <div>
+              <h4 class="font-semibold text-gray-900">Order #${order.orderNumber || order._id.slice(-8)}</h4>
+              <p class="text-sm text-gray-600 mt-1">
+                <i class="fas fa-user mr-1"></i>${order.customerId?.name || 'Unknown Customer'}
+              </p>
+              <p class="text-sm text-gray-600">
+                <i class="fas fa-envelope mr-1"></i>${order.customerId?.email || 'No email'}
+              </p>
+            </div>
+            <div class="text-right">
+              <p class="font-semibold text-green-600">₹${order.totalAmount}</p>
+              <span class="badge ${getOrderStatusClass(order.status)} mt-1">${order.status}</span>
+            </div>
+          </div>
+          
+          <div class="mb-3">
+            <h5 class="font-medium text-gray-900 mb-2 flex items-center">
+              <i class="fas fa-box mr-2"></i>Items Ordered
+            </h5>
+            <div class="space-y-2">
+              ${order.items.map(item => `
+                <div class="flex justify-between items-center text-sm bg-gray-50 p-2 rounded">
+                  <span class="font-medium">${item.productId?.name || 'Unknown Product'} x${item.quantity}</span>
+                  <span class="font-semibold text-green-600">₹${item.price * item.quantity}</span>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+          
+          <div class="mb-3">
+            <p class="text-sm text-gray-600 mb-1 flex items-center">
+              <i class="fas fa-map-marker-alt mr-2"></i><strong>Shipping Address:</strong>
+            </p>
+            <p class="text-sm text-gray-600 bg-gray-50 p-2 rounded">
+              ${order.shippingAddress || 'No address provided'}
+            </p>
+          </div>
+          
+          <div class="flex justify-between items-center">
+            <p class="text-sm text-gray-500">
+              <i class="fas fa-calendar mr-1"></i>${new Date(order.createdAt).toLocaleDateString()}
+            </p>
+            <div class="flex gap-2">
+              <button class="btn-primary btn-sm" onclick="updateOrderStatus('${order._id}', 'confirmed')">
+                Confirm
+              </button>
+              <button class="btn-secondary btn-sm" onclick="updateOrderStatus('${order._id}', 'processing')">
+                Process
+              </button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Update pagination info
+    const totalOrders = recentOrdersData.length;
+    const totalPages = Math.ceil(totalOrders / ordersPerPage);
+    paginationInfo.textContent = `Showing ${startIndex + 1}-${Math.min(endIndex, totalOrders)} of ${totalOrders} orders`;
+  }
+
+  // Update pagination controls
+  function updateOrdersPaginationControls() {
+    const controls = document.getElementById('orders-pagination-controls');
+    const prevBtn = document.getElementById('orders-prev-btn');
+    const nextBtn = document.getElementById('orders-next-btn');
+    const pageInfo = document.getElementById('orders-page-info');
+    
+    if (!controls || !prevBtn || !nextBtn || !pageInfo) return;
+
+    const totalPages = Math.ceil(recentOrdersData.length / ordersPerPage);
+    
+    // Show controls only if there are multiple pages
+    if (totalPages > 1) {
+      controls.style.display = 'flex';
+    } else {
+      controls.style.display = 'none';
+      return;
+    }
+
+    // Update button states
+    prevBtn.disabled = currentOrdersPage === 1;
+    nextBtn.disabled = currentOrdersPage === totalPages;
+
+    // Update page info
+    pageInfo.textContent = `Page ${currentOrdersPage} of ${totalPages}`;
+  }
+
+  // Show orders error
+  function showOrdersError() {
+    const container = document.getElementById('vendor-orders-container');
+    const paginationInfo = document.getElementById('orders-pagination-info');
+    
+    if (container) {
+      container.innerHTML = `
+        <div class="text-center py-8 text-red-500">
+          <div class="mb-4">
+            <i class="fas fa-exclamation-triangle text-4xl"></i>
+          </div>
+          <p class="text-lg font-medium">Failed to load orders</p>
+          <p class="text-sm">Please try refreshing the page</p>
+        </div>
+      `;
+    }
+    
+    if (paginationInfo) {
+      paginationInfo.textContent = 'Error loading orders';
+    }
+  }
+
+  // Get order status class for styling
+  function getOrderStatusClass(status) {
+    const statusClasses = {
+      'pending': 'warning',
+      'confirmed': 'primary',
+      'processing': 'info',
+      'shipped': 'success',
+      'delivered': 'success',
+      'cancelled': 'danger'
+    };
+    return statusClasses[status] || 'secondary';
+  }
+
+  // Event listeners for pagination buttons
+  document.addEventListener('DOMContentLoaded', function() {
+    const prevBtn = document.getElementById('orders-prev-btn');
+    const nextBtn = document.getElementById('orders-next-btn');
+    
+    if (prevBtn) {
+      prevBtn.addEventListener('click', function() {
+        if (currentOrdersPage > 1) {
+          loadRecentOrders(currentOrdersPage - 1);
+        }
+      });
+    }
+    
+    if (nextBtn) {
+      nextBtn.addEventListener('click', function() {
+        const totalPages = Math.ceil(recentOrdersData.length / ordersPerPage);
+        if (currentOrdersPage < totalPages) {
+          loadRecentOrders(currentOrdersPage + 1);
+        }
+      });
+    }
+  });
 
   // Menu removed per request; no dropdown logic needed
 })();

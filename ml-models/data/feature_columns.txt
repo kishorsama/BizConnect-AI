@@ -1,0 +1,68 @@
+price
+price_log
+stock
+product_age_days
+total_sales
+avg_order_quantity
+order_count
+total_revenue
+avg_order_value
+unique_customers
+delivery_rate
+cancellation_rate
+sales_velocity
+category_Automotive
+category_Beauty
+category_Books
+category_Clothing
+category_Electronics
+category_Food & Beverage
+category_Health
+category_Home & Garden
+category_Sports
+category_Toys
+subcategory_Accessories
+subcategory_Action Figures
+subcategory_Bath & Body
+subcategory_Beverages
+subcategory_Board Games
+subcategory_Cameras
+subcategory_Children's
+subcategory_Cooking
+subcategory_Decor
+subcategory_Educational
+subcategory_Electronic
+subcategory_Electronics
+subcategory_Fiction
+subcategory_Fitness
+subcategory_Fragrance
+subcategory_Furniture
+subcategory_Garden
+subcategory_Hair Care
+subcategory_Headphones
+subcategory_Health Food
+subcategory_International
+subcategory_Kids' Wear
+subcategory_Kitchen
+subcategory_Laptops
+subcategory_Maintenance
+subcategory_Makeup
+subcategory_Medical
+subcategory_Men's Wear
+subcategory_Non-Fiction
+subcategory_Outdoor
+subcategory_Parts
+subcategory_Personal Care
+subcategory_Shoes
+subcategory_Skincare
+subcategory_Smartphones
+subcategory_Snacks
+subcategory_Supplements
+subcategory_Tablets
+subcategory_Team Sports
+subcategory_Technical
+subcategory_Tools
+subcategory_Water Sports
+subcategory_Wellness
+subcategory_Winter Sports
+subcategory_Women's Wear

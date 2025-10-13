@@ -277,9 +277,374 @@
   color: #6b7280; 
 }
 
+/* Mobile-First Responsive Design */
 @media (max-width: 1024px) { 
-  .vd-layout { grid-template-columns: 1fr; } 
-  .vd-sidebar { position: sticky; top: 0; z-index: 10; } 
+  .vd-layout { 
+    grid-template-columns: 1fr; 
+  } 
+  .vd-sidebar { 
+    position: fixed; 
+    top: 0; 
+    left: -280px; 
+    z-index: 1000; 
+    transition: left 0.3s ease;
+    width: 280px;
+  }
+  
+  .vd-sidebar.mobile-open {
+    left: 0;
+  }
+  
+  .vd-main {
+    margin-left: 0;
+  }
+  
+  .mobile-menu-toggle {
+    display: block;
+  }
+}
+
+@media (max-width: 768px) {
+  .vd-topbar {
+    padding: 12px 16px;
+  }
+  
+  .topbar-left,
+  .topbar-right {
+    min-width: auto;
+  }
+  
+  .shop-info {
+    font-size: 12px;
+  }
+  
+  .topbar-center h2 {
+    font-size: 16px;
+  }
+  
+  .user-name {
+    font-size: 12px;
+  }
+  
+  .user-role {
+    font-size: 10px;
+    padding: 1px 6px;
+  }
+  
+  .profile-avatar {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+  }
+  
+  .vd-container {
+    padding: 16px;
+  }
+  
+  .metrics-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .metric-card {
+    padding: 20px;
+  }
+  
+  .metric-icon {
+    font-size: 28px;
+  }
+  
+  .metric-number {
+    font-size: 24px;
+  }
+  
+  .metric-label {
+    font-size: 12px;
+  }
+  
+  .main-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .dashboard-card {
+    padding: 20px;
+  }
+  
+  .card-header h3 {
+    font-size: 18px;
+  }
+  
+  .action-bar {
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px;
+  }
+  
+  .action-info {
+    text-align: center;
+  }
+  
+  .modern-table {
+    font-size: 12px;
+  }
+  
+  .modern-table th,
+  .modern-table td {
+    padding: 12px 8px;
+  }
+  
+  .status-chip {
+    font-size: 10px;
+    padding: 2px 8px;
+  }
+  
+  .action-btn-small {
+    padding: 4px 8px;
+    font-size: 10px;
+  }
+  
+  .chart-container {
+    padding: 16px;
+  }
+  
+  .chart-container canvas {
+    height: 200px !important;
+  }
+  
+  .future-predict-list li {
+    padding: 12px 16px;
+    font-size: 13px;
+  }
+  
+  .inventory-stats {
+    grid-template-columns: 1fr;
+  }
+  
+  .channel-stats {
+    grid-template-columns: 1fr;
+  }
+  
+  .product-item {
+    flex-direction: column;
+    text-align: center;
+    gap: 8px;
+  }
+  
+  .product-image img {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .quick-actions {
+    gap: 8px;
+  }
+  
+  .action-btn {
+    padding: 12px;
+    font-size: 14px;
+  }
+  
+  .action-icon {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .vd-topbar {
+    padding: 8px 12px;
+  }
+  
+  .topbar-center h2 {
+    font-size: 14px;
+  }
+  
+  .vd-container {
+    padding: 12px;
+  }
+  
+  .metric-card {
+    padding: 16px;
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+  }
+  
+  .metric-icon {
+    font-size: 24px;
+  }
+  
+  .metric-number {
+    font-size: 20px;
+  }
+  
+  .dashboard-card {
+    padding: 16px;
+  }
+  
+  .card-header h3 {
+    font-size: 16px;
+  }
+  
+  .modern-table th,
+  .modern-table td {
+    padding: 8px 4px;
+  }
+  
+  .chart-container {
+    padding: 12px;
+  }
+  
+  .chart-container canvas {
+    height: 150px !important;
+  }
+  
+  .future-predict-list li {
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+  
+  .action-btn {
+    padding: 10px;
+    font-size: 13px;
+  }
+  
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .modal-content {
+    width: 95%;
+    margin: 10px;
+  }
+  
+  .modal-header {
+    padding: 16px 20px;
+  }
+  
+  .modal-form {
+    padding: 20px;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+  }
+  
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* Mobile Menu Toggle Button */
+.mobile-menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: #374151;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+}
+
+.mobile-menu-toggle:hover {
+  background: #f3f4f6;
+}
+
+@media (max-width: 1024px) {
+  .mobile-menu-toggle {
+    display: block;
+  }
+}
+
+/* Mobile Overlay */
+.mobile-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+
+.mobile-overlay.active {
+  display: block;
+}
+
+@media (max-width: 1024px) {
+  .mobile-overlay.active {
+    display: block;
+  }
+}
+
+/* Touch-friendly improvements */
+@media (max-width: 768px) {
+  .vd-nav a {
+    padding: 20px 16px;
+    font-size: 16px;
+  }
+  
+  .vd-nav a i {
+    font-size: 18px;
+    width: 24px;
+  }
+  
+  .action-btn-small {
+    min-height: 44px;
+    padding: 8px 12px;
+  }
+  
+  .btn-primary,
+  .btn-secondary {
+    min-height: 44px;
+    padding: 12px 20px;
+  }
+  
+  .form-input {
+    min-height: 44px;
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+  
+  .checkbox-label {
+    min-height: 44px;
+  }
+  
+  .checkbox-label input[type="checkbox"] {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+/* Landscape mobile optimization */
+@media (max-width: 768px) and (orientation: landscape) {
+  .vd-container {
+    padding: 8px;
+  }
+  
+  .metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .metric-card {
+    padding: 12px;
+  }
+  
+  .dashboard-card {
+    padding: 12px;
+  }
+  
+  .chart-container {
+    padding: 8px;
+  }
+  
+  .chart-container canvas {
+    height: 120px !important;
+  }
 }
 
 /* Action Bar Styles */
@@ -760,23 +1125,7 @@
   gap: 8px;
 }
 
-.btn-primary {
-  background: #007bff;
-  color: white;
-}
-
-.btn-primary:hover {
-  background: #0056b3;
-}
-
-.btn-secondary {
-  background: #6c757d;
-  color: white;
-}
-
-.btn-secondary:hover {
-  background: #545b62;
-}
+/* Removed duplicate button styles - using comprehensive definitions below */
 
 .product-item {
   display: flex;
@@ -1864,6 +2213,78 @@ body.vendor-dashboard #profileInfoModal .modal-content,
   .btn-secondary {
     width: 100%;
     justify-content: center;
+  }
+}
+
+.metric .value {
+  color: #1f2937;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* Pagination Controls */
+.pagination-info {
+  font-size: 14px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.pagination-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0;
+  border-top: 1px solid #e5e7eb;
+  margin-top: 16px;
+}
+
+.pagination-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: #f8fafc;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  color: #374151;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background: #e5e7eb;
+  border-color: #9ca3af;
+}
+
+.pagination-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: #f9fafb;
+  color: #9ca3af;
+}
+
+.page-info {
+  font-size: 14px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+/* Mobile pagination */
+@media (max-width: 768px) {
+  .pagination-controls {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .pagination-btn {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .page-info {
+    order: -1;
   }
 }
 

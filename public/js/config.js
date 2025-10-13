@@ -18,9 +18,11 @@ const API_CONFIG = {
     cart: '/cart',
     addToCart: '/cart/add',
     removeFromCart: '/cart/remove',
+    updateCart: '/cart/update',
     
     // Order endpoints
     createOrder: '/orders/create',
+    customerOrders: '/orders/customer',
     vendorOrders: '/vendor/orders',
     updateOrderStatus: '/vendor/orders',
     

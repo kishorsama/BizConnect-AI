@@ -102,11 +102,11 @@
                                     <i data-lucide="heart" class="w-4 h-4 text-gray-500"></i>
                                     <span>Favourites</span>
                                 </a>
-                                <a href="#" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition">
+                                <a href="#" data-open-offers class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition">
                                     <i data-lucide="badge-percent" class="w-4 h-4 text-gray-500"></i>
                                     <span>Offers & rewards</span>
                                 </a>
-                                <a href="#" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition">
+                                <a href="#" data-open-customer-care class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition">
                                     <i data-lucide="headphones" class="w-4 h-4 text-gray-500"></i>
                                     <span>Customer care</span>
                                 </a>
@@ -128,62 +128,8 @@
                 <h2 class="text-lg font-semibold text-gray-900">Shop by categories</h2>
             </div>
             <div class="flex gap-5 overflow-x-auto no-scrollbar py-2" id="categoriesRow">
-                <!-- Grocery categories -->
-                <button class="flex-none w-24 text-center js-category" data-category="all">
-                    <div class="mx-auto w-16 h-16 rounded-xl bg-white shadow-sm border border-gray-100 flex items-center justify-center hover:shadow-md transition">
-                        <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7b0b0b?w=48&h=48&fit=crop" alt="All Categories" class="w-10 h-10 rounded-lg"/>
-                    </div>
-                    <p class="mt-2 text-xs text-gray-700">All</p>
-                </button>
-                <button class="flex-none w-24 text-center js-category" data-category="Fruits & Vegetables">
-                    <div class="mx-auto w-16 h-16 rounded-xl bg-white shadow-sm border border-gray-100 flex items-center justify-center hover:shadow-md transition">
-                        <img src="https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=48&h=48&fit=crop" alt="Fruits & Vegetables" class="w-10 h-10 rounded-lg"/>
-                    </div>
-                    <p class="mt-2 text-xs text-gray-700">Fruits & Veg</p>
-                </button>
-                <button class="flex-none w-24 text-center js-category" data-category="Dairy & Eggs">
-                    <div class="mx-auto w-16 h-16 rounded-xl bg-white shadow-sm border border-gray-100 flex items-center justify-center hover:shadow-md transition">
-                        <img src="https://images.unsplash.com/photo-1550583724-b2692b85b150?w=48&h=48&fit=crop" alt="Dairy & Eggs" class="w-10 h-10 rounded-lg"/>
-                    </div>
-                    <p class="mt-2 text-xs text-gray-700">Dairy & Eggs</p>
-                </button>
-                <button class="flex-none w-24 text-center js-category" data-category="Bakery">
-                    <div class="mx-auto w-16 h-16 rounded-xl bg-white shadow-sm border border-gray-100 flex items-center justify-center hover:shadow-md transition">
-                        <img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?w=48&h=48&fit=crop" alt="Bakery" class="w-10 h-10 rounded-lg"/>
-                    </div>
-                    <p class="mt-2 text-xs text-gray-700">Bakery</p>
-                </button>
-                <button class="flex-none w-24 text-center js-category" data-category="Snacks">
-                    <div class="mx-auto w-16 h-16 rounded-xl bg-white shadow-sm border border-gray-100 flex items-center justify-center hover:shadow-md transition">
-                        <img src="https://images.unsplash.com/photo-1566478989037-eec170784d0b?w=48&h=48&fit=crop" alt="Snacks" class="w-10 h-10 rounded-lg"/>
-                    </div>
-                    <p class="mt-2 text-xs text-gray-700">Snacks</p>
-                </button>
-                <button class="flex-none w-24 text-center js-category" data-category="Beverages">
-                    <div class="mx-auto w-16 h-16 rounded-xl bg-white shadow-sm border border-gray-100 flex items-center justify-center hover:shadow-md transition">
-                        <img src="https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?w=48&h=48&fit=crop" alt="Beverages" class="w-10 h-10 rounded-lg"/>
-                    </div>
-                    <p class="mt-2 text-xs text-gray-700">Beverages</p>
-                </button>
-                <button class="flex-none w-24 text-center js-category" data-category="Breakfast & Instant">
-                    <div class="mx-auto w-16 h-16 rounded-xl bg-white shadow-sm border border-gray-100 flex items-center justify-center hover:shadow-md transition">
-                        <img src="https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=48&h=48&fit=crop" alt="Breakfast & Instant" class="w-10 h-10 rounded-lg"/>
-                    </div>
-                    <p class="mt-2 text-xs text-gray-700">Breakfast</p>
-                </button>
-                <button class="flex-none w-24 text-center js-category" data-category="Household Essentials">
-                    <div class="mx-auto w-16 h-16 rounded-xl bg-white shadow-sm border border-gray-100 flex items-center justify-center hover:shadow-md transition">
-                        <img src="https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?w=48&h=48&fit=crop" alt="Household Essentials" class="w-10 h-10 rounded-lg"/>
-                    </div>
-                    <p class="mt-2 text-xs text-gray-700">Household</p>
-                </button>
-                <button class="flex-none w-24 text-center js-category" data-category="Personal Care">
-                    <div class="mx-auto w-16 h-16 rounded-xl bg-white shadow-sm border border-gray-100 flex items-center justify-center hover:shadow-md transition">
-                        <img src="https://images.unsplash.com/photo-1556228720-195a672e8a03?w=48&h=48&fit=crop" alt="Personal Care" class="w-10 h-10 rounded-lg"/>
-                    </div>
-                    <p class="mt-2 text-xs text-gray-700">Personal Care</p>
-                </button>
-        </div>
+                <!-- Categories will be loaded dynamically from database -->
+            </div>
         </section>
 
         <!-- Moving Promo Carousel -->
@@ -204,7 +150,10 @@
         <!-- Products Section -->
         <section class="mb-10" id="productsSection">
             <div class="flex items-center justify-between mb-3">
-                <h2 class="text-lg font-semibold text-gray-900">Available Products</h2>
+                <div>
+                    <h2 class="text-lg font-semibold text-gray-900">Available Products</h2>
+                    <p id="product-count" class="text-sm text-gray-500 mt-1">Loading products...</p>
+                </div>
                 <div class="flex items-center gap-2">
                     <span id="cart-count" class="text-sm text-gray-600">0 items in cart</span>
                     <span id="cart-total" class="text-sm font-semibold text-green-600">₹0</span>
@@ -212,6 +161,21 @@
             </div>
             <div id="products-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 <!-- Products will be loaded here -->
+            </div>
+            
+            <!-- Pagination Controls -->
+            <div id="pagination-controls" class="flex items-center justify-center gap-4 mt-8" style="display: none;">
+                <button id="prev-page-btn" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                    <i data-lucide="chevron-left" class="w-4 h-4 inline mr-1"></i>
+                    Previous
+                </button>
+                <div class="flex items-center gap-2">
+                    <span id="page-info" class="text-sm text-gray-600">Page 1 of 1</span>
+                </div>
+                <button id="next-page-btn" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                    Next
+                    <i data-lucide="chevron-right" class="w-4 h-4 inline ml-1"></i>
+                </button>
             </div>
         </section>
 
@@ -255,7 +219,7 @@
                             Shipping Address
                         </label>
                         <textarea 
-                            id="shipping-address" 
+                            id="shipping-address-checkout" 
                             rows="3" 
                             class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                             placeholder="Enter your complete shipping address"
@@ -273,24 +237,6 @@
             </div>
         </section>
 
-        <!-- Recommended For You -->
-        <section class="mb-10">
-            <div class="flex items-center justify-between mb-3">
-                <h2 class="text-lg font-semibold text-gray-900">Recommended For You</h2>
-                <a href="#" class="text-sm text-blue-600 hover:text-blue-700">More</a>
-            </div>
-            <div id="recommendedGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"></div>
-        </section>
-
-        <!-- Best Deals -->
-        <section class="mb-10">
-            <div class="flex items-center justify-between mb-3">
-                <h2 class="text-lg font-semibold text-gray-900">Best Deals</h2>
-                <a href="#" class="text-sm text-blue-600 hover:text-blue-700">More</a>
-            </div>
-            <div id="dealsGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"></div>
-        </section>
-
         <!-- Two-Column Layout -->
         <section class="mb-12">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -298,29 +244,10 @@
                 <div class="bg-white rounded-2xl shadow-sm p-4 sm:p-5">
                     <div class="flex items-center justify-between mb-4">
                         <h3 class="text-base sm:text-lg font-semibold text-gray-900">Festival Exclusive Deals</h3>
+                        <button onclick="refreshFestivalDeals()" class="text-xs text-blue-600 hover:text-blue-700">Refresh</button>
                     </div>
-                    <div class="space-y-3">
-                        <div class="flex items-center gap-3 p-3 rounded-xl border border-gray-100 hover:shadow-sm transition">
-                            <img src="https://placehold.co/80x60" alt="Item" class="w-20 h-14 rounded-lg object-cover">
-                            <div>
-                                <p class="text-sm font-medium text-gray-800">Exclusive item</p>
-                                <p class="text-xs text-gray-500">Special price</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-3 p-3 rounded-xl border border-gray-100 hover:shadow-sm transition">
-                            <img src="https://placehold.co/80x60" alt="Item" class="w-20 h-14 rounded-lg object-cover">
-                            <div>
-                                <p class="text-sm font-medium text-gray-800">Exclusive item</p>
-                                <p class="text-xs text-gray-500">Special price</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-3 p-3 rounded-xl border border-gray-100 hover:shadow-sm transition">
-                            <img src="https://placehold.co/80x60" alt="Item" class="w-20 h-14 rounded-lg object-cover">
-                            <div>
-                                <p class="text-sm font-medium text-gray-800">Exclusive item</p>
-                                <p class="text-xs text-gray-500">Special price</p>
-                            </div>
-                        </div>
+                    <div id="festival-deals-container" class="space-y-3">
+                        <!-- Festival deals will be loaded here -->
                     </div>
                 </div>
 
@@ -328,29 +255,10 @@
                 <div class="bg-white rounded-2xl shadow-sm p-4 sm:p-5">
                     <div class="flex items-center justify-between mb-4">
                         <h3 class="text-base sm:text-lg font-semibold text-gray-900">Trending Shops near you</h3>
+                        <button onclick="refreshTrendingShops()" class="text-xs text-blue-600 hover:text-blue-700">Refresh</button>
                     </div>
-                    <div class="space-y-3">
-                        <div class="flex items-center gap-3 p-3 rounded-xl border border-gray-100 hover:shadow-sm transition">
-                            <img src="https://placehold.co/80x60" alt="Shop" class="w-20 h-14 rounded-lg object-cover">
-                            <div>
-                                <p class="text-sm font-medium text-gray-800">Shop name</p>
-                                <p class="text-xs text-gray-500">1.2 km away</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-3 p-3 rounded-xl border border-gray-100 hover:shadow-sm transition">
-                            <img src="https://placehold.co/80x60" alt="Shop" class="w-20 h-14 rounded-lg object-cover">
-                            <div>
-                                <p class="text-sm font-medium text-gray-800">Shop name</p>
-                                <p class="text-xs text-gray-500">2.0 km away</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-3 p-3 rounded-xl border border-gray-100 hover:shadow-sm transition">
-                            <img src="https://placehold.co/80x60" alt="Shop" class="w-20 h-14 rounded-lg object-cover">
-                            <div>
-                                <p class="text-sm font-medium text-gray-800">Shop name</p>
-                                <p class="text-xs text-gray-500">2.7 km away</p>
-                            </div>
-                        </div>
+                    <div id="trending-shops-container" class="space-y-3">
+                        <!-- Trending shops will be loaded here -->
                     </div>
                 </div>
             </div>
@@ -393,9 +301,12 @@
     <script>
         Auth.protectPage(['customer']);
         
-        // Global variables for category filtering
+        // Global variables for category filtering and pagination
         let allProducts = [];
         let currentCategory = 'all';
+        let currentPage = 1;
+        const productsPerPage = 25;
+        let filteredProducts = [];
         
         // Load products when page loads
         document.addEventListener('DOMContentLoaded', async () => {
@@ -411,9 +322,19 @@
             try {
                 allProducts = await Products.getAllProducts();
                 console.log('Loaded products:', allProducts);
-                renderProductsToGrids(allProducts);
+                filteredProducts = allProducts; // Initialize filtered products
+                renderMainProducts(); // Render main products with pagination
+                loadCategoriesFromDatabase(); // Load categories from database
                 initCategoryFiltering();
+                initPagination();
                 renderHighlightsCarousel();
+                
+                // Initialize product count
+                updateProductCount(filteredProducts.length, 'all');
+                
+                // Load festival deals and trending shops
+                loadFestivalDeals();
+                loadTrendingShops();
                 
                 // Debug cart availability
                 console.log('Cart object after page load:', typeof Cart);
@@ -424,36 +345,93 @@
                     console.log('Testing cart loading...');
                     Cart.loadCart();
                 }
+                
+                // Initialize favorites functionality
+                initializeFavorites();
             } catch (error) {
                 console.error('Error loading products:', error);
             }
         });
         
-        // Render products to both grids
-        function renderProductsToGrids(products) {
-            const recommendedGrid = document.getElementById('recommendedGrid');
-            const dealsGrid = document.getElementById('dealsGrid');
+        // Initialize favorites functionality
+        function initializeFavorites() {
+            // Wait for BCFav to be available
+            const checkFav = () => {
+                if (window.BCFav) {
+                    console.log('Favorites system initialized');
+                    
+                    // Add event listeners to all favorite buttons
+                    document.addEventListener('click', (e) => {
+                        const favButton = e.target.closest('[data-fav]');
+                        if (favButton) {
+                            e.preventDefault();
+                            const productId = favButton.getAttribute('data-fav');
+                            const product = allProducts.find(p => p._id === productId);
+                            
+                            if (product) {
+                                const favItem = {
+                                    id: product._id,
+                                    name: product.name,
+                                    price: product.price,
+                                    image: product.image || '/img/placeholder-product.jpg'
+                                };
+                                
+                                const wasFav = window.BCFav.has(productId);
+                                window.BCFav.toggle(favItem);
+                                
+                                if (wasFav) {
+                                    showMessage(`Removed ${product.name} from favorites!`, 'info');
+                                } else {
+                                    showMessage(`Added ${product.name} to favorites!`, 'success');
+                                }
+                                
+                                // Update all favorite icons for this product
+                                updateAllFavIcons(productId);
+                            }
+                        }
+                    });
+                    
+                    // Update all favorite icons on page load
+                    updateAllFavIcons();
+                    
+                    // Listen for favorites changes to update icons
+                    window.addEventListener('fav:changed', () => {
+                        updateAllFavIcons();
+                    });
+                } else {
+                    // Retry after a short delay
+                    setTimeout(checkFav, 100);
+                }
+            };
             
-            if (!recommendedGrid || !dealsGrid) {
-                console.error('Grid containers not found');
-                return;
-            }
+            checkFav();
+        }
+        
+        // Update all favorite icons for a specific product
+        function updateAllFavIcons(productId = null) {
+            if (!window.BCFav) return;
             
-            // Clear existing content
-            recommendedGrid.innerHTML = '';
-            dealsGrid.innerHTML = '';
-            
-            if (!products || products.length === 0) {
-                recommendedGrid.innerHTML = '<div class="col-span-full text-center text-gray-500 py-8">No products available</div>';
-                dealsGrid.innerHTML = '<div class="col-span-full text-center text-gray-500 py-8">No products available</div>';
-                return;
-            }
-            
-            // Render products to recommended grid
-            recommendedGrid.innerHTML = products.map(product => createProductCard(product)).join('');
-            
-            // Render products to deals grid (same products for now)
-            dealsGrid.innerHTML = products.map(product => createProductCard(product)).join('');
+            const favButtons = productId 
+                ? document.querySelectorAll(`[data-fav="${productId}"]`)
+                : document.querySelectorAll('[data-fav]');
+                
+            favButtons.forEach(button => {
+                const id = button.getAttribute('data-fav');
+                const isFav = window.BCFav.has(id);
+                const icon = button.querySelector('i') || button.querySelector('svg');
+                
+                if (icon) {
+                    // Update color
+                    icon.classList.remove('text-rose-500');
+                    if (isFav) icon.classList.add('text-rose-500');
+                    
+                    // Update SVG fill for Lucide icons
+                    if (icon.tagName.toLowerCase() === 'svg') {
+                        icon.setAttribute('fill', isFav ? 'currentColor' : 'none');
+                        icon.setAttribute('stroke', 'currentColor');
+                    }
+                }
+            });
         }
         
         // Create product card HTML
@@ -473,7 +451,7 @@
                             ${product.mrp ? `<span class="text-xs text-gray-400 line-through">₹${product.mrp}</span>` : ''}
                         </div>
                         <div class="mt-2 text-xs text-gray-500">Stock: ${product.stock}</div>
-                        <div class="mt-2 text-xs text-gray-500">Sold by: ${product.vendorId?.name || 'Unknown'}</div>
+                        <div class="mt-2 text-xs text-gray-500">Sold by: ${product.vendorId?.name || 'Unknown Vendor'}</div>
                         <div class="mt-4"></div>
                         <div class="flex items-center justify-center">
                             <button onclick="addToCart('${product._id}')" class="w-full text-sm font-medium bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-full transition">Add to cart</button>
@@ -481,6 +459,133 @@
                     </div>
                 </div>
             `;
+        }
+        
+        // Initialize pagination
+        function initPagination() {
+            const prevBtn = document.getElementById('prev-page-btn');
+            const nextBtn = document.getElementById('next-page-btn');
+            const pageInfo = document.getElementById('page-info');
+            const paginationControls = document.getElementById('pagination-controls');
+            
+            // Show pagination controls if there are more than 25 products
+            if (filteredProducts.length > productsPerPage) {
+                paginationControls.style.display = 'flex';
+            } else {
+                paginationControls.style.display = 'none';
+            }
+            
+            // Update pagination controls
+            updatePaginationControls();
+            
+            // Add event listeners
+            prevBtn.addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderMainProducts();
+                    updatePaginationControls();
+                }
+            });
+            
+            nextBtn.addEventListener('click', () => {
+                const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderMainProducts();
+                    updatePaginationControls();
+                }
+            });
+        }
+        
+        // Update pagination controls
+        function updatePaginationControls() {
+            const prevBtn = document.getElementById('prev-page-btn');
+            const nextBtn = document.getElementById('next-page-btn');
+            const pageInfo = document.getElementById('page-info');
+            const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+            
+            // Update page info
+            pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+            
+            // Update button states
+            prevBtn.disabled = currentPage <= 1;
+            nextBtn.disabled = currentPage >= totalPages;
+        }
+        
+        // Render main products with pagination
+        function renderMainProducts() {
+            const startIndex = (currentPage - 1) * productsPerPage;
+            const endIndex = startIndex + productsPerPage;
+            const productsToShow = filteredProducts.slice(startIndex, endIndex);
+            
+            const container = document.getElementById('products-container');
+            if (!container) return;
+            
+            if (!productsToShow || productsToShow.length === 0) {
+                container.innerHTML = '<div class="col-span-full text-center text-gray-500 py-8">No products available</div>';
+                return;
+            }
+            
+            // Use the same design as the carousel products
+            container.innerHTML = productsToShow.map(product => createProductCard(product)).join('');
+        }
+        
+        // Load categories from database and render them
+        async function loadCategoriesFromDatabase() {
+            try {
+                // Get unique categories from products
+                const categories = [...new Set(allProducts.map(product => product.category))].sort();
+                console.log('Categories from database:', categories);
+                
+                const categoriesRow = document.getElementById('categoriesRow');
+                if (!categoriesRow) return;
+                
+                // Category icons mapping
+                const categoryIcons = {
+                    'Automotive': 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=48&h=48&fit=crop',
+                    'Beauty': 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=48&h=48&fit=crop',
+                    'Books': 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=48&h=48&fit=crop',
+                    'Clothing': 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=48&h=48&fit=crop',
+                    'Electronics': 'https://images.unsplash.com/photo-1498049794561-7780e7231661?w=48&h=48&fit=crop',
+                    'Food & Beverage': 'https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=48&h=48&fit=crop',
+                    'Health': 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=48&h=48&fit=crop',
+                    'Home & Garden': 'https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?w=48&h=48&fit=crop',
+                    'Sports': 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=48&h=48&fit=crop',
+                    'Toys': 'https://images.unsplash.com/photo-1558060370-9d4b4a0b7b4a?w=48&h=48&fit=crop'
+                };
+                
+                // Create category buttons HTML
+                let categoriesHTML = `
+                    <button class="flex-none w-24 text-center js-category" data-category="all">
+                        <div class="mx-auto w-16 h-16 rounded-xl bg-white shadow-sm border border-gray-100 flex items-center justify-center hover:shadow-md transition">
+                            <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7b0b0b?w=48&h=48&fit=crop" alt="All Categories" class="w-10 h-10 rounded-lg"/>
+                        </div>
+                        <p class="mt-2 text-xs text-gray-700">All</p>
+                    </button>
+                `;
+                
+                // Add each category button
+                categories.forEach(category => {
+                    const icon = categoryIcons[category] || 'https://images.unsplash.com/photo-1556909114-f6e7ad7b0b0b?w=48&h=48&fit=crop';
+                    const shortName = category.length > 12 ? category.substring(0, 12) + '...' : category;
+                    
+                    categoriesHTML += `
+                        <button class="flex-none w-24 text-center js-category" data-category="${category}">
+                            <div class="mx-auto w-16 h-16 rounded-xl bg-white shadow-sm border border-gray-100 flex items-center justify-center hover:shadow-md transition">
+                                <img src="${icon}" alt="${category}" class="w-10 h-10 rounded-lg"/>
+                            </div>
+                            <p class="mt-2 text-xs text-gray-700">${shortName}</p>
+                        </button>
+                    `;
+                });
+                
+                // Insert the HTML
+                categoriesRow.innerHTML = categoriesHTML;
+                
+                console.log('Categories loaded successfully');
+            } catch (error) {
+                console.error('Error loading categories:', error);
+            }
         }
         
         // Initialize category filtering
@@ -511,19 +616,832 @@
                     console.log('Selected category:', cat);
                     currentCategory = cat;
                     
-                    let filteredProducts;
+                    // Update filtered products based on selected category
                     if (cat === 'all') {
                         filteredProducts = allProducts;
                         console.log('Showing all products:', filteredProducts.length);
                     } else {
                         filteredProducts = allProducts.filter((p) => p.category === cat);
-                        console.log(`Filtered products for ${cat}:`, filteredProducts.length, filteredProducts);
+                        console.log(`Filtered products for ${cat}:`, filteredProducts.length);
+                        console.log('Sample filtered products:', filteredProducts.slice(0, 3));
                     }
                     
-                    // Update both grids with filtered products
-                    renderProductsToGrids(filteredProducts);
+                    // Debug: Show category distribution
+                    const categoryCounts = {};
+                    filteredProducts.forEach(p => {
+                        categoryCounts[p.category] = (categoryCounts[p.category] || 0) + 1;
+                    });
+                    console.log('Category distribution in filtered results:', categoryCounts);
+                    
+                    // Reset to first page when filtering
+                    currentPage = 1;
+                    
+                    // Update main products with pagination
+                    renderMainProducts();
+                    
+                    // Update pagination controls
+                    initPagination();
+                    
+                    // Update product count display
+                    updateProductCount(filteredProducts.length, cat);
                 });
             });
+        }
+        
+        // Update product count display
+        function updateProductCount(count, category) {
+            const countElement = document.getElementById('product-count');
+            if (countElement) {
+                if (category === 'all') {
+                    countElement.textContent = `Showing ${count} products`;
+                } else {
+                    countElement.textContent = `Showing ${count} products in ${category}`;
+                }
+            }
+        }
+        
+        // Load Festival Exclusive Deals
+        function loadFestivalDeals() {
+            try {
+                // Get products with discounts (MRP > Price) or special offers
+                const dealsProducts = allProducts.filter(product => {
+                    const hasDiscount = product.mrp && product.mrp > product.price;
+                    const isSpecialOffer = product.tags && (
+                        product.tags.toLowerCase().includes('festival') ||
+                        product.tags.toLowerCase().includes('special') ||
+                        product.tags.toLowerCase().includes('offer') ||
+                        product.tags.toLowerCase().includes('deal')
+                    );
+                    return hasDiscount || isSpecialOffer;
+                });
+                
+                // Sort by discount percentage (highest first)
+                dealsProducts.sort((a, b) => {
+                    const discountA = a.mrp ? Math.round((1 - a.price / a.mrp) * 100) : 0;
+                    const discountB = b.mrp ? Math.round((1 - b.price / b.mrp) * 100) : 0;
+                    return discountB - discountA;
+                });
+                
+                // Take top 3 deals
+                const topDeals = dealsProducts.slice(0, 3);
+                
+                const container = document.getElementById('festival-deals-container');
+                if (!container) return;
+                
+                if (topDeals.length === 0) {
+                    container.innerHTML = '<div class="text-center text-gray-500 py-4">No special deals available</div>';
+                    return;
+                }
+                
+                container.innerHTML = topDeals.map(product => createFestivalDealCard(product)).join('');
+                
+                console.log('Loaded festival deals:', topDeals.length);
+            } catch (error) {
+                console.error('Error loading festival deals:', error);
+            }
+        }
+        
+        // Create festival deal card
+        function createFestivalDealCard(product) {
+            const discount = product.mrp ? Math.round((1 - product.price / product.mrp) * 100) : 0;
+            const savings = product.mrp ? product.mrp - product.price : 0;
+            
+            return `
+                <div class="flex items-center gap-3 p-3 rounded-xl border border-gray-100 hover:shadow-sm transition cursor-pointer" onclick="showProductDetail('${product._id}')">
+                    <img src="${product.image || 'https://placehold.co/80x60?text=No+Image'}" alt="${product.name}" class="w-20 h-14 rounded-lg object-cover">
+                    <div class="flex-1">
+                        <p class="text-sm font-medium text-gray-800 line-clamp-1">${product.name}</p>
+                        <div class="flex items-center gap-2 mt-1">
+                            <span class="text-sm font-semibold text-green-600">₹${product.price}</span>
+                            ${product.mrp ? `<span class="text-xs text-gray-400 line-through">₹${product.mrp}</span>` : ''}
+                            ${discount > 0 ? `<span class="text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded-full">${discount}% OFF</span>` : ''}
+                        </div>
+                        ${savings > 0 ? `<p class="text-xs text-gray-500 mt-1">Save ₹${savings}</p>` : ''}
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Load Trending Shops
+        function loadTrendingShops() {
+            try {
+                // Get unique vendors from products
+                const vendors = {};
+                allProducts.forEach(product => {
+                    if (product.vendorId && product.vendorId.name) {
+                        const vendorName = product.vendorId.name;
+                        if (!vendors[vendorName]) {
+                            vendors[vendorName] = {
+                                name: vendorName,
+                                productCount: 0,
+                                totalStock: 0,
+                                categories: new Set(),
+                                image: product.image || 'https://placehold.co/80x60?text=Shop'
+                            };
+                        }
+                        vendors[vendorName].productCount++;
+                        vendors[vendorName].totalStock += product.stock || 0;
+                        vendors[vendorName].categories.add(product.category);
+                    }
+                });
+                
+                // Convert to array and sort by product count (trending = more products)
+                const vendorArray = Object.values(vendors).map(vendor => ({
+                    ...vendor,
+                    categories: Array.from(vendor.categories).slice(0, 2) // Top 2 categories
+                }));
+                
+                vendorArray.sort((a, b) => b.productCount - a.productCount);
+                
+                // Take top 3 vendors
+                const topVendors = vendorArray.slice(0, 3);
+                
+                const container = document.getElementById('trending-shops-container');
+                if (!container) return;
+                
+                if (topVendors.length === 0) {
+                    container.innerHTML = '<div class="text-center text-gray-500 py-4">No shops available</div>';
+                    return;
+                }
+                
+                container.innerHTML = topVendors.map(vendor => createTrendingShopCard(vendor)).join('');
+                
+                console.log('Loaded trending shops:', topVendors.length);
+            } catch (error) {
+                console.error('Error loading trending shops:', error);
+            }
+        }
+        
+        // Create trending shop card
+        function createTrendingShopCard(vendor) {
+            // Generate random distance (simulating location-based data)
+            const distance = (Math.random() * 3 + 0.5).toFixed(1);
+            
+            return `
+                <div class="flex items-center gap-3 p-3 rounded-xl border border-gray-100 hover:shadow-sm transition cursor-pointer" onclick="filterByVendor('${vendor.name}')">
+                    <img src="${vendor.image}" alt="${vendor.name}" class="w-20 h-14 rounded-lg object-cover">
+                    <div class="flex-1">
+                        <p class="text-sm font-medium text-gray-800">${vendor.name}</p>
+                        <p class="text-xs text-gray-500 mt-1">${vendor.productCount} products • ${vendor.categories.join(', ')}</p>
+                        <p class="text-xs text-gray-500">${distance} km away</p>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Filter products by vendor
+        function filterByVendor(vendorName) {
+            const vendorProducts = allProducts.filter(product => 
+                product.vendorId && product.vendorId.name === vendorName
+            );
+            
+            if (vendorProducts.length > 0) {
+                filteredProducts = vendorProducts;
+                currentCategory = 'vendor';
+                currentPage = 1;
+                
+                renderMainProducts();
+                initPagination();
+                updateProductCount(filteredProducts.length, vendorName);
+                
+                showMessage(`Showing products from ${vendorName}`, 'info');
+            }
+        }
+        
+        // Refresh functions
+        function refreshFestivalDeals() {
+            loadFestivalDeals();
+            showMessage('Festival deals refreshed!', 'success');
+        }
+        
+        function refreshTrendingShops() {
+            loadTrendingShops();
+            showMessage('Trending shops refreshed!', 'success');
+        }
+        
+        // Load Offers and Rewards
+        async function loadOffersAndRewards() {
+            try {
+                // Load active offers
+                await loadActiveOffers();
+                
+                // Load rewards
+                await loadRewards();
+                
+                // Update rewards summary
+                updateRewardsSummary();
+                
+                console.log('Offers and rewards loaded successfully');
+            } catch (error) {
+                console.error('Error loading offers and rewards:', error);
+            }
+        }
+        
+        // Load Active Offers
+        async function loadActiveOffers() {
+            try {
+                // Get products with discounts or special offers
+                const offersProducts = allProducts.filter(product => {
+                    const hasDiscount = product.mrp && product.mrp > product.price;
+                    const isSpecialOffer = product.tags && (
+                        product.tags.toLowerCase().includes('offer') ||
+                        product.tags.toLowerCase().includes('deal') ||
+                        product.tags.toLowerCase().includes('special') ||
+                        product.tags.toLowerCase().includes('festival')
+                    );
+                    return hasDiscount || isSpecialOffer;
+                });
+                
+                // Sort by discount percentage (highest first)
+                offersProducts.sort((a, b) => {
+                    const discountA = a.mrp ? Math.round((1 - a.price / a.mrp) * 100) : 0;
+                    const discountB = b.mrp ? Math.round((1 - b.price / b.mrp) * 100) : 0;
+                    return discountB - discountA;
+                });
+                
+                const container = document.getElementById('activeOffersContent');
+                if (!container) return;
+                
+                if (offersProducts.length === 0) {
+                    container.innerHTML = `
+                        <div class="text-center py-8">
+                            <i data-lucide="gift" class="w-12 h-12 text-gray-300 mx-auto mb-3"></i>
+                            <p class="text-gray-500">No active offers available</p>
+                            <p class="text-xs text-gray-400 mt-1">Check back later for new deals!</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                container.innerHTML = offersProducts.map(product => createOfferCard(product)).join('');
+                
+                console.log('Loaded active offers:', offersProducts.length);
+            } catch (error) {
+                console.error('Error loading active offers:', error);
+            }
+        }
+        
+        // Create Offer Card
+        function createOfferCard(product) {
+            const discount = product.mrp ? Math.round((1 - product.price / product.mrp) * 100) : 0;
+            const savings = product.mrp ? product.mrp - product.price : 0;
+            const offerType = discount > 0 ? 'Discount' : 'Special Offer';
+            
+            return `
+                <div class="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
+                    <div class="flex items-start gap-3">
+                        <img src="${product.image || 'https://placehold.co/60x60?text=No+Image'}" 
+                             alt="${product.name}" 
+                             class="w-16 h-16 rounded-lg object-cover">
+                        <div class="flex-1">
+                            <div class="flex items-center gap-2 mb-2">
+                                <span class="text-xs bg-green-100 text-green-600 px-2 py-1 rounded-full font-medium">${offerType}</span>
+                                ${discount > 0 ? `<span class="text-xs bg-red-100 text-red-600 px-2 py-1 rounded-full font-medium">${discount}% OFF</span>` : ''}
+                            </div>
+                            <h4 class="font-medium text-gray-900 text-sm mb-1">${product.name}</h4>
+                            <div class="flex items-center gap-2 mb-2">
+                                <span class="text-sm font-semibold text-green-600">₹${product.price}</span>
+                                ${product.mrp ? `<span class="text-xs text-gray-400 line-through">₹${product.mrp}</span>` : ''}
+                                ${savings > 0 ? `<span class="text-xs text-gray-500">Save ₹${savings}</span>` : ''}
+                            </div>
+                            <p class="text-xs text-gray-500 mb-3">${product.category}</p>
+                            <button onclick="applyOffer('${product._id}')" 
+                                    class="w-full text-xs font-medium bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-lg transition">
+                                Apply Offer
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Load Rewards
+        async function loadRewards() {
+            try {
+                // Calculate user rewards based on activity
+                const userRewards = calculateUserRewards();
+                
+                const container = document.getElementById('rewardsContent');
+                if (!container) return;
+                
+                container.innerHTML = `
+                    <div class="space-y-4">
+                        <!-- Rewards Progress -->
+                        <div class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg p-4">
+                            <h4 class="font-semibold text-gray-900 mb-3">Rewards Progress</h4>
+                            <div class="space-y-3">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-sm text-gray-600">Orders Completed</span>
+                                    <span class="text-sm font-semibold">${userRewards.ordersCompleted}</span>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <span class="text-sm text-gray-600">Total Spent</span>
+                                    <span class="text-sm font-semibold">₹${userRewards.totalSpent}</span>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <span class="text-sm text-gray-600">Points Earned</span>
+                                    <span class="text-sm font-semibold text-purple-600">${userRewards.pointsEarned}</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Available Rewards -->
+                        <div class="space-y-3">
+                            <h4 class="font-semibold text-gray-900">Available Rewards</h4>
+                            ${userRewards.availableRewards.map(reward => createRewardCard(reward)).join('')}
+                        </div>
+                        
+                        <!-- Reward History -->
+                        <div class="space-y-3">
+                            <h4 class="font-semibold text-gray-900">Recent Rewards</h4>
+                            ${userRewards.recentRewards.map(reward => createRewardHistoryCard(reward)).join('')}
+                        </div>
+                    </div>
+                `;
+                
+                console.log('Loaded rewards:', userRewards);
+            } catch (error) {
+                console.error('Error loading rewards:', error);
+            }
+        }
+        
+        // Calculate User Rewards
+        function calculateUserRewards() {
+            // This would typically come from the backend, but for now we'll simulate it
+            const mockRewards = {
+                pointsEarned: Math.floor(Math.random() * 500) + 100,
+                ordersCompleted: Math.floor(Math.random() * 20) + 5,
+                totalSpent: Math.floor(Math.random() * 5000) + 1000,
+                availableRewards: [
+                    {
+                        id: 1,
+                        title: 'Free Delivery',
+                        description: 'Get free delivery on your next order',
+                        pointsRequired: 50,
+                        icon: 'truck'
+                    },
+                    {
+                        id: 2,
+                        title: '10% Discount',
+                        description: 'Get 10% off on Electronics',
+                        pointsRequired: 100,
+                        icon: 'percent'
+                    },
+                    {
+                        id: 3,
+                        title: 'Premium Support',
+                        description: 'Priority customer support',
+                        pointsRequired: 200,
+                        icon: 'headphones'
+                    }
+                ],
+                recentRewards: [
+                    {
+                        id: 1,
+                        title: 'Points Earned',
+                        description: 'Order completed',
+                        points: 25,
+                        date: '2 days ago',
+                        type: 'earned'
+                    },
+                    {
+                        id: 2,
+                        title: 'Free Delivery Used',
+                        description: 'Applied to order #12345',
+                        points: -50,
+                        date: '1 week ago',
+                        type: 'used'
+                    }
+                ]
+            };
+            
+            return mockRewards;
+        }
+        
+        // Create Reward Card
+        function createRewardCard(reward) {
+            const canClaim = reward.pointsRequired <= calculateUserRewards().pointsEarned;
+            
+            return `
+                <div class="bg-white border border-gray-200 rounded-lg p-4 ${canClaim ? 'hover:shadow-md' : 'opacity-60'}">
+                    <div class="flex items-start gap-3">
+                        <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                            <i data-lucide="${reward.icon}" class="w-5 h-5 text-purple-600"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h5 class="font-medium text-gray-900 text-sm mb-1">${reward.title}</h5>
+                            <p class="text-xs text-gray-500 mb-2">${reward.description}</p>
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs text-purple-600 font-medium">${reward.pointsRequired} points</span>
+                                <button onclick="claimReward(${reward.id})" 
+                                        class="text-xs font-medium ${canClaim ? 'bg-purple-600 hover:bg-purple-700 text-white' : 'bg-gray-300 text-gray-500 cursor-not-allowed'} px-3 py-1 rounded-lg transition"
+                                        ${!canClaim ? 'disabled' : ''}>
+                                    ${canClaim ? 'Claim' : 'Not Enough Points'}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Create Reward History Card
+        function createRewardHistoryCard(reward) {
+            const isEarned = reward.type === 'earned';
+            
+            return `
+                <div class="bg-white border border-gray-200 rounded-lg p-3">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 ${isEarned ? 'bg-green-100' : 'bg-red-100'} rounded-lg flex items-center justify-center">
+                                <i data-lucide="${isEarned ? 'plus' : 'minus'}" class="w-4 h-4 ${isEarned ? 'text-green-600' : 'text-red-600'}"></i>
+                            </div>
+                            <div>
+                                <h6 class="text-sm font-medium text-gray-900">${reward.title}</h6>
+                                <p class="text-xs text-gray-500">${reward.description}</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-sm font-semibold ${isEarned ? 'text-green-600' : 'text-red-600'}">
+                                ${isEarned ? '+' : ''}${reward.points}
+                            </span>
+                            <p class="text-xs text-gray-400">${reward.date}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Update Rewards Summary
+        function updateRewardsSummary() {
+            const rewards = calculateUserRewards();
+            
+            const totalPointsEl = document.getElementById('totalPoints');
+            const availableOffersEl = document.getElementById('availableOffers');
+            const usedOffersEl = document.getElementById('usedOffers');
+            
+            if (totalPointsEl) totalPointsEl.textContent = `${rewards.pointsEarned} Points`;
+            if (availableOffersEl) availableOffersEl.textContent = rewards.availableRewards.length;
+            if (usedOffersEl) usedOffersEl.textContent = rewards.recentRewards.filter(r => r.type === 'used').length;
+        }
+        
+        // Apply Offer
+        function applyOffer(productId) {
+            const product = allProducts.find(p => p._id === productId);
+            if (product) {
+                showMessage(`Offer applied for ${product.name}!`, 'success');
+                // Here you would typically apply the offer to the cart or order
+            }
+        }
+        
+        // Claim Reward
+        function claimReward(rewardId) {
+            showMessage('Reward claimed successfully!', 'success');
+            // Here you would typically process the reward claim
+            loadRewards(); // Refresh rewards
+        }
+        
+        // Load Customer Care Data
+        async function loadCustomerCareData() {
+            try {
+                // Load help content
+                await loadHelpContent();
+                
+                // Load support tickets
+                await loadSupportTickets();
+                
+                // Load contact form
+                await loadContactForm();
+                
+                // Update customer care summary
+                updateCustomerCareSummary();
+                
+                console.log('Customer care data loaded successfully');
+            } catch (error) {
+                console.error('Error loading customer care data:', error);
+            }
+        }
+        
+        // Load Help & FAQ Content
+        async function loadHelpContent() {
+            try {
+                const container = document.getElementById('helpContent');
+                if (!container) return;
+                
+                const faqData = getFAQData();
+                
+                container.innerHTML = `
+                    <div class="space-y-4">
+                        <!-- Quick Actions -->
+                        <div class="grid grid-cols-2 gap-3">
+                            <button onclick="showHelpSection('orders')" class="p-3 bg-blue-50 rounded-lg text-center hover:bg-blue-100 transition">
+                                <i data-lucide="package" class="w-6 h-6 text-blue-600 mx-auto mb-2"></i>
+                                <div class="text-xs font-medium text-blue-800">Order Help</div>
+                            </button>
+                            <button onclick="showHelpSection('shipping')" class="p-3 bg-green-50 rounded-lg text-center hover:bg-green-100 transition">
+                                <i data-lucide="truck" class="w-6 h-6 text-green-600 mx-auto mb-2"></i>
+                                <div class="text-xs font-medium text-green-800">Shipping</div>
+                            </button>
+                            <button onclick="showHelpSection('returns')" class="p-3 bg-orange-50 rounded-lg text-center hover:bg-orange-100 transition">
+                                <i data-lucide="rotate-ccw" class="w-6 h-6 text-orange-600 mx-auto mb-2"></i>
+                                <div class="text-xs font-medium text-orange-800">Returns</div>
+                            </button>
+                            <button onclick="showHelpSection('account')" class="p-3 bg-purple-50 rounded-lg text-center hover:bg-purple-100 transition">
+                                <i data-lucide="user" class="w-6 h-6 text-purple-600 mx-auto mb-2"></i>
+                                <div class="text-xs font-medium text-purple-800">Account</div>
+                            </button>
+                        </div>
+                        
+                        <!-- FAQ Section -->
+                        <div class="space-y-3">
+                            <h4 class="font-semibold text-gray-900">Frequently Asked Questions</h4>
+                            ${faqData.map(faq => createFAQItem(faq)).join('')}
+                        </div>
+                    </div>
+                `;
+                
+                console.log('Help content loaded');
+            } catch (error) {
+                console.error('Error loading help content:', error);
+            }
+        }
+        
+        // Get FAQ Data
+        function getFAQData() {
+            return [
+                {
+                    id: 1,
+                    question: "How do I track my order?",
+                    answer: "You can track your order by going to the Orders section in your profile menu. Click on any order to see its current status and tracking information.",
+                    category: "orders"
+                },
+                {
+                    id: 2,
+                    question: "What is the delivery time?",
+                    answer: "Standard delivery takes 2-5 business days. Express delivery options are available at checkout for same-day or next-day delivery.",
+                    category: "shipping"
+                },
+                {
+                    id: 3,
+                    question: "How do I return a product?",
+                    answer: "You can initiate a return within 30 days of purchase. Go to your Orders section, select the item you want to return, and follow the return process.",
+                    category: "returns"
+                },
+                {
+                    id: 4,
+                    question: "How do I update my profile?",
+                    answer: "Click on your profile picture in the top right corner and select 'Profile Settings' to update your personal information, address, and preferences.",
+                    category: "account"
+                },
+                {
+                    id: 5,
+                    question: "What payment methods do you accept?",
+                    answer: "We accept all major credit cards, debit cards, UPI, net banking, and digital wallets like Paytm, PhonePe, and Google Pay.",
+                    category: "payment"
+                },
+                {
+                    id: 6,
+                    question: "How do I contact customer support?",
+                    answer: "You can contact us through this Customer Care section, email us at support@bizconnect-ai.com, or call our 24/7 helpline at +91-800-123-4567.",
+                    category: "support"
+                }
+            ];
+        }
+        
+        // Create FAQ Item
+        function createFAQItem(faq) {
+            return `
+                <div class="bg-white border border-gray-200 rounded-lg">
+                    <button onclick="toggleFAQ(${faq.id})" class="w-full p-3 text-left flex items-center justify-between hover:bg-gray-50 transition">
+                        <span class="text-sm font-medium text-gray-900">${faq.question}</span>
+                        <i data-lucide="chevron-down" class="w-4 h-4 text-gray-500 faq-icon-${faq.id}"></i>
+                    </button>
+                    <div id="faq-answer-${faq.id}" class="hidden px-3 pb-3">
+                        <p class="text-xs text-gray-600">${faq.answer}</p>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Toggle FAQ
+        function toggleFAQ(faqId) {
+            const answer = document.getElementById(`faq-answer-${faqId}`);
+            const icon = document.querySelector(`.faq-icon-${faqId}`);
+            
+            if (answer.classList.contains('hidden')) {
+                answer.classList.remove('hidden');
+                icon.style.transform = 'rotate(180deg)';
+            } else {
+                answer.classList.add('hidden');
+                icon.style.transform = 'rotate(0deg)';
+            }
+        }
+        
+        // Show Help Section
+        function showHelpSection(section) {
+            const sections = {
+                orders: "Order Help",
+                shipping: "Shipping Information", 
+                returns: "Returns & Refunds",
+                account: "Account Management"
+            };
+            
+            showMessage(`Opening ${sections[section]} section...`, 'info');
+            // Here you would typically navigate to a specific help section
+        }
+        
+        // Load Support Tickets
+        async function loadSupportTickets() {
+            try {
+                const container = document.getElementById('supportContent');
+                if (!container) return;
+                
+                const tickets = getSupportTickets();
+                
+                container.innerHTML = `
+                    <div class="space-y-4">
+                        <!-- Create New Ticket -->
+                        <div class="bg-blue-50 rounded-lg p-4">
+                            <h4 class="font-semibold text-gray-900 mb-3">Need Help?</h4>
+                            <p class="text-xs text-gray-600 mb-3">Create a support ticket and we'll get back to you within 24 hours.</p>
+                            <button onclick="createNewTicket()" class="w-full bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
+                                Create Support Ticket
+                            </button>
+                        </div>
+                        
+                        <!-- Existing Tickets -->
+                        <div class="space-y-3">
+                            <h4 class="font-semibold text-gray-900">Your Support Tickets</h4>
+                            ${tickets.length > 0 ? tickets.map(ticket => createTicketCard(ticket)).join('') : '<div class="text-center py-4 text-gray-500">No support tickets yet</div>'}
+                        </div>
+                    </div>
+                `;
+                
+                console.log('Support tickets loaded:', tickets.length);
+            } catch (error) {
+                console.error('Error loading support tickets:', error);
+            }
+        }
+        
+        // Get Support Tickets
+        function getSupportTickets() {
+            // This would typically come from the backend
+            return [
+                {
+                    id: 1,
+                    subject: "Order delivery issue",
+                    status: "resolved",
+                    priority: "medium",
+                    createdAt: "2024-01-15",
+                    lastUpdate: "2024-01-16"
+                },
+                {
+                    id: 2,
+                    subject: "Product quality concern",
+                    status: "pending",
+                    priority: "high",
+                    createdAt: "2024-01-20",
+                    lastUpdate: "2024-01-20"
+                }
+            ];
+        }
+        
+        // Create Ticket Card
+        function createTicketCard(ticket) {
+            const statusColors = {
+                resolved: 'bg-green-100 text-green-800',
+                pending: 'bg-yellow-100 text-yellow-800',
+                closed: 'bg-gray-100 text-gray-800'
+            };
+            
+            const priorityColors = {
+                low: 'text-gray-600',
+                medium: 'text-orange-600',
+                high: 'text-red-600'
+            };
+            
+            return `
+                <div class="bg-white border border-gray-200 rounded-lg p-3">
+                    <div class="flex items-start justify-between mb-2">
+                        <h5 class="text-sm font-medium text-gray-900">${ticket.subject}</h5>
+                        <span class="text-xs px-2 py-1 rounded-full ${statusColors[ticket.status]}">${ticket.status}</span>
+                    </div>
+                    <div class="flex items-center justify-between text-xs text-gray-500">
+                        <span class="${priorityColors[ticket.priority]}">Priority: ${ticket.priority}</span>
+                        <span>Created: ${ticket.createdAt}</span>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Create New Ticket
+        function createNewTicket() {
+            showMessage('Opening ticket creation form...', 'info');
+            // Here you would typically open a modal or navigate to a ticket creation form
+        }
+        
+        // Load Contact Form
+        async function loadContactForm() {
+            try {
+                const container = document.getElementById('contactContent');
+                if (!container) return;
+                
+                container.innerHTML = `
+                    <div class="space-y-4">
+                        <!-- Contact Information -->
+                        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-4">
+                            <h4 class="font-semibold text-gray-900 mb-3">Get in Touch</h4>
+                            <div class="space-y-2 text-sm">
+                                <div class="flex items-center gap-2">
+                                    <i data-lucide="phone" class="w-4 h-4 text-blue-600"></i>
+                                    <span>+91-800-123-4567</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <i data-lucide="mail" class="w-4 h-4 text-blue-600"></i>
+                                    <span>support@bizconnect-ai.com</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <i data-lucide="clock" class="w-4 h-4 text-blue-600"></i>
+                                    <span>24/7 Customer Support</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Contact Form -->
+                        <form id="contactForm" class="space-y-3">
+                            <div>
+                                <label class="text-xs font-medium text-gray-700 mb-1 block">Subject</label>
+                                <select class="w-full text-sm border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <option>General Inquiry</option>
+                                    <option>Order Issue</option>
+                                    <option>Product Question</option>
+                                    <option>Technical Support</option>
+                                    <option>Feedback</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="text-xs font-medium text-gray-700 mb-1 block">Message</label>
+                                <textarea rows="4" placeholder="Describe your issue or question..." class="w-full text-sm border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"></textarea>
+                            </div>
+                            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
+                                Send Message
+                            </button>
+                        </form>
+                        
+                        <!-- Quick Feedback -->
+                        <div class="bg-gray-50 rounded-lg p-3">
+                            <h5 class="text-sm font-semibold text-gray-900 mb-2">Quick Feedback</h5>
+                            <div class="flex gap-2">
+                                <button onclick="submitFeedback('good')" class="flex-1 bg-green-100 hover:bg-green-200 text-green-800 text-xs font-medium px-3 py-2 rounded-lg transition">
+                                    👍 Good Experience
+                                </button>
+                                <button onclick="submitFeedback('bad')" class="flex-1 bg-red-100 hover:bg-red-200 text-red-800 text-xs font-medium px-3 py-2 rounded-lg transition">
+                                    👎 Needs Improvement
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // Add form submission handler
+                const contactForm = document.getElementById('contactForm');
+                if (contactForm) {
+                    contactForm.addEventListener('submit', handleContactFormSubmit);
+                }
+                
+                console.log('Contact form loaded');
+            } catch (error) {
+                console.error('Error loading contact form:', error);
+            }
+        }
+        
+        // Handle Contact Form Submit
+        function handleContactFormSubmit(e) {
+            e.preventDefault();
+            showMessage('Message sent successfully! We\'ll get back to you soon.', 'success');
+            e.target.reset();
+        }
+        
+        // Submit Feedback
+        function submitFeedback(type) {
+            const messages = {
+                good: 'Thank you for your positive feedback!',
+                bad: 'Thank you for your feedback. We\'ll work to improve your experience.'
+            };
+            showMessage(messages[type], 'info');
+        }
+        
+        // Update Customer Care Summary
+        function updateCustomerCareSummary() {
+            const tickets = getSupportTickets();
+            const resolvedCount = tickets.filter(t => t.status === 'resolved').length;
+            const pendingCount = tickets.filter(t => t.status === 'pending').length;
+            
+            const resolvedEl = document.getElementById('resolvedTickets');
+            const pendingEl = document.getElementById('pendingTickets');
+            
+            if (resolvedEl) resolvedEl.textContent = resolvedCount;
+            if (pendingEl) pendingEl.textContent = pendingCount;
         }
         
         // Render highlights carousel with actual products
@@ -540,7 +1458,8 @@
         
         // Get featured products (mix of different categories)
         function getFeaturedProducts() {
-            const categories = ['Fruits & Vegetables', 'Dairy & Eggs', 'Bakery', 'Snacks', 'Beverages', 'Personal Care'];
+            // Get unique categories from products
+            const categories = [...new Set(allProducts.map(product => product.category))];
             const featured = [];
             
             // Get one product from each category
@@ -754,9 +1673,28 @@
         // Add to favorites
         function addToFavorites(productId) {
             const product = allProducts.find(p => p._id === productId);
-            if (product) {
-                // Add to favorites logic here
-                showMessage(`Added ${product.name} to favorites!`, 'success');
+            if (product && window.BCFav) {
+                const favItem = {
+                    id: product._id,
+                    name: product.name,
+                    price: product.price,
+                    image: product.image || '/img/placeholder-product.jpg'
+                };
+                
+                const wasFav = window.BCFav.has(productId);
+                window.BCFav.toggle(favItem);
+                
+                if (wasFav) {
+                    showMessage(`Removed ${product.name} from favorites!`, 'info');
+                } else {
+                    showMessage(`Added ${product.name} to favorites!`, 'success');
+                }
+                
+                // Update the heart icon in the modal
+                updateAllFavIcons(productId);
+            } else {
+                console.error('Favorites system not available');
+                showMessage('Favorites system not available', 'error');
             }
         }
         
@@ -843,6 +1781,169 @@
              }
              if (ordersBackdrop) {
                  ordersBackdrop.addEventListener('click', closeOrdersDrawer);
+             }
+             
+             // Offers drawer
+             const offersBtn = document.querySelector('[data-open-offers]');
+             const offersDrawer = document.getElementById('offersDrawer');
+             const offersClose = document.getElementById('offersClose');
+             const offersBackdrop = document.getElementById('offersBackdrop');
+
+             if (offersBtn && offersDrawer) {
+                 offersBtn.addEventListener('click', async (e) => {
+                     e.preventDefault();
+                     console.log('Opening offers drawer');
+                     
+                     // Load offers and rewards data
+                     try {
+                         await loadOffersAndRewards();
+                     } catch (error) {
+                         console.error('Error loading offers:', error);
+                     }
+                     
+                     // Show drawer
+                     offersDrawer.classList.remove('hidden');
+                     requestAnimationFrame(() => {
+                         offersBackdrop.classList.remove('opacity-0');
+                         offersDrawer.querySelector('aside').classList.remove('translate-x-full');
+                     });
+                 });
+             }
+
+             // Close offers drawer
+             function closeOffersDrawer() {
+                 offersDrawer.classList.add('hidden');
+                 offersBackdrop.classList.add('opacity-0');
+                 offersDrawer.querySelector('aside').classList.add('translate-x-full');
+             }
+
+             if (offersClose) {
+                 offersClose.addEventListener('click', closeOffersDrawer);
+             }
+             if (offersBackdrop) {
+                 offersBackdrop.addEventListener('click', closeOffersDrawer);
+             }
+             
+             // Offers tab functionality
+             const activeOffersTab = document.getElementById('activeOffersTab');
+             const rewardsTab = document.getElementById('rewardsTab');
+             const activeOffersContent = document.getElementById('activeOffersContent');
+             const rewardsContent = document.getElementById('rewardsContent');
+             
+             if (activeOffersTab && rewardsTab) {
+                 activeOffersTab.addEventListener('click', () => {
+                     activeOffersTab.classList.add('text-green-600', 'border-b-2', 'border-green-600', 'bg-green-50');
+                     activeOffersTab.classList.remove('text-gray-500');
+                     rewardsTab.classList.remove('text-green-600', 'border-b-2', 'border-green-600', 'bg-green-50');
+                     rewardsTab.classList.add('text-gray-500');
+                     
+                     activeOffersContent.classList.remove('hidden');
+                     rewardsContent.classList.add('hidden');
+                 });
+                 
+                 rewardsTab.addEventListener('click', () => {
+                     rewardsTab.classList.add('text-green-600', 'border-b-2', 'border-green-600', 'bg-green-50');
+                     rewardsTab.classList.remove('text-gray-500');
+                     activeOffersTab.classList.remove('text-green-600', 'border-b-2', 'border-green-600', 'bg-green-50');
+                     activeOffersTab.classList.add('text-gray-500');
+                     
+                     rewardsContent.classList.remove('hidden');
+                     activeOffersContent.classList.add('hidden');
+                 });
+             }
+             
+             // Customer Care drawer
+             const customerCareBtn = document.querySelector('[data-open-customer-care]');
+             const customerCareDrawer = document.getElementById('customerCareDrawer');
+             const customerCareClose = document.getElementById('customerCareClose');
+             const customerCareBackdrop = document.getElementById('customerCareBackdrop');
+
+             if (customerCareBtn && customerCareDrawer) {
+                 customerCareBtn.addEventListener('click', async (e) => {
+                     e.preventDefault();
+                     console.log('Opening customer care drawer');
+                     
+                     // Load customer care data
+                     try {
+                         await loadCustomerCareData();
+                     } catch (error) {
+                         console.error('Error loading customer care data:', error);
+                     }
+                     
+                     // Show drawer
+                     customerCareDrawer.classList.remove('hidden');
+                     requestAnimationFrame(() => {
+                         customerCareBackdrop.classList.remove('opacity-0');
+                         customerCareDrawer.querySelector('aside').classList.remove('translate-x-full');
+                     });
+                 });
+             }
+
+             // Close customer care drawer
+             function closeCustomerCareDrawer() {
+                 customerCareDrawer.classList.add('hidden');
+                 customerCareBackdrop.classList.add('opacity-0');
+                 customerCareDrawer.querySelector('aside').classList.add('translate-x-full');
+             }
+
+             if (customerCareClose) {
+                 customerCareClose.addEventListener('click', closeCustomerCareDrawer);
+             }
+             if (customerCareBackdrop) {
+                 customerCareBackdrop.addEventListener('click', closeCustomerCareDrawer);
+             }
+             
+             // Customer care tab functionality
+             const helpTab = document.getElementById('helpTab');
+             const supportTab = document.getElementById('supportTab');
+             const contactTab = document.getElementById('contactTab');
+             const helpContent = document.getElementById('helpContent');
+             const supportContent = document.getElementById('supportContent');
+             const contactContent = document.getElementById('contactContent');
+             
+             if (helpTab && supportTab && contactTab) {
+                 // Help tab
+                 helpTab.addEventListener('click', () => {
+                     setActiveTab('help');
+                 });
+                 
+                 // Support tab
+                 supportTab.addEventListener('click', () => {
+                     setActiveTab('support');
+                 });
+                 
+                 // Contact tab
+                 contactTab.addEventListener('click', () => {
+                     setActiveTab('contact');
+                 });
+                 
+                 function setActiveTab(activeTab) {
+                     // Reset all tabs
+                     [helpTab, supportTab, contactTab].forEach(tab => {
+                         tab.classList.remove('text-blue-600', 'border-b-2', 'border-blue-600', 'bg-blue-50');
+                         tab.classList.add('text-gray-500');
+                     });
+                     
+                     // Hide all content
+                     [helpContent, supportContent, contactContent].forEach(content => {
+                         content.classList.add('hidden');
+                     });
+                     
+                     // Set active tab and content
+                     if (activeTab === 'help') {
+                         helpTab.classList.add('text-blue-600', 'border-b-2', 'border-blue-600', 'bg-blue-50');
+                         helpTab.classList.remove('text-gray-500');
+                         helpContent.classList.remove('hidden');
+                     } else if (activeTab === 'support') {
+                         supportTab.classList.add('text-blue-600', 'border-b-2', 'border-blue-600', 'bg-blue-50');
+                         supportTab.classList.remove('text-gray-500');
+                         supportContent.classList.remove('hidden');
+                     } else if (activeTab === 'contact') {
+                         contactTab.classList.add('text-blue-600', 'border-b-2', 'border-blue-600', 'bg-blue-50');
+                         contactTab.classList.remove('text-gray-500');
+                         contactContent.classList.remove('hidden');
+                     }
+                 }
              }
          }
     </script>
@@ -1056,6 +2157,132 @@
                     </button>
                 </div>
                 <div id="ordersList" class="flex-1 overflow-auto p-4 space-y-3"></div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Offers & Rewards Drawer -->
+    <div id="offersDrawer" class="fixed inset-0 z-40 hidden">
+        <div id="offersBackdrop" class="absolute inset-0 bg-black/40 opacity-0 transition-opacity"></div>
+        <aside class="absolute right-0 top-0 h-full w-full sm:w-[420px] bg-white shadow-xl translate-x-full transition-transform">
+            <div class="h-full flex flex-col">
+                <div class="flex items-center justify-between p-4 border-b border-gray-100 bg-green-600">
+                    <div class="flex items-center">
+                        <i data-lucide="badge-percent" class="w-5 h-5 text-white mr-2"></i>
+                        <h3 class="text-lg font-semibold text-white">Offers & Rewards</h3>
+                    </div>
+                    <button id="offersClose" class="p-2 rounded hover:bg-white/10">
+                        <i data-lucide="x" class="w-4 h-4 text-white"></i>
+                    </button>
+                </div>
+                
+                <!-- Rewards Summary -->
+                <div class="p-4 bg-gradient-to-r from-green-50 to-blue-50 border-b border-gray-100">
+                    <div class="flex items-center justify-between mb-3">
+                        <h4 class="font-semibold text-gray-900">Your Rewards</h4>
+                        <span id="totalPoints" class="text-lg font-bold text-green-600">0 Points</span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 text-center">
+                        <div class="bg-white rounded-lg p-3 shadow-sm">
+                            <div class="text-2xl font-bold text-blue-600" id="availableOffers">0</div>
+                            <div class="text-xs text-gray-600">Available Offers</div>
+                        </div>
+                        <div class="bg-white rounded-lg p-3 shadow-sm">
+                            <div class="text-2xl font-bold text-purple-600" id="usedOffers">0</div>
+                            <div class="text-xs text-gray-600">Used This Month</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Offers Tabs -->
+                <div class="flex border-b border-gray-100">
+                    <button id="activeOffersTab" class="flex-1 py-3 px-4 text-sm font-medium text-green-600 border-b-2 border-green-600 bg-green-50">
+                        Active Offers
+                    </button>
+                    <button id="rewardsTab" class="flex-1 py-3 px-4 text-sm font-medium text-gray-500 hover:text-gray-700">
+                        Rewards
+                    </button>
+                </div>
+                
+                <!-- Content Area -->
+                <div class="flex-1 overflow-auto">
+                    <!-- Active Offers Content -->
+                    <div id="activeOffersContent" class="p-4 space-y-3">
+                        <!-- Active offers will be loaded here -->
+                    </div>
+                    
+                    <!-- Rewards Content -->
+                    <div id="rewardsContent" class="p-4 space-y-3 hidden">
+                        <!-- Rewards will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Customer Care Drawer -->
+    <div id="customerCareDrawer" class="fixed inset-0 z-40 hidden">
+        <div id="customerCareBackdrop" class="absolute inset-0 bg-black/40 opacity-0 transition-opacity"></div>
+        <aside class="absolute right-0 top-0 h-full w-full sm:w-[420px] bg-white shadow-xl translate-x-full transition-transform">
+            <div class="h-full flex flex-col">
+                <div class="flex items-center justify-between p-4 border-b border-gray-100 bg-blue-600">
+                    <div class="flex items-center">
+                        <i data-lucide="headphones" class="w-5 h-5 text-white mr-2"></i>
+                        <h3 class="text-lg font-semibold text-white">Customer Care</h3>
+                    </div>
+                    <button id="customerCareClose" class="p-2 rounded hover:bg-white/10">
+                        <i data-lucide="x" class="w-4 h-4 text-white"></i>
+                    </button>
+                </div>
+                
+                <!-- Quick Help Summary -->
+                <div class="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-gray-100">
+                    <div class="flex items-center justify-between mb-3">
+                        <h4 class="font-semibold text-gray-900">Quick Help</h4>
+                        <span class="text-sm text-blue-600 font-medium">24/7 Support</span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 text-center">
+                        <div class="bg-white rounded-lg p-3 shadow-sm">
+                            <div class="text-2xl font-bold text-green-600" id="resolvedTickets">0</div>
+                            <div class="text-xs text-gray-600">Resolved Issues</div>
+                        </div>
+                        <div class="bg-white rounded-lg p-3 shadow-sm">
+                            <div class="text-2xl font-bold text-orange-600" id="pendingTickets">0</div>
+                            <div class="text-xs text-gray-600">Pending Tickets</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Customer Care Tabs -->
+                <div class="flex border-b border-gray-100">
+                    <button id="helpTab" class="flex-1 py-3 px-4 text-sm font-medium text-blue-600 border-b-2 border-blue-600 bg-blue-50">
+                        Help & FAQ
+                    </button>
+                    <button id="supportTab" class="flex-1 py-3 px-4 text-sm font-medium text-gray-500 hover:text-gray-700">
+                        Support Tickets
+                    </button>
+                    <button id="contactTab" class="flex-1 py-3 px-4 text-sm font-medium text-gray-500 hover:text-gray-700">
+                        Contact Us
+                    </button>
+                </div>
+                
+                <!-- Content Area -->
+                <div class="flex-1 overflow-auto">
+                    <!-- Help & FAQ Content -->
+                    <div id="helpContent" class="p-4 space-y-3">
+                        <!-- Help content will be loaded here -->
+                    </div>
+                    
+                    <!-- Support Tickets Content -->
+                    <div id="supportContent" class="p-4 space-y-3 hidden">
+                        <!-- Support tickets will be loaded here -->
+                    </div>
+                    
+                    <!-- Contact Us Content -->
+                    <div id="contactContent" class="p-4 space-y-3 hidden">
+                        <!-- Contact form will be loaded here -->
+                    </div>
+                </div>
             </div>
         </aside>
     </div>
@@ -1462,9 +2689,9 @@
                  const shippingAddress = `${shippingInfo.name}, ${shippingInfo.address}, ${shippingInfo.city} - ${shippingInfo.pincode}, Phone: ${shippingInfo.phone}`;
                  
                  console.log('Shipping address:', shippingAddress);
-                 console.log('API endpoint:', '/api/orders/create');
+                 console.log('API endpoint:', '/orders/create');
                  console.log('API_CONFIG.baseURL:', API_CONFIG.baseURL);
-                 console.log('Full URL:', `${API_CONFIG.baseURL}/api/orders/create`);
+                 console.log('Full URL:', `${API_CONFIG.baseURL}/orders/create`);
                  console.log('Current token:', Storage.getToken());
                      console.log('Current URL:', window.location.href);
                  console.log('Base URL:', window.location.origin);
