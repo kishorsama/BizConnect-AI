@@ -1,0 +1,11 @@
+# Environment Variables for BizConnect AI
+
+# MongoDB Connection String
+# For local development, use: mongodb://localhost:27017/bizconnect-ai
+# For cloud deployment, use your MongoDB Atlas connection string:
+# MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/bizconnect-ai?retryWrites=true&w=majority
+MONGODB_URI=mongodb://localhost:27017/bizconnect-ai
+
+# Server Port (optional - defaults to 3000)
+# Cloud platforms like Heroku, Railway, etc. will set this automatically
+PORT=3000
