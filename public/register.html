@@ -394,175 +394,258 @@
         document.addEventListener('DOMContentLoaded', function() {
             console.log('Registration page loaded, initializing...');
             
+            // Initialize vendor fields visibility and required attributes
+            const roleSelect = document.getElementById('role');
+            const vendorShopInfo = document.getElementById('vendorShopInfo');
+            const aadharUpload = document.getElementById('aadharUpload');
+            
+            // Set initial state based on default role selection
+            if (roleSelect.value === 'vendor') {
+                vendorShopInfo.style.display = 'block';
+                aadharUpload.setAttribute('required', 'required');
+            } else {
+                vendorShopInfo.style.display = 'none';
+                aadharUpload.removeAttribute('required');
+            }
+            
             // Show/hide vendor shop information based on role selection
             document.getElementById('role').addEventListener('change', function() {
                 const vendorShopInfo = document.getElementById('vendorShopInfo');
+                const aadharUpload = document.getElementById('aadharUpload');
+                
                 if (this.value === 'vendor') {
                     vendorShopInfo.style.display = 'block';
+                    // Make Aadhar upload required for vendors
+                    aadharUpload.setAttribute('required', 'required');
                 } else {
                     vendorShopInfo.style.display = 'none';
+                    // Remove required attribute for non-vendors
+                    aadharUpload.removeAttribute('required');
                 }
             });
 
-        // Image compression function
-        function compressImage(file, maxWidth = 800, quality = 0.8) {
-            return new Promise((resolve) => {
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-                const img = new Image();
-                
-                img.onload = function() {
-                    // Calculate new dimensions
-                    let { width, height } = img;
-                    if (width > maxWidth) {
-                        height = (height * maxWidth) / width;
-                        width = maxWidth;
-                    }
+            // Image compression function
+            function compressImage(file, maxWidth = 800, quality = 0.8) {
+                return new Promise((resolve) => {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    const img = new Image();
                     
-                    canvas.width = width;
-                    canvas.height = height;
+                    img.onload = function() {
+                        // Calculate new dimensions
+                        let { width, height } = img;
+                        if (width > maxWidth) {
+                            height = (height * maxWidth) / width;
+                            width = maxWidth;
+                        }
+                        
+                        canvas.width = width;
+                        canvas.height = height;
+                        
+                        // Draw and compress
+                        ctx.drawImage(img, 0, 0, width, height);
+                        
+                        canvas.toBlob((blob) => {
+                            resolve(blob);
+                        }, file.type, quality);
+                    };
                     
-                    // Draw and compress
-                    ctx.drawImage(img, 0, 0, width, height);
-                    
-                    canvas.toBlob((blob) => {
-                        resolve(blob);
-                    }, file.type, quality);
-                };
-                
-                img.src = URL.createObjectURL(file);
-            });
-        }
+                    img.src = URL.createObjectURL(file);
+                });
+            }
 
-        // Register form submission
-        console.log('Adding form submission event listener...');
-        const form = document.getElementById('registerForm');
-        console.log('Form element:', form);
+            // Register form submission
+            console.log('Adding form submission event listener...');
+            const form = document.getElementById('registerForm');
+            console.log('Form element:', form);
         
-        if (form) {
-            form.addEventListener('submit', async (e) => {
-                console.log('Form submitted!');
-                e.preventDefault();
+            if (form) {
+                form.addEventListener('submit', async (e) => {
+                    console.log('Form submitted!');
+                    e.preventDefault();
 
-            const errorDiv = document.getElementById('errorMessage');
-            errorDiv.style.display = 'none';
+                    const errorDiv = document.getElementById('errorMessage');
+                    errorDiv.style.display = 'none';
 
-            const name = document.getElementById('name').value.trim();
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-            const role = document.getElementById('role').value;
+                    const name = document.getElementById('name').value.trim();
+                    const email = document.getElementById('email').value.trim();
+                    const password = document.getElementById('password').value;
+                    const confirmPassword = document.getElementById('confirmPassword').value;
+                    const role = document.getElementById('role').value;
 
-            const registerBtn = document.getElementById('registerBtn');
-            const loadingSpinner = document.getElementById('loadingSpinner');
+                    const registerBtn = document.getElementById('registerBtn');
+                    const loadingSpinner = document.getElementById('loadingSpinner');
 
-            // --- Form Validation ---
-            if (!name || !email || !password || !confirmPassword || !role) {
-                errorDiv.textContent = 'Please fill in all fields.';
-                errorDiv.style.display = 'block';
-                return;
-            }
-
-            if (password !== confirmPassword) {
-                errorDiv.textContent = 'Passwords do not match.';
-                errorDiv.style.display = 'block';
-                return;
-            }
-            
-            if (password.length < 6) {
-                errorDiv.textContent = 'Password must be at least 6 characters long.';
-                errorDiv.style.display = 'block';
-                return;
-            }
-
-            // Vendor-specific validation
-            if (role === 'vendor') {
-                const shopName = document.getElementById('shopName').value.trim();
-                const phone = document.getElementById('phone').value.trim();
-                const businessType = document.getElementById('businessType').value;
-                const address = document.getElementById('address').value.trim();
-                const aadharFile = document.getElementById('aadharUpload').files[0];
-
-                if (!shopName || !phone || !businessType || !address) {
-                    errorDiv.textContent = 'Please fill in all required shop information fields.';
-                    errorDiv.style.display = 'block';
-                    return;
-                }
-
-                // Temporarily make Aadhar upload optional for testing
-                // if (!aadharFile) {
-                //     errorDiv.textContent = 'Please upload your Aadhar card.';
-                //     errorDiv.style.display = 'block';
-                //     return;
-                // }
-
-                // Validate file size (5MB max) - only if file exists
-                if (aadharFile && aadharFile.size > 5 * 1024 * 1024) {
-                    errorDiv.textContent = 'Aadhar file size must be less than 5MB.';
-                    errorDiv.style.display = 'block';
-                    return;
-                }
-
-                // Validate file type - only if file exists
-                if (aadharFile) {
-                    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'];
-                    if (!allowedTypes.includes(aadharFile.type)) {
-                        errorDiv.textContent = 'Please upload a valid image (JPG, PNG) or PDF file.';
+                    // --- Form Validation ---
+                    if (!name || !email || !password || !confirmPassword || !role) {
+                        errorDiv.textContent = 'Please fill in all fields.';
                         errorDiv.style.display = 'block';
                         return;
                     }
-                }
-            }
 
-            try {
-                registerBtn.disabled = true;
-                loadingSpinner.style.display = 'block';
-
-                // Prepare registration data
-                const registrationData = {
-                    name,
-                    email,
-                    password,
-                    role
-                };
-
-                // Add shop information for vendors
-                if (role === 'vendor') {
-                    const aadharFile = document.getElementById('aadharUpload').files[0];
+                    if (password !== confirmPassword) {
+                        errorDiv.textContent = 'Passwords do not match.';
+                        errorDiv.style.display = 'block';
+                        return;
+                    }
                     
-                    // Only process file if it exists
-                    if (aadharFile) {
-                        // Compress image if it's an image file
-                        let processedFile = aadharFile;
-                        if (aadharFile.type.startsWith('image/')) {
-                            loadingSpinner.textContent = 'Processing Aadhar file...';
-                            processedFile = await compressImage(aadharFile);
+                    if (password.length < 6) {
+                        errorDiv.textContent = 'Password must be at least 6 characters long.';
+                        errorDiv.style.display = 'block';
+                        return;
+                    }
+
+                    // Vendor-specific validation
+                    if (role === 'vendor') {
+                        const shopName = document.getElementById('shopName').value.trim();
+                        const phone = document.getElementById('phone').value.trim();
+                        const businessType = document.getElementById('businessType').value;
+                        const address = document.getElementById('address').value.trim();
+                        const aadharFile = document.getElementById('aadharUpload').files[0];
+
+                        if (!shopName || !phone || !businessType || !address) {
+                            errorDiv.textContent = 'Please fill in all required shop information fields.';
+                            errorDiv.style.display = 'block';
+                            return;
                         }
-                    
-                    // Convert file to base64 for storage
-                    const fileReader = new FileReader();
-                    fileReader.onload = async function(e) {
-                        const aadharBase64 = e.target.result;
-                        
-                        registrationData.shopInfo = {
-                            shopName: document.getElementById('shopName').value.trim(),
-                            phone: document.getElementById('phone').value.trim(),
-                            businessType: document.getElementById('businessType').value,
-                            address: document.getElementById('address').value.trim(),
-                            gstNumber: document.getElementById('gstNumber').value.trim(),
-                            panNumber: document.getElementById('panNumber').value.trim(),
-                            businessDescription: document.getElementById('businessDescription').value.trim(),
-                            annualTurnover: document.getElementById('annualTurnover').value.trim(),
-                            employeeCount: document.getElementById('employeeCount').value.trim(),
-                            aadharFile: {
-                                name: processedFile.name || aadharFile.name,
-                                type: processedFile.type || aadharFile.type,
-                                size: processedFile.size,
-                                data: aadharBase64
+
+                        // Temporarily make Aadhar upload optional for testing
+                        // if (!aadharFile) {
+                        //     errorDiv.textContent = 'Please upload your Aadhar card.';
+                        //     errorDiv.style.display = 'block';
+                        //     return;
+                        // }
+
+                        // Validate file size (5MB max) - only if file exists
+                        if (aadharFile && aadharFile.size > 5 * 1024 * 1024) {
+                            errorDiv.textContent = 'Aadhar file size must be less than 5MB.';
+                            errorDiv.style.display = 'block';
+                            return;
+                        }
+
+                        // Validate file type - only if file exists
+                        if (aadharFile) {
+                            const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'];
+                            if (!allowedTypes.includes(aadharFile.type)) {
+                                errorDiv.textContent = 'Please upload a valid image (JPG, PNG) or PDF file.';
+                                errorDiv.style.display = 'block';
+                                return;
                             }
+                        }
+                    }
+
+                    try {
+                        registerBtn.disabled = true;
+                        loadingSpinner.style.display = 'block';
+
+                        // Prepare registration data
+                        const registrationData = {
+                            name,
+                            email,
+                            password,
+                            role
                         };
 
-                        // Proceed with registration
+                        // Add shop information for vendors
+                        if (role === 'vendor') {
+                            const aadharFile = document.getElementById('aadharUpload').files[0];
+                            
+                            // Only process file if it exists
+                            if (aadharFile) {
+                                // Compress image if it's an image file
+                                let processedFile = aadharFile;
+                                if (aadharFile.type.startsWith('image/')) {
+                                    loadingSpinner.textContent = 'Processing Aadhar file...';
+                                    processedFile = await compressImage(aadharFile);
+                                }
+                                
+                                // Convert file to base64 for storage
+                                const fileReader = new FileReader();
+                                fileReader.onload = async function(e) {
+                                    const aadharBase64 = e.target.result;
+                                    
+                                    registrationData.shopInfo = {
+                                        shopName: document.getElementById('shopName').value.trim(),
+                                        phone: document.getElementById('phone').value.trim(),
+                                        businessType: document.getElementById('businessType').value,
+                                        address: document.getElementById('address').value.trim(),
+                                        gstNumber: document.getElementById('gstNumber').value.trim(),
+                                        panNumber: document.getElementById('panNumber').value.trim(),
+                                        businessDescription: document.getElementById('businessDescription').value.trim(),
+                                        annualTurnover: document.getElementById('annualTurnover').value.trim(),
+                                        employeeCount: document.getElementById('employeeCount').value.trim(),
+                                        aadharFile: {
+                                            name: processedFile.name || aadharFile.name,
+                                            type: processedFile.type || aadharFile.type,
+                                            size: processedFile.size,
+                                            data: aadharBase64
+                                        }
+                                    };
+
+                                    // Proceed with registration
+                                    await Auth.register(registrationData);
+                                    
+                                    // Success message
+                                    errorDiv.style.backgroundColor = '#d4edda';
+                                    errorDiv.style.color = '#155724';
+                                    errorDiv.style.border = '1px solid #c3e6cb';
+                                    
+                                    if (role === 'vendor') {
+                                        errorDiv.textContent = 'Vendor registration submitted for approval! You will be notified once approved.';
+                                    } else {
+                                        errorDiv.textContent = 'Registration successful! Redirecting to login...';
+                                    }
+                                    
+                                    errorDiv.style.display = 'block';
+                                    
+                                    // Redirect after 2 seconds
+                                    setTimeout(() => {
+                                        window.location.href = 'login.html';
+                                    }, 2000);
+                                };
+                                
+                                fileReader.onerror = function() {
+                                    registerBtn.disabled = false;
+                                    loadingSpinner.style.display = 'none';
+                                    errorDiv.textContent = 'Error processing Aadhar file. Please try again.';
+                                    errorDiv.style.display = 'block';
+                                };
+                                
+                                fileReader.readAsDataURL(processedFile);
+                                return; // Exit early, registration will continue in the file reader callback
+                            } else {
+                                // No file uploaded, proceed without file
+                                registrationData.shopInfo = {
+                                    shopName: document.getElementById('shopName').value.trim(),
+                                    phone: document.getElementById('phone').value.trim(),
+                                    businessType: document.getElementById('businessType').value,
+                                    address: document.getElementById('address').value.trim(),
+                                    gstNumber: document.getElementById('gstNumber').value.trim(),
+                                    panNumber: document.getElementById('panNumber').value.trim(),
+                                    businessDescription: document.getElementById('businessDescription').value.trim(),
+                                    annualTurnover: document.getElementById('annualTurnover').value.trim(),
+                                    employeeCount: document.getElementById('employeeCount').value.trim()
+                                };
+                                
+                                // Proceed with registration
+                                await Auth.register(registrationData);
+                                
+                                // Success message
+                                errorDiv.style.backgroundColor = '#d4edda';
+                                errorDiv.style.color = '#155724';
+                                errorDiv.style.border = '1px solid #c3e6cb';
+                                errorDiv.textContent = 'Vendor registration submitted for approval! You will be notified once approved.';
+                                errorDiv.style.display = 'block';
+                                
+                                // Redirect after 2 seconds
+                                setTimeout(() => {
+                                    window.location.href = 'login.html';
+                                }, 2000);
+                                return;
+                            }
+                        }
+
+                        // Real API call to register user
                         await Auth.register(registrationData);
                         
                         // Success message
@@ -573,92 +656,29 @@
                         if (role === 'vendor') {
                             errorDiv.textContent = 'Vendor registration submitted for approval! You will be notified once approved.';
                         } else {
-                            errorDiv.textContent = 'Registration successful! Redirecting to login...';
+                            errorDiv.textContent = 'Registration successful! Redirecting...';
                         }
-                        
                         errorDiv.style.display = 'block';
                         
-                        // Redirect after 2 seconds
+                        // Redirect to appropriate dashboard
                         setTimeout(() => {
-                            window.location.href = 'login.html';
+                            Auth.redirectToDashboard();
                         }, 2000);
-                    };
-                    
-                    fileReader.onerror = function() {
+                
+                    } catch (err) {
+                        errorDiv.style.backgroundColor = '#f8d7da';
+                        errorDiv.style.color = 'var(--error-color)';
+                        errorDiv.style.border = '1px solid var(--error-color)';
+                        errorDiv.textContent = err.message || 'Registration failed. Please try again.';
+                        errorDiv.style.display = 'block';
+                    } finally {
                         registerBtn.disabled = false;
                         loadingSpinner.style.display = 'none';
-                        errorDiv.textContent = 'Error processing Aadhar file. Please try again.';
-                        errorDiv.style.display = 'block';
-                    };
-                    
-                        fileReader.readAsDataURL(processedFile);
-                        return; // Exit early, registration will continue in the file reader callback
-                    } else {
-                        // No file uploaded, proceed without file
-                        registrationData.shopInfo = {
-                            shopName: document.getElementById('shopName').value.trim(),
-                            phone: document.getElementById('phone').value.trim(),
-                            businessType: document.getElementById('businessType').value,
-                            address: document.getElementById('address').value.trim(),
-                            gstNumber: document.getElementById('gstNumber').value.trim(),
-                            panNumber: document.getElementById('panNumber').value.trim(),
-                            businessDescription: document.getElementById('businessDescription').value.trim(),
-                            annualTurnover: document.getElementById('annualTurnover').value.trim(),
-                            employeeCount: document.getElementById('employeeCount').value.trim()
-                        };
-                        
-                        // Proceed with registration
-                        await Auth.register(registrationData);
-                        
-                        // Success message
-                        errorDiv.style.backgroundColor = '#d4edda';
-                        errorDiv.style.color = '#155724';
-                        errorDiv.style.border = '1px solid #c3e6cb';
-                        errorDiv.textContent = 'Vendor registration submitted for approval! You will be notified once approved.';
-                        errorDiv.style.display = 'block';
-                        
-                        // Redirect after 2 seconds
-                        setTimeout(() => {
-                            window.location.href = 'login.html';
-                        }, 2000);
-                        return;
                     }
-                }
-
-                // Real API call to register user
-                await Auth.register(registrationData);
-                
-                // Success message
-                errorDiv.style.backgroundColor = '#d4edda';
-                errorDiv.style.color = '#155724';
-                errorDiv.style.border = '1px solid #c3e6cb';
-                
-                if (role === 'vendor') {
-                    errorDiv.textContent = 'Vendor registration submitted for approval! You will be notified once approved.';
-                } else {
-                    errorDiv.textContent = 'Registration successful! Redirecting...';
-                }
-                errorDiv.style.display = 'block';
-                
-                // Redirect to appropriate dashboard
-                setTimeout(() => {
-                    Auth.redirectToDashboard();
-                }, 2000);
-                
-            } catch (err) {
-                errorDiv.style.backgroundColor = '#f8d7da';
-                errorDiv.style.color = 'var(--error-color)';
-                errorDiv.style.border = '1px solid var(--error-color)';
-                errorDiv.textContent = err.message || 'Registration failed. Please try again.';
-                errorDiv.style.display = 'block';
-            } finally {
-                registerBtn.disabled = false;
-                loadingSpinner.style.display = 'none';
+                });
+            } else {
+                console.error('Form element not found!');
             }
-        });
-        } else {
-            console.error('Form element not found!');
-        }
         
         }); // End of DOMContentLoaded
     </script>
